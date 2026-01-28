@@ -19,6 +19,8 @@ const {
   clearError,
 } = useMembers();
 const router = useRouter();
+const nuxtApp = useNuxtApp();
+const { user } = useFirebase();
 
 // State
 const searchQuery = ref("");
@@ -76,10 +78,18 @@ watch(searchQuery, () => {
 let unsubscribe: (() => void) | null = null;
 
 onMounted(() => {
+  console.log("[Members Page] Component mounted");
+  console.log("[Members Page] Firebase available:", !!nuxtApp.$firebase);
+  console.log("[Members Page] RTDB available:", !!nuxtApp.$firebase?.rtdb);
+  console.log("[Members Page] User:", user.value);
+
   unsubscribe = fetchMembers();
+
+  console.log("[Members Page] Fetch initiated, isLoading:", isLoading.value);
 });
 
 onUnmounted(() => {
+  console.log("[Members Page] Component unmounting");
   if (unsubscribe) {
     unsubscribe();
   }

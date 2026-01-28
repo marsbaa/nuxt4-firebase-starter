@@ -151,7 +151,15 @@ export const useMembers = () => {
 
   // Get database from the Firebase plugin
   const getDatabase = (): Database | null => {
-    return (nuxtApp.$firebase?.rtdb as Database) || null;
+    console.log("[useMembers] Getting database...");
+    console.log("[useMembers] nuxtApp.$firebase:", nuxtApp.$firebase);
+    console.log(
+      "[useMembers] nuxtApp.$firebase?.rtdb:",
+      nuxtApp.$firebase?.rtdb,
+    );
+    const db = (nuxtApp.$firebase?.rtdb as Database) || null;
+    console.log("[useMembers] Database retrieved:", !!db);
+    return db;
   };
 
   /**
@@ -173,24 +181,30 @@ export const useMembers = () => {
    * Fetch members list with real-time updates
    */
   const fetchMembers = (): (() => void) => {
+    console.log("[useMembers] fetchMembers called");
     const database = getDatabase();
     if (!database) {
+      console.error("[useMembers] Database not initialized!");
       error.value = "Database not initialized";
       toast.error("Database not initialized");
       isLoading.value = false;
       return () => {};
     }
 
+    console.log("[useMembers] Setting up real-time listener...");
     isLoading.value = true;
     error.value = null;
 
     const membersRef = dbRef(database, "members");
+    console.log("[useMembers] Members ref created:", membersRef);
 
     // Set up real-time listener
     const unsubscribe = onValue(
       membersRef,
       (snapshot) => {
+        console.log("[useMembers] Snapshot received");
         const data = snapshot.val();
+        console.log("[useMembers] Data:", data);
 
         if (data) {
           // Convert object to array with IDs
@@ -198,13 +212,16 @@ export const useMembers = () => {
             id,
             ...(memberData as Omit<Member, "id">),
           }));
+          console.log("[useMembers] Members loaded:", members.value.length);
         } else {
           members.value = [];
+          console.log("[useMembers] No members data found");
         }
 
         isLoading.value = false;
       },
       (err) => {
+        console.error("[useMembers] Error fetching members:", err);
         const firebaseError = err as unknown as FirebaseError;
         const errorMessage = getErrorMessage(firebaseError.code);
         error.value = errorMessage;
@@ -213,6 +230,7 @@ export const useMembers = () => {
       },
     );
 
+    console.log("[useMembers] Listener set up successfully");
     return unsubscribe;
   };
 
