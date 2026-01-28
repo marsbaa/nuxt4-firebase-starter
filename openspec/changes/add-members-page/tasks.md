@@ -37,8 +37,8 @@
 
 ## 5. Navigation
 
-- [ ] 5.1 Add "Members List" link to dashboard layout navigation
-- [ ] 5.2 Update active state highlighting in navigation
+- [x] 5.1 Add "Members" link to dashboard layout navigation
+- [x] 5.2 Update active state highlighting in navigation
 
 ## 6. Member Forms (Future)
 

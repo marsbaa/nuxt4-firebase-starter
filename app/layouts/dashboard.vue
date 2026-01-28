@@ -35,7 +35,7 @@ const navItems = [
     icon: "mdi:view-dashboard",
   },
   {
-    name: "Members List",
+    name: "Members",
     path: "/members",
     icon: "mdi:account-group",
   },
