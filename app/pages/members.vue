@@ -12,7 +12,7 @@ const {
   members,
   isLoading,
   error,
-  fetchMembers,
+  startPolling,
   deleteMember,
   searchMembers,
   sortMembersByName,
@@ -79,13 +79,12 @@ let unsubscribe: (() => void) | null = null;
 
 onMounted(() => {
   console.log("[Members Page] Component mounted");
-  console.log("[Members Page] Firebase available:", !!nuxtApp.$firebase);
-  console.log("[Members Page] RTDB available:", !!nuxtApp.$firebase?.rtdb);
   console.log("[Members Page] User:", user.value);
 
-  unsubscribe = fetchMembers();
+  // Start polling for members data
+  unsubscribe = startPolling();
 
-  console.log("[Members Page] Fetch initiated, isLoading:", isLoading.value);
+  console.log("[Members Page] Polling initiated, isLoading:", isLoading.value);
 });
 
 onUnmounted(() => {
@@ -192,7 +191,7 @@ const handlePageChange = (page: number) => {
     <div v-else-if="error" class="error-state">
       <Icon name="mdi:alert-circle-outline" class="error-icon" />
       <p class="error-text">{{ error }}</p>
-      <AppButton @click="fetchMembers" variant="secondary">
+      <AppButton @click="startPolling" variant="secondary">
         Try Again
       </AppButton>
     </div>

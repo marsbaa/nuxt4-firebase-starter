@@ -1,12 +1,4 @@
-import {
-  ref as dbRef,
-  onValue,
-  push,
-  set,
-  update,
-  remove,
-  type Database,
-} from "firebase/database";
+// Server API based member management (uses Firebase Admin SDK)
 
 /**
  * Member data interface matching Firebase RTDB structure
@@ -137,10 +129,9 @@ export const getMemberInitials = (name: string): string => {
 };
 
 /**
- * Members composable for Firebase RTDB operations
+ * Members composable for server API operations
  */
 export const useMembers = () => {
-  const nuxtApp = useNuxtApp();
   const { user } = useFirebase();
   const toast = useToast();
 
@@ -149,21 +140,12 @@ export const useMembers = () => {
   const isLoading = ref(false);
   const error = ref<string | null>(null);
 
-  // Get database from the Firebase plugin
-  const getDatabase = (): Database | null => {
-    console.log("[useMembers] Getting database...");
-    console.log("[useMembers] nuxtApp.$firebase:", nuxtApp.$firebase);
-    console.log(
-      "[useMembers] nuxtApp.$firebase?.rtdb:",
-      nuxtApp.$firebase?.rtdb,
-    );
-    const db = (nuxtApp.$firebase?.rtdb as Database) || null;
-    console.log("[useMembers] Database retrieved:", !!db);
-    return db;
-  };
+  // Polling interval (in ms) - poll every 5 seconds for updates
+  const POLL_INTERVAL = 5000;
+  let pollTimer: ReturnType<typeof setInterval> | null = null;
 
   /**
-   * Get error message for Firebase errors
+   * Get error message for API errors
    */
   const getErrorMessage = (errorCode: string): string => {
     const errorMessages: Record<string, string> = {
@@ -178,60 +160,76 @@ export const useMembers = () => {
   };
 
   /**
-   * Fetch members list with real-time updates
+   * Get authentication token for API requests
    */
-  const fetchMembers = (): (() => void) => {
-    console.log("[useMembers] fetchMembers called");
-    const database = getDatabase();
-    if (!database) {
-      console.error("[useMembers] Database not initialized!");
-      error.value = "Database not initialized";
-      toast.error("Database not initialized");
-      isLoading.value = false;
-      return () => {};
+  const getAuthToken = async (): Promise<string | null> => {
+    try {
+      if (!user.value) return null;
+      // Get the current Firebase ID token
+      return await user.value.getIdToken();
+    } catch (err) {
+      console.error("[useMembers] Error getting auth token:", err);
+      return null;
     }
+  };
 
-    console.log("[useMembers] Setting up real-time listener...");
-    isLoading.value = true;
-    error.value = null;
+  /**
+   * Fetch members list from server API
+   */
+  const fetchMembers = async (): Promise<void> => {
+    console.log("[useMembers] fetchMembers called");
 
-    const membersRef = dbRef(database, "members");
-    console.log("[useMembers] Members ref created:", membersRef);
+    try {
+      isLoading.value = true;
+      error.value = null;
 
-    // Set up real-time listener
-    const unsubscribe = onValue(
-      membersRef,
-      (snapshot) => {
-        console.log("[useMembers] Snapshot received");
-        const data = snapshot.val();
-        console.log("[useMembers] Data:", data);
+      const token = await getAuthToken();
+      if (!token) {
+        throw new Error("Not authenticated");
+      }
 
-        if (data) {
-          // Convert object to array with IDs
-          members.value = Object.entries(data).map(([id, memberData]) => ({
-            id,
-            ...(memberData as Omit<Member, "id">),
-          }));
-          console.log("[useMembers] Members loaded:", members.value.length);
-        } else {
-          members.value = [];
-          console.log("[useMembers] No members data found");
-        }
+      console.log("[useMembers] Fetching from /api/members");
+      const data = await $fetch<Member[]>("/api/members", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
-        isLoading.value = false;
-      },
-      (err) => {
-        console.error("[useMembers] Error fetching members:", err);
-        const firebaseError = err as unknown as FirebaseError;
-        const errorMessage = getErrorMessage(firebaseError.code);
-        error.value = errorMessage;
-        toast.error(errorMessage);
-        isLoading.value = false;
-      },
-    );
+      members.value = data || [];
+      console.log("[useMembers] Members loaded:", members.value.length);
+    } catch (err: any) {
+      console.error("[useMembers] Error fetching members:", err);
+      const errorMessage =
+        err.data?.message || err.message || "Failed to fetch members";
+      error.value = errorMessage;
+      toast.error(errorMessage);
+    } finally {
+      isLoading.value = false;
+    }
+  };
 
-    console.log("[useMembers] Listener set up successfully");
-    return unsubscribe;
+  /**
+   * Start polling for member updates
+   */
+  const startPolling = (): (() => void) => {
+    console.log("[useMembers] Starting polling");
+
+    // Initial fetch
+    fetchMembers();
+
+    // Set up polling
+    pollTimer = setInterval(() => {
+      fetchMembers();
+    }, POLL_INTERVAL);
+
+    // Return cleanup function
+    return () => {
+      console.log("[useMembers] Stopping polling");
+      if (pollTimer) {
+        clearInterval(pollTimer);
+        pollTimer = null;
+      }
+    };
   };
 
   /**
@@ -241,33 +239,31 @@ export const useMembers = () => {
     memberData: Omit<Member, "id" | "createdAt" | "createdBy" | "updatedAt">,
   ): Promise<{ success: boolean; error?: string; id?: string }> => {
     try {
-      const database = getDatabase();
-      if (!database) {
-        throw new Error("Database not initialized");
+      const token = await getAuthToken();
+      if (!token) {
+        throw new Error("Not authenticated");
       }
 
-      if (!user.value?.uid) {
-        throw new Error("No user is currently logged in");
-      }
-
-      const membersRef = dbRef(database, "members");
-      const newMemberRef = push(membersRef);
-      const now = new Date().toISOString();
-
-      const newMember: Omit<Member, "id"> = {
-        ...memberData,
-        createdAt: now,
-        createdBy: user.value.uid,
-        updatedAt: now,
-      };
-
-      await set(newMemberRef, newMember);
+      const response = await $fetch<{ success: boolean; id?: string }>(
+        "/api/members",
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          body: memberData,
+        },
+      );
 
       toast.success("Member added successfully");
-      return { success: true, id: newMemberRef.key || undefined };
-    } catch (err) {
-      const firebaseError = err as FirebaseError;
-      const errorMessage = getErrorMessage(firebaseError.code);
+
+      // Refresh members list
+      await fetchMembers();
+
+      return response;
+    } catch (err: any) {
+      const errorMessage =
+        err.data?.message || err.message || "Failed to create member";
       toast.error(errorMessage);
       return { success: false, error: errorMessage };
     }
@@ -281,31 +277,28 @@ export const useMembers = () => {
     memberData: Partial<Omit<Member, "id" | "createdAt" | "createdBy">>,
   ): Promise<{ success: boolean; error?: string }> => {
     try {
-      const database = getDatabase();
-      if (!database) {
-        throw new Error("Database not initialized");
+      const token = await getAuthToken();
+      if (!token) {
+        throw new Error("Not authenticated");
       }
 
-      if (!user.value?.uid) {
-        throw new Error("No user is currently logged in");
-      }
-
-      const memberRef = dbRef(database, `members/${memberId}`);
-      const now = new Date().toISOString();
-
-      const updates = {
-        ...memberData,
-        updatedAt: now,
-        updatedBy: user.value.uid,
-      };
-
-      await update(memberRef, updates);
+      await $fetch(`/api/members/${memberId}`, {
+        method: "PATCH",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: memberData,
+      });
 
       toast.success("Member updated successfully");
+
+      // Refresh members list
+      await fetchMembers();
+
       return { success: true };
-    } catch (err) {
-      const firebaseError = err as FirebaseError;
-      const errorMessage = getErrorMessage(firebaseError.code);
+    } catch (err: any) {
+      const errorMessage =
+        err.data?.message || err.message || "Failed to update member";
       toast.error(errorMessage);
       return { success: false, error: errorMessage };
     }
@@ -318,19 +311,27 @@ export const useMembers = () => {
     memberId: string,
   ): Promise<{ success: boolean; error?: string }> => {
     try {
-      const database = getDatabase();
-      if (!database) {
-        throw new Error("Database not initialized");
+      const token = await getAuthToken();
+      if (!token) {
+        throw new Error("Not authenticated");
       }
 
-      const memberRef = dbRef(database, `members/${memberId}`);
-      await remove(memberRef);
+      await $fetch(`/api/members/${memberId}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
       toast.success("Member deleted successfully");
+
+      // Refresh members list
+      await fetchMembers();
+
       return { success: true };
-    } catch (err) {
-      const firebaseError = err as FirebaseError;
-      const errorMessage = getErrorMessage(firebaseError.code);
+    } catch (err: any) {
+      const errorMessage =
+        err.data?.message || err.message || "Failed to delete member";
       toast.error(errorMessage);
       return { success: false, error: errorMessage };
     }
@@ -384,6 +385,7 @@ export const useMembers = () => {
     isLoading: readonly(isLoading),
     error: readonly(error),
     fetchMembers,
+    startPolling,
     createMember,
     updateMember,
     deleteMember,
