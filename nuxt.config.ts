@@ -16,7 +16,7 @@ export default defineNuxtConfig({
     // Use local server bundle mode for better performance
     serverBundle: "local",
     // Set preferred icon collections
-    collections: ["heroicons", "mdi"],
+    collections: ["heroicons", "mdi", "material-symbols"],
     // Customize default size
     size: "24px",
     // Optimize icons in production
