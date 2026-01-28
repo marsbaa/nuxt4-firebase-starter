@@ -10,12 +10,12 @@
 
 ## 2. Base Component Updates
 
-- [ ] 2.1 Update `AppButton.vue` with soft corners, gentle shadows, and new color variants
-- [ ] 2.2 Update `AppInput.vue` with comfortable sizing, soft borders, and supportive focus states
-- [ ] 2.3 Update `AppCard.vue` with generous padding, subtle shadows, and warm borders
-- [ ] 2.4 Update `AppAlert.vue` with muted semantic colors and gentle styling
-- [ ] 2.5 Update `AppIcon.vue` if needed for consistent sizing and colors
-- [ ] 2.6 Test all component variants in isolation
+- [x] 2.1 Update `AppButton.vue` with soft corners, gentle shadows, and new color variants
+- [x] 2.2 Update `AppInput.vue` with comfortable sizing, soft borders, and supportive focus states
+- [x] 2.3 Update `AppCard.vue` with generous padding, subtle shadows, and warm borders
+- [x] 2.4 Update `AppAlert.vue` with muted semantic colors and gentle styling
+- [x] 2.5 Update `AppIcon.vue` if needed for consistent sizing and colors
+- [x] 2.6 Test all component variants in isolation
 
 ## 3. Dashboard Layout
 
