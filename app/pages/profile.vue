@@ -2,6 +2,7 @@
 // Use authentication middleware to protect this route
 definePageMeta({
   middleware: ["auth"],
+  layout: "dashboard",
 });
 
 const { user } = useAuth();
@@ -105,145 +106,140 @@ const userInitials = computed(() => {
 
 <template>
   <div class="page-container">
-    <div class="page-content">
-      <header class="page-header">
-        <NuxtLink to="/dashboard" class="back-link">
-          <Icon name="mdi:arrow-left" class="back-icon" />
-          Back to Dashboard
-        </NuxtLink>
-        <h1 class="page-title">Profile</h1>
-      </header>
+    <header class="page-header">
+      <h1 class="page-title">Profile</h1>
+      <p class="page-description">Manage your personal information</p>
+    </header>
 
-      <div v-if="isLoading" class="loading-container">
-        <Icon name="mdi:loading" class="loading-icon animate-spin" />
-        <p class="loading-text">Loading profile...</p>
+    <div v-if="isLoading" class="loading-container">
+      <Icon name="mdi:loading" class="loading-icon animate-spin" />
+      <p class="loading-text">Loading profile...</p>
+    </div>
+
+    <div v-else class="content-card">
+      <!-- Avatar -->
+      <div class="avatar-container">
+        <div class="avatar">{{ userInitials }}</div>
       </div>
 
-      <div v-else class="content-card">
-        <!-- Avatar -->
-        <div class="avatar-container">
-          <div class="avatar">{{ userInitials }}</div>
+      <!-- Success message -->
+      <transition name="error-slide">
+        <div v-if="successMessage" class="alert-success">
+          <Icon name="mdi:check-circle-outline" class="alert-icon" />
+          <p>{{ successMessage }}</p>
+        </div>
+      </transition>
+
+      <!-- Error message -->
+      <transition name="error-slide">
+        <div v-if="error" class="alert-error">
+          <Icon name="mdi:alert-circle-outline" class="alert-icon" />
+          <p>{{ error }}</p>
+        </div>
+      </transition>
+
+      <!-- Profile Information / Edit Form -->
+      <div v-if="!isEditMode" class="profile-info">
+        <div class="info-group">
+          <label class="info-label">Display Name</label>
+          <p class="info-value">
+            {{ profile?.displayName || user?.displayName || "Not set" }}
+          </p>
         </div>
 
-        <!-- Success message -->
-        <transition name="error-slide">
-          <div v-if="successMessage" class="alert-success">
-            <Icon name="mdi:check-circle-outline" class="alert-icon" />
-            <p>{{ successMessage }}</p>
-          </div>
-        </transition>
-
-        <!-- Error message -->
-        <transition name="error-slide">
-          <div v-if="error" class="alert-error">
-            <Icon name="mdi:alert-circle-outline" class="alert-icon" />
-            <p>{{ error }}</p>
-          </div>
-        </transition>
-
-        <!-- Profile Information / Edit Form -->
-        <div v-if="!isEditMode" class="profile-info">
-          <div class="info-group">
-            <label class="info-label">Display Name</label>
-            <p class="info-value">
-              {{ profile?.displayName || user?.displayName || "Not set" }}
-            </p>
-          </div>
-
-          <div class="info-group">
-            <label class="info-label">Email</label>
-            <p class="info-value">{{ user?.email || "Not available" }}</p>
-          </div>
-
-          <div class="info-group">
-            <label class="info-label">User ID</label>
-            <p class="info-value mono">{{ user?.uid || "Not available" }}</p>
-          </div>
+        <div class="info-group">
+          <label class="info-label">Email</label>
+          <p class="info-value">{{ user?.email || "Not available" }}</p>
         </div>
 
-        <!-- Edit Form -->
-        <form v-else @submit.prevent="handleUpdateProfile" class="edit-form">
-          <div class="form-group">
-            <label for="displayName" class="form-label">Display Name</label>
-            <div class="input-wrapper">
-              <Icon name="mdi:account-outline" class="input-icon" />
-              <input
-                id="displayName"
-                v-model="displayName"
-                type="text"
-                class="form-input"
-                :class="{ 'input-error': validationError }"
-                placeholder="Enter your display name"
-                maxlength="50"
-              />
-            </div>
-            <transition name="error-slide">
-              <p v-if="validationError" class="error-message">
-                {{ validationError }}
-              </p>
-            </transition>
-          </div>
+        <div class="info-group">
+          <label class="info-label">User ID</label>
+          <p class="info-value mono">{{ user?.uid || "Not available" }}</p>
+        </div>
+      </div>
 
-          <div class="form-group">
-            <label class="info-label">Email</label>
-            <p class="info-value-readonly">
-              {{ user?.email || "Not available" }}
+      <!-- Edit Form -->
+      <form v-else @submit.prevent="handleUpdateProfile" class="edit-form">
+        <div class="form-group">
+          <label for="displayName" class="form-label">Display Name</label>
+          <div class="input-wrapper">
+            <Icon name="mdi:account-outline" class="input-icon" />
+            <input
+              id="displayName"
+              v-model="displayName"
+              type="text"
+              class="form-input"
+              :class="{ 'input-error': validationError }"
+              placeholder="Enter your display name"
+              maxlength="50"
+            />
+          </div>
+          <transition name="error-slide">
+            <p v-if="validationError" class="error-message">
+              {{ validationError }}
             </p>
-            <p class="help-text">Email address cannot be changed</p>
-          </div>
-        </form>
+          </transition>
+        </div>
 
-        <!-- Action Buttons -->
-        <div class="button-group">
+        <div class="form-group">
+          <label class="info-label">Email</label>
+          <p class="info-value-readonly">
+            {{ user?.email || "Not available" }}
+          </p>
+          <p class="help-text">Email address cannot be changed</p>
+        </div>
+      </form>
+
+      <!-- Action Buttons -->
+      <div class="button-group">
+        <button
+          v-if="!isEditMode"
+          @click="toggleEditMode"
+          class="btn-primary"
+          type="button"
+        >
+          <Icon name="mdi:pencil" class="btn-icon" />
+          Edit Profile
+        </button>
+
+        <template v-else>
           <button
-            v-if="!isEditMode"
-            @click="toggleEditMode"
+            @click="handleUpdateProfile"
             class="btn-primary"
             type="button"
+            :disabled="isLoading"
           >
-            <Icon name="mdi:pencil" class="btn-icon" />
-            Edit Profile
+            <transition name="fade" mode="out-in">
+              <span v-if="!isLoading" key="text" class="btn-content">
+                <Icon name="mdi:content-save" class="btn-icon" />
+                Save Changes
+              </span>
+              <span v-else key="loading" class="btn-content">
+                <Icon name="mdi:loading" class="btn-icon animate-spin" />
+                Saving...
+              </span>
+            </transition>
           </button>
 
-          <template v-else>
-            <button
-              @click="handleUpdateProfile"
-              class="btn-primary"
-              type="button"
-              :disabled="isLoading"
-            >
-              <transition name="fade" mode="out-in">
-                <span v-if="!isLoading" key="text" class="btn-content">
-                  <Icon name="mdi:content-save" class="btn-icon" />
-                  Save Changes
-                </span>
-                <span v-else key="loading" class="btn-content">
-                  <Icon name="mdi:loading" class="btn-icon animate-spin" />
-                  Saving...
-                </span>
-              </transition>
-            </button>
+          <button
+            @click="toggleEditMode"
+            class="btn-secondary"
+            type="button"
+            :disabled="isLoading"
+          >
+            <Icon name="mdi:close" class="btn-icon" />
+            Cancel
+          </button>
+        </template>
+      </div>
 
-            <button
-              @click="toggleEditMode"
-              class="btn-secondary"
-              type="button"
-              :disabled="isLoading"
-            >
-              <Icon name="mdi:close" class="btn-icon" />
-              Cancel
-            </button>
-          </template>
-        </div>
-
-        <!-- Quick Links -->
-        <div class="quick-links">
-          <NuxtLink to="/change-password" class="quick-link">
-            <Icon name="mdi:lock-reset" class="link-icon" />
-            <span>Change Password</span>
-            <Icon name="mdi:chevron-right" class="chevron-icon" />
-          </NuxtLink>
-        </div>
+      <!-- Quick Links -->
+      <div class="quick-links">
+        <NuxtLink to="/change-password" class="quick-link">
+          <Icon name="mdi:lock-reset" class="link-icon" />
+          <span>Change Password</span>
+          <Icon name="mdi:chevron-right" class="chevron-icon" />
+        </NuxtLink>
       </div>
     </div>
   </div>
@@ -253,61 +249,11 @@ const userInitials = computed(() => {
 @import url("https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;600&family=Work+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400&display=swap");
 
 .page-container {
-  min-height: 100vh;
-  background: linear-gradient(135deg, #faf9f7 0%, #f5f3ef 100%);
-  position: relative;
-}
-
-.page-container::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
-  pointer-events: none;
-}
-
-.page-content {
-  position: relative;
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 2rem;
-  animation: fadeIn 0.6s ease-out;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  width: 100%;
 }
 
 .page-header {
   margin-bottom: 2rem;
-}
-
-.back-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-family: "Work Sans", sans-serif;
-  font-size: 0.938rem;
-  color: #706c64;
-  text-decoration: none;
-  transition: color 0.2s ease;
-  margin-bottom: 1rem;
-}
-
-.back-link:hover {
-  color: #d9bc9b;
-}
-
-.back-icon {
-  width: 1.125rem;
-  height: 1.125rem;
 }
 
 .page-title {
@@ -315,8 +261,16 @@ const userInitials = computed(() => {
   font-size: 2.5rem;
   font-weight: 600;
   color: #2d2a26;
-  margin: 0;
+  margin: 0 0 0.5rem 0;
   letter-spacing: -0.02em;
+}
+
+.page-description {
+  font-family: "Work Sans", sans-serif;
+  font-size: 1rem;
+  color: #706c64;
+  margin: 0;
+  line-height: 1.5;
 }
 
 /* Loading */
@@ -702,10 +656,6 @@ const userInitials = computed(() => {
 }
 
 @media (max-width: 640px) {
-  .page-content {
-    padding: 1.5rem;
-  }
-
   .content-card {
     padding: 1.5rem;
   }
