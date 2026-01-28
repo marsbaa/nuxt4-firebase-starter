@@ -109,8 +109,8 @@ const pageTitle = computed(() => {
       <!-- Sidebar header -->
       <div class="sidebar-header">
         <div class="sidebar-logo">
-          <Icon name="mdi:fire" class="logo-icon" />
-          <span class="logo-text">Firebase</span>
+          <Icon name="mdi:heart-outline" class="logo-icon" />
+          <span class="logo-text">Pastoral Care</span>
         </div>
       </div>
 

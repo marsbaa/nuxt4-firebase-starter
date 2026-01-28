@@ -57,6 +57,7 @@
 - [ ] 7.3 Revise headings and labels for respectful tone
 - [ ] 7.4 Update success messages to be affirming not celebratory
 - [ ] 7.5 Review all copy for pastoral appropriateness
+- [x] 7.6 Update app name/branding from "Firebase" to "Pastoral Care" throughout
 
 ## 8. Accessibility Audit
 
