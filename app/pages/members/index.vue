@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import type { Member } from "~/composables/useMembers";
-import { parseMemberName } from "~/composables/useMembers";
+import {
+  parseMemberName,
+  formatBirthday,
+  formatContact,
+} from "~/composables/useMembers";
 
 definePageMeta({
   middleware: "auth",
@@ -92,18 +96,17 @@ onUnmounted(() => {
 
 // Methods
 const handleNewMember = () => {
-  // TODO: Navigate to member creation page or open modal
-  console.log("New member clicked");
+  router.push("/members/add");
 };
 
 const handleView = (member: Member) => {
-  // TODO: Navigate to member detail page
-  console.log("View member:", member);
+  if (!member.id) return;
+  router.push(`/members/view/${member.id}`);
 };
 
 const handleEdit = (member: Member) => {
-  // TODO: Navigate to member edit page or open modal
-  console.log("Edit member:", member);
+  if (!member.id) return;
+  router.push(`/members/${member.id}`);
 };
 
 const handleDeleteClick = (member: Member) => {
@@ -213,7 +216,8 @@ const handlePageChange = (page: number) => {
 
     <!-- Members table -->
     <div v-else>
-      <div class="table-container">
+      <!-- Desktop table view -->
+      <div class="table-container desktop-view">
         <MemberTable
           :members="paginatedMembers"
           :start-index="(currentPage - 1) * itemsPerPage"
@@ -237,6 +241,101 @@ const handlePageChange = (page: number) => {
             </div>
           </template>
         </MemberTable>
+      </div>
+
+      <!-- Mobile card view -->
+      <div class="mobile-view">
+        <div class="member-cards">
+          <div
+            v-for="(member, index) in paginatedMembers"
+            :key="member.id"
+            class="member-card"
+          >
+            <div class="member-card-header">
+              <div class="member-info">
+                <MemberAvatar :name="parseMemberName(member.name).fullName" />
+                <div class="member-details">
+                  <h3 class="member-name">
+                    {{ parseMemberName(member.name).fullName }}
+                  </h3>
+                  <div class="member-meta">
+                    <Icon name="mdi:cake-variant" class="meta-icon" />
+                    <span class="meta-text">{{
+                      formatBirthday(member.birthday)
+                    }}</span>
+                  </div>
+                </div>
+              </div>
+              <span class="member-number"
+                >#{{ (currentPage - 1) * itemsPerPage + index + 1 }}</span
+              >
+            </div>
+
+            <div class="member-card-body">
+              <div v-if="member.contact" class="card-info-row">
+                <Icon name="mdi:phone" class="info-icon" />
+                <span class="info-text">{{
+                  formatContact(member.contact)
+                }}</span>
+              </div>
+              <div v-else class="card-info-row">
+                <Icon name="mdi:phone" class="info-icon" />
+                <span class="info-text empty">No contact info</span>
+              </div>
+
+              <div v-if="member.suburb" class="card-info-row">
+                <Icon name="mdi:map-marker" class="info-icon" />
+                <span class="info-text">{{ member.suburb }}</span>
+              </div>
+              <div v-else class="card-info-row">
+                <Icon name="mdi:map-marker" class="info-icon" />
+                <span class="info-text empty">No location</span>
+              </div>
+            </div>
+
+            <div class="member-card-actions">
+              <button
+                @click="handleView(member)"
+                class="card-action-btn view"
+                aria-label="View member"
+              >
+                <Icon name="mdi:eye" class="action-icon" />
+                <span>View</span>
+              </button>
+              <button
+                @click="handleEdit(member)"
+                class="card-action-btn edit"
+                aria-label="Edit member"
+              >
+                <Icon name="mdi:pencil" class="action-icon" />
+                <span>Edit</span>
+              </button>
+              <button
+                @click="handleDeleteClick(member)"
+                class="card-action-btn delete"
+                aria-label="Delete member"
+              >
+                <Icon name="mdi:delete" class="action-icon" />
+                <span>Delete</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mobile pagination -->
+        <div class="mobile-pagination">
+          <div class="pagination-info">
+            Showing {{ displayRange.start }}-{{ displayRange.end }} of
+            {{ totalMembers }}
+          </div>
+          <Pagination
+            :current-page="currentPage"
+            :total-pages="totalPages"
+            :total-items="totalMembers"
+            :items-per-page="itemsPerPage"
+            @page-change="handlePageChange"
+          />
+        </div>
       </div>
     </div>
 
@@ -606,6 +705,198 @@ const handlePageChange = (page: number) => {
   justify-content: flex-end;
 }
 
+/* Desktop/Mobile view toggle */
+.desktop-view {
+  display: block;
+}
+
+.mobile-view {
+  display: none;
+}
+
+/* Mobile card styles */
+.member-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.member-card {
+  background: #ffffff;
+  border: 1px solid #e8e8e5;
+  border-radius: 1rem;
+  overflow: hidden;
+  box-shadow: 0 1px 3px 0 rgba(44, 44, 42, 0.05);
+  transition: all 0.2s ease;
+}
+
+.member-card:active {
+  transform: scale(0.98);
+}
+
+.member-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem;
+  border-bottom: 1px solid #e8e8e5;
+  gap: 1rem;
+}
+
+.member-info {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.member-details {
+  flex: 1;
+  min-width: 0;
+}
+
+.member-name {
+  font-family: "Inter", sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #2d2a26;
+  margin: 0 0 0.25rem 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.member-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+}
+
+.meta-icon {
+  width: 0.875rem;
+  height: 0.875rem;
+  color: #9a9690;
+  flex-shrink: 0;
+}
+
+.meta-text {
+  font-family: "Inter", sans-serif;
+  font-size: 0.813rem;
+  color: #706c64;
+}
+
+.member-number {
+  font-family: "Inter", sans-serif;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #9a9690;
+  flex-shrink: 0;
+}
+
+.member-card-body {
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+}
+
+.card-info-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.info-icon {
+  width: 1.125rem;
+  height: 1.125rem;
+  color: #c2a47a;
+  flex-shrink: 0;
+}
+
+.info-text {
+  font-family: "Inter", sans-serif;
+  font-size: 0.938rem;
+  color: #2d2a26;
+}
+
+.info-text.empty {
+  color: #9a9690;
+  font-style: italic;
+}
+
+.member-card-actions {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border-top: 1px solid #e8e8e5;
+}
+
+.card-action-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.875rem;
+  font-family: "Inter", sans-serif;
+  font-size: 0.875rem;
+  font-weight: 500;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.card-action-btn:not(:last-child) {
+  border-right: 1px solid #e8e8e5;
+}
+
+.card-action-btn.view {
+  color: #c2a47a;
+}
+
+.card-action-btn.view:hover,
+.card-action-btn.view:active {
+  background: rgba(194, 164, 122, 0.05);
+}
+
+.card-action-btn.edit {
+  color: #706c64;
+}
+
+.card-action-btn.edit:hover,
+.card-action-btn.edit:active {
+  background: rgba(112, 108, 100, 0.05);
+}
+
+.card-action-btn.delete {
+  color: #dc2626;
+}
+
+.card-action-btn.delete:hover,
+.card-action-btn.delete:active {
+  background: rgba(220, 38, 38, 0.05);
+}
+
+.action-icon {
+  width: 1.125rem;
+  height: 1.125rem;
+}
+
+.mobile-pagination {
+  margin-top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  align-items: center;
+}
+
+.mobile-pagination .pagination-info {
+  font-family: "Inter", sans-serif;
+  font-size: 0.875rem;
+  color: #706c64;
+  text-align: center;
+}
+
 /* Responsive - Tablet */
 @media (max-width: 1024px) {
   .page-header {
@@ -633,6 +924,15 @@ const handlePageChange = (page: number) => {
 
 /* Responsive - Mobile */
 @media (max-width: 768px) {
+  /* Show mobile view, hide desktop */
+  .desktop-view {
+    display: none;
+  }
+
+  .mobile-view {
+    display: block;
+  }
+
   .page-title {
     font-size: 1.75rem;
   }
@@ -664,6 +964,7 @@ const handlePageChange = (page: number) => {
 @media (max-width: 480px) {
   .page-header {
     gap: 1rem;
+    margin-bottom: 1.5rem;
   }
 
   .search-section {
@@ -676,6 +977,33 @@ const handlePageChange = (page: number) => {
 
   .modal-content {
     padding: 1.5rem;
+  }
+
+  .member-card-header {
+    padding: 1rem;
+  }
+
+  .member-card-body {
+    padding: 1rem;
+  }
+
+  .member-name {
+    font-size: 0.938rem;
+  }
+
+  .card-action-btn {
+    padding: 0.75rem 0.5rem;
+    font-size: 0.813rem;
+    gap: 0.375rem;
+  }
+
+  .card-action-btn span {
+    display: none;
+  }
+
+  .action-icon {
+    width: 1.25rem;
+    height: 1.25rem;
   }
 }
 </style>
