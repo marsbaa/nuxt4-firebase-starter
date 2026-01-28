@@ -274,18 +274,18 @@ const pageTitle = computed(() => {
   left: 0;
   width: 280px;
   height: 100vh;
-  background: rgba(255, 255, 255, 0.98);
-  backdrop-filter: blur(10px);
-  border-right: 1px solid rgba(232, 230, 225, 0.8);
+  background: #fafaf8;
+  border-right: 1px solid #e8e8e5;
   display: flex;
   flex-direction: column;
   z-index: 50;
   transition: transform 0.3s ease;
+  box-shadow: 2px 0 15px 0 rgba(44, 44, 42, 0.03);
 }
 
 .sidebar-header {
   padding: 2rem 1.5rem 1.5rem;
-  border-bottom: 1px solid rgba(232, 230, 225, 0.6);
+  border-bottom: 1px solid #e8e8e5;
 }
 
 .sidebar-logo {
@@ -310,11 +310,12 @@ const pageTitle = computed(() => {
 
 /* Sidebar profile */
 .sidebar-profile {
-  padding: 1.5rem;
+  padding: 2rem 1.5rem;
   display: flex;
   align-items: center;
   gap: 1rem;
-  border-bottom: 1px solid rgba(232, 230, 225, 0.6);
+  border-bottom: 1px solid #e8e8e5;
+  background: rgba(247, 246, 244, 0.5);
 }
 
 .profile-avatar {
@@ -360,7 +361,7 @@ const pageTitle = computed(() => {
 /* Navigation menu */
 .nav-menu {
   flex: 1;
-  padding: 1rem 0.75rem;
+  padding: 1.5rem 1rem;
   list-style: none;
   margin: 0;
   overflow-y: auto;
@@ -369,32 +370,33 @@ const pageTitle = computed(() => {
 .nav-link {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  padding: 0.875rem 1rem;
+  gap: 0.875rem;
+  padding: 1rem 1.125rem;
   font-family: "Work Sans", sans-serif;
   font-size: 0.938rem;
   font-weight: 500;
-  color: #706c64;
+  color: #6b6b68;
   text-decoration: none;
   border-radius: 12px;
   transition: all 0.2s ease;
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.5rem;
 }
 
 .nav-link:hover {
-  background: rgba(217, 188, 155, 0.1);
-  color: #2d2a26;
+  background: rgba(122, 155, 118, 0.08);
+  color: #2c2c2a;
 }
 
 .nav-link.is-active {
-  background: linear-gradient(135deg, #d9bc9b 0%, #c9a87c 100%);
-  color: #ffffff;
+  background: rgba(122, 155, 118, 0.15);
+  color: #5f7d5c;
   font-weight: 600;
+  box-shadow: 0 1px 2px 0 rgba(122, 155, 118, 0.15);
 }
 
 .nav-icon {
-  width: 1.25rem;
-  height: 1.25rem;
+  width: 1.375rem;
+  height: 1.375rem;
   flex-shrink: 0;
 }
 
@@ -404,31 +406,33 @@ const pageTitle = computed(() => {
 
 /* Sidebar footer */
 .sidebar-footer {
-  padding: 1rem 1.5rem 1.5rem;
-  border-top: 1px solid rgba(232, 230, 225, 0.6);
+  padding: 1.5rem;
+  border-top: 1px solid #e8e8e5;
+  background: rgba(247, 246, 244, 0.5);
 }
 
 .logout-btn {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 0.875rem;
   width: 100%;
-  padding: 0.875rem 1rem;
+  padding: 1rem 1.125rem;
   font-family: "Work Sans", sans-serif;
   font-size: 0.938rem;
   font-weight: 500;
-  color: #706c64;
-  background: rgba(217, 188, 155, 0.05);
-  border: 1.5px solid rgba(232, 230, 225, 0.8);
+  color: #6b6b68;
+  background: #ffffff;
+  border: 1px solid #e8e8e5;
   border-radius: 12px;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
 .logout-btn:hover:not(:disabled) {
-  background: rgba(217, 188, 155, 0.15);
-  border-color: #d9bc9b;
-  color: #d9bc9b;
+  background: rgba(156, 139, 122, 0.06);
+  border-color: #9c8b7a;
+  color: #9c8b7a;
+  box-shadow: 0 1px 2px 0 rgba(44, 44, 42, 0.05);
 }
 
 .logout-btn:disabled {
@@ -440,7 +444,7 @@ const pageTitle = computed(() => {
 .main-content {
   flex: 1;
   margin-left: 280px;
-  padding: 2rem;
+  padding: 3rem;
   animation: slideIn 0.6s cubic-bezier(0.16, 1, 0.3, 1);
   position: relative;
   z-index: 1;
@@ -460,7 +464,7 @@ const pageTitle = computed(() => {
 /* Responsive - Tablet */
 @media (max-width: 1024px) {
   .main-content {
-    padding: 1.5rem;
+    padding: 2.5rem 2rem;
   }
 }
 
@@ -486,14 +490,14 @@ const pageTitle = computed(() => {
   .main-content {
     margin-left: 0;
     margin-top: 60px;
-    padding: 1.5rem;
+    padding: 2rem 1.5rem;
   }
 }
 
 /* Small mobile */
 @media (max-width: 480px) {
   .main-content {
-    padding: 1rem;
+    padding: 1.5rem 1rem;
   }
 }
 </style>
