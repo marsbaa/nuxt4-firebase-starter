@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Pastoral Care - Members List</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@600;700&family=Inter:wght@400;500;600&family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+<script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              primary: "#c2a47a", // The tan color from the dashboard header
+              "background-light": "#f9f8f6", // Off-white/cream background
+              "background-dark": "#1a1a17",
+              "sidebar-light": "#ffffff",
+              "sidebar-dark": "#262622",
+              "accent-green": "#e3e8e1", // The green from the dashboard menu item
+              "accent-green-dark": "#3a4138",
+            },
+            fontFamily: {
+              display: ["Crimson Pro", "serif"],
+              sans: ["Inter", "sans-serif"],
+            },
+            borderRadius: {
+              DEFAULT: "0.75rem",
+            },
+          },
+        },
+      };
+    </script>
+<style>
+        .material-symbols-rounded {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-rounded.filled {
+            font-variation-settings: 'FILL' 1;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-800 dark:text-slate-200 min-h-screen font-sans">
+<div class="flex min-h-screen">
+<aside class="w-64 bg-sidebar-light dark:bg-sidebar-dark border-r border-slate-200 dark:border-slate-800 flex flex-col fixed h-full">
+<div class="p-6 flex items-center space-x-3">
+<div class="w-8 h-8 flex items-center justify-center text-primary">
+<span class="material-symbols-rounded filled text-3xl">favorite</span>
+</div>
+<h1 class="font-display text-xl font-bold text-slate-900 dark:text-white">Pastoral Care</h1>
+</div>
+<div class="px-4 py-2 flex items-center space-x-3 mb-6">
+<div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white font-bold text-sm">
+                    RY
+                </div>
+<div>
+<div class="text-sm font-semibold dark:text-white">Ray Yee</div>
+<div class="text-xs text-slate-500">ray@fka.sg</div>
+</div>
+</div>
+<nav class="flex-1 px-3 space-y-1">
+<a class="flex items-center px-3 py-2.5 text-sm font-medium rounded-lg text-slate-600 dark:text-slate-400 hover:bg-accent-green/50 dark:hover:bg-accent-green-dark/30 transition-colors group" href="#">
+<span class="material-symbols-rounded mr-3 text-slate-400 group-hover:text-primary transition-colors">grid_view</span>
+                    Dashboard
+                </a>
+<a class="flex items-center px-3 py-2.5 text-sm font-medium rounded-lg bg-accent-green dark:bg-accent-green-dark/40 text-slate-900 dark:text-white group" href="#">
+<span class="material-symbols-rounded mr-3 text-primary filled">group</span>
+                    Members List
+                </a>
+<a class="flex items-center px-3 py-2.5 text-sm font-medium rounded-lg text-slate-600 dark:text-slate-400 hover:bg-accent-green/50 dark:hover:bg-accent-green-dark/30 transition-colors group" href="#">
+<span class="material-symbols-rounded mr-3 text-slate-400 group-hover:text-primary transition-colors">person</span>
+                    Your Profile
+                </a>
+<a class="flex items-center px-3 py-2.5 text-sm font-medium rounded-lg text-slate-600 dark:text-slate-400 hover:bg-accent-green/50 dark:hover:bg-accent-green-dark/30 transition-colors group" href="#">
+<span class="material-symbols-rounded mr-3 text-slate-400 group-hover:text-primary transition-colors">settings</span>
+                    Your Settings
+                </a>
+</nav>
+<div class="p-4 border-t border-slate-100 dark:border-slate-800">
+<button class="w-full flex items-center justify-center space-x-2 py-2.5 px-4 rounded-xl border border-slate-200 dark:border-slate-700 text-sm font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all">
+<span class="material-symbols-rounded text-lg">logout</span>
+<span>Sign out</span>
+</button>
+</div>
+</aside>
+<main class="flex-1 ml-64 p-8">
+<div class="max-w-7xl mx-auto">
+<div class="flex items-center justify-between mb-8">
+<div>
+<h2 class="font-display text-3xl font-bold text-slate-900 dark:text-white">Members</h2>
+<p class="text-slate-500 text-sm mt-1">Manage and care for your community members</p>
+</div>
+<button class="bg-primary hover:opacity-90 text-white px-5 py-2.5 rounded-xl font-medium flex items-center space-x-2 transition-all shadow-sm">
+<span class="material-symbols-rounded">add</span>
+<span>New Member</span>
+</button>
+</div>
+<div class="bg-white dark:bg-sidebar-dark rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800 p-6 mb-6">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+<div class="relative flex-1 max-w-lg">
+<span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400">
+<span class="material-symbols-rounded">search</span>
+</span>
+<input class="block w-full pl-10 pr-4 py-2.5 bg-background-light dark:bg-background-dark border-transparent focus:border-primary focus:ring-primary rounded-xl text-sm transition-all dark:text-white" placeholder="Search by name, email or location..." type="text"/>
+</div>
+<div class="flex items-center space-x-2 text-sm text-slate-500">
+<span class="font-medium text-slate-900 dark:text-white">66</span>
+<span>members total</span>
+</div>
+</div>
+</div>
+<div class="bg-white dark:bg-sidebar-dark rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-slate-50 dark:bg-slate-800/50 text-slate-500 text-xs font-semibold uppercase tracking-wider">
+<th class="px-6 py-4">#</th>
+<th class="px-6 py-4">Member</th>
+<th class="px-6 py-4">Contact Info</th>
+<th class="px-6 py-4">Location</th>
+<th class="px-6 py-4 text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
+<td class="px-6 py-4 text-sm text-slate-400">1</td>
+<td class="px-6 py-4">
+<div class="flex items-center space-x-3">
+<div class="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold text-xs">SA</div>
+<div>
+<div class="text-sm font-semibold text-slate-900 dark:text-white">Sandra Auterson</div>
+<div class="text-xs text-slate-400 flex items-center mt-0.5">
+<span class="material-symbols-rounded text-xs mr-1">cake</span> Jan 15, 1945 • Age 81
+                                                </div>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-sm text-slate-500 italic">No contact info</td>
+<td class="px-6 py-4">
+<div class="flex items-center text-sm text-slate-600 dark:text-slate-400">
+<span class="material-symbols-rounded text-primary mr-1.5 text-lg">location_on</span>
+                                            Glen Waverley
+                                        </div>
+</td>
+<td class="px-6 py-4 text-right">
+<div class="flex items-center justify-end space-x-1">
+<button class="p-2 text-slate-400 hover:text-primary hover:bg-primary/10 rounded-lg transition-colors" title="View">
+<span class="material-symbols-rounded">visibility</span>
+</button>
+<button class="p-2 text-slate-400 hover:text-primary hover:bg-primary/10 rounded-lg transition-colors" title="Edit">
+<span class="material-symbols-rounded">edit</span>
+</button>
+<button class="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors" title="Delete">
+<span class="material-symbols-rounded">delete</span>
+</button>
+</div>
+</td>
+</tr>
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
+<td class="px-6 py-4 text-sm text-slate-400">2</td>
+<td class="px-6 py-4">
+<div class="flex items-center space-x-3">
+<div class="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold text-xs">LB</div>
+<div>
+<div class="text-sm font-semibold text-slate-900 dark:text-white">Lucas Badenhop</div>
+<div class="text-xs text-slate-400 flex items-center mt-0.5">
+<span class="material-symbols-rounded text-xs mr-1">cake</span> Nov 4, 2001 • Age 24
+                                                </div>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-sm text-slate-600 dark:text-slate-400">
+<div class="flex items-center">
+<span class="material-symbols-rounded text-primary mr-1.5 text-lg">call</span>
+                                            +61499187267
+                                        </div>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center text-sm text-slate-600 dark:text-slate-400">
+<span class="material-symbols-rounded text-primary mr-1.5 text-lg">location_on</span>
+                                            Chadstone
+                                        </div>
+</td>
+<td class="px-6 py-4 text-right">
+<div class="flex items-center justify-end space-x-1">
+<button class="p-2 text-slate-400 hover:text-primary hover:bg-primary/10 rounded-lg transition-colors">
+<span class="material-symbols-rounded">visibility</span>
+</button>
+<button class="p-2 text-slate-400 hover:text-primary hover:bg-primary/10 rounded-lg transition-colors">
+<span class="material-symbols-rounded">edit</span>
+</button>
+<button class="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors">
+<span class="material-symbols-rounded">delete</span>
+</button>
+</div>
+</td>
+</tr>
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
+<td class="px-6 py-4 text-sm text-slate-400">3</td>
+<td class="px-6 py-4">
+<div class="flex items-center space-x-3">
+<div class="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold text-xs">GB</div>
+<div>
+<div class="text-sm font-semibold text-slate-900 dark:text-white">Giverny Badenhop</div>
+<div class="text-xs text-slate-400 flex items-center mt-0.5">
+<span class="material-symbols-rounded text-xs mr-1">cake</span> Mar 20, 2004 • Age 21
+                                                </div>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-sm text-slate-600 dark:text-slate-400">
+<div class="flex items-center">
+<span class="material-symbols-rounded text-primary mr-1.5 text-lg">call</span>
+                                            +61468752015
+                                        </div>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center text-sm text-slate-600 dark:text-slate-400">
+<span class="material-symbols-rounded text-primary mr-1.5 text-lg">location_on</span>
+                                            Templestowe Lower
+                                        </div>
+</td>
+<td class="px-6 py-4 text-right">
+<div class="flex items-center justify-end space-x-1">
+<button class="p-2 text-slate-400 hover:text-primary hover:bg-primary/10 rounded-lg transition-colors">
+<span class="material-symbols-rounded">visibility</span>
+</button>
+<button class="p-2 text-slate-400 hover:text-primary hover:bg-primary/10 rounded-lg transition-colors">
+<span class="material-symbols-rounded">edit</span>
+</button>
+<button class="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors">
+<span class="material-symbols-rounded">delete</span>
+</button>
+</div>
+</td>
+</tr>
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
+<td class="px-6 py-4 text-sm text-slate-400">4</td>
+<td class="px-6 py-4">
+<div class="flex items-center space-x-3">
+<div class="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold text-xs">PB</div>
+<div>
+<div class="text-sm font-semibold text-slate-900 dark:text-white">Paul Bailey</div>
+<div class="text-xs text-slate-400 flex items-center mt-0.5">
+<span class="material-symbols-rounded text-xs mr-1">cake</span> May 3, 1991 • Age 34
+                                                </div>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-sm text-slate-500 italic">No contact info</td>
+<td class="px-6 py-4">
+<div class="flex items-center text-sm text-slate-600 dark:text-slate-400">
+<span class="material-symbols-rounded text-primary mr-1.5 text-lg">location_on</span>
+                                            Clayton
+                                        </div>
+</td>
+<td class="px-6 py-4 text-right">
+<div class="flex items-center justify-end space-x-1">
+<button class="p-2 text-slate-400 hover:text-primary hover:bg-primary/10 rounded-lg transition-colors">
+<span class="material-symbols-rounded">visibility</span>
+</button>
+<button class="p-2 text-slate-400 hover:text-primary hover:bg-primary/10 rounded-lg transition-colors">
+<span class="material-symbols-rounded">edit</span>
+</button>
+<button class="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors">
+<span class="material-symbols-rounded">delete</span>
+</button>
+</div>
+</td>
+</tr>
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
+<td class="px-6 py-4 text-sm text-slate-400">5</td>
+<td class="px-6 py-4">
+<div class="flex items-center space-x-3">
+<div class="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold text-xs">MB</div>
+<div>
+<div class="text-sm font-semibold text-slate-900 dark:text-white">Marah Bantales</div>
+<div class="text-xs text-slate-400 flex items-center mt-0.5">
+<span class="material-symbols-rounded text-xs mr-1">cake</span> Mar 10, 1993 • Age 32
+                                                </div>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-sm text-slate-600 dark:text-slate-400">
+<div class="flex items-center">
+<span class="material-symbols-rounded text-primary mr-1.5 text-lg">call</span>
+                                            +61451291116
+                                        </div>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center text-sm text-slate-600 dark:text-slate-400">
+<span class="material-symbols-rounded text-primary mr-1.5 text-lg">location_on</span>
+                                            Oakleigh South
+                                        </div>
+</td>
+<td class="px-6 py-4 text-right">
+<div class="flex items-center justify-end space-x-1">
+<button class="p-2 text-slate-400 hover:text-primary hover:bg-primary/10 rounded-lg transition-colors">
+<span class="material-symbols-rounded">visibility</span>
+</button>
+<button class="p-2 text-slate-400 hover:text-primary hover:bg-primary/10 rounded-lg transition-colors">
+<span class="material-symbols-rounded">edit</span>
+</button>
+<button class="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors">
+<span class="material-symbols-rounded">delete</span>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="px-6 py-4 bg-slate-50 dark:bg-slate-800/50 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
+<div class="text-sm text-slate-500">
+                            Showing <span class="font-medium">1</span> to <span class="font-medium">5</span> of <span class="font-medium">66</span> members
+                        </div>
+<div class="flex items-center space-x-2">
+<button class="p-2 rounded-lg border border-slate-200 dark:border-slate-700 text-slate-400 hover:bg-white dark:hover:bg-slate-800 disabled:opacity-50" disabled="">
+<span class="material-symbols-rounded">chevron_left</span>
+</button>
+<button class="px-3 py-1 rounded-lg bg-primary text-white text-sm font-medium">1</button>
+<button class="px-3 py-1 rounded-lg hover:bg-white dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 text-sm font-medium transition-colors">2</button>
+<button class="px-3 py-1 rounded-lg hover:bg-white dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 text-sm font-medium transition-colors">3</button>
+<span class="text-slate-400">...</span>
+<button class="px-3 py-1 rounded-lg hover:bg-white dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 text-sm font-medium transition-colors">14</button>
+<button class="p-2 rounded-lg border border-slate-200 dark:border-slate-700 text-slate-400 hover:bg-white dark:hover:bg-slate-800">
+<span class="material-symbols-rounded">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+<button class="fixed bottom-6 right-6 w-12 h-12 bg-white dark:bg-sidebar-dark border border-slate-200 dark:border-slate-800 rounded-full flex items-center justify-center shadow-lg text-slate-500 hover:text-primary transition-all z-50" onclick="document.documentElement.classList.toggle('dark')">
+<span class="material-symbols-rounded">dark_mode</span>
+</button>
+
+</body></html>
