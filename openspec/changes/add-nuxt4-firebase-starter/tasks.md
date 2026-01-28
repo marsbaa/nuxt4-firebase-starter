@@ -3,18 +3,21 @@
 ## 1. Project Setup & Configuration
 
 - [ ] 1.1 Install Nuxt 4 dependencies
-- [ ] 1.2 Install Firebase SDK (firebase, @vuefire/nuxt)
-- [ ] 1.3 Install and configure Tailwind CSS
-- [ ] 1.4 Install icon library (e.g., @iconify/vue, nuxt-icon, or @heroicons/vue)
-- [ ] 1.5 Create Firebase configuration file
-- [ ] 1.6 Configure Nuxt modules for Firebase, Tailwind, and icons
+- [ ] 1.2 Install Firebase SDK (firebase) for client-side authentication
+- [ ] 1.3 Install Firebase Admin SDK (firebase-admin) for server-side operations
+- [ ] 1.4 Install and configure Tailwind CSS
+- [ ] 1.5 Install icon library (e.g., @iconify/vue, nuxt-icon, or @heroicons/vue)
+- [ ] 1.6 Create Firebase configuration files (client and admin)
+- [ ] 1.7 Configure Nuxt modules for Tailwind and icons
 
 ## 2. Firebase Integration
 
-- [ ] 2.1 Create Firebase app initialization in plugins
-- [ ] 2.2 Set up Firebase Authentication service
-- [ ] 2.3 Set up Firestore database connection
-- [ ] 2.4 Create environment configuration for Firebase credentials
+- [ ] 2.1 Create Firebase client initialization plugin
+- [ ] 2.2 Create Firebase Admin initialization for server-side API routes
+- [ ] 2.3 Set up Firebase Authentication service (client-side)
+- [ ] 2.4 Set up Firestore database connection (client-side)
+- [ ] 2.5 Configure Firebase Admin for server-side Firestore operations
+- [ ] 2.6 Create environment configuration for Firebase credentials (client and admin service account)
 
 ## 3. Authentication System
 
@@ -80,11 +83,12 @@
 ## 10. Documentation & Examples
 
 - [ ] 10.1 Create README with setup instructions
-- [ ] 10.2 Document Firebase configuration steps
-- [ ] 10.3 Document icon system usage
-- [ ] 10.4 Add code comments and JSDoc
-- [ ] 10.5 Create example .env file
-- [ ] 10.6 Document project structure
+- [ ] 10.2 Document Firebase configuration steps (client SDK and Admin SDK)
+- [ ] 10.3 Document Firebase service account setup for Admin SDK
+- [ ] 10.4 Document icon system usage
+- [ ] 10.5 Add code comments and JSDoc
+- [ ] 10.6 Create example .env file with both client and admin credentials
+- [ ] 10.7 Document project structure
 
 ## 11. Testing & Validation
 
