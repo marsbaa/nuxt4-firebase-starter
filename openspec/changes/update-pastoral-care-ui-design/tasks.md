@@ -27,12 +27,12 @@
 
 ## 4. Authentication Pages
 
-- [ ] 4.1 Update `app/pages/login.vue` styling for calmer appearance
-- [ ] 4.2 Update `app/pages/register.vue` styling for welcoming experience
-- [ ] 4.3 Update `app/pages/change-password.vue` styling for consistency
-- [ ] 4.4 Revise copy and language for warm, supportive tone
-- [ ] 4.5 Update error messages to be gentle and helpful
-- [ ] 4.6 Test form interactions and validation states
+- [x] 4.1 Update `app/pages/login.vue` styling for calmer appearance
+- [x] 4.2 Update `app/pages/register.vue` styling for welcoming experience
+- [x] 4.3 Update `app/pages/change-password.vue` styling for consistency
+- [x] 4.4 Revise copy and language for warm, supportive tone
+- [x] 4.5 Update error messages to be gentle and helpful
+- [x] 4.6 Test form interactions and validation states
 
 ## 5. Dashboard Pages
 
