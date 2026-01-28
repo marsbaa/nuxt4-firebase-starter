@@ -144,13 +144,15 @@ export const useMembers = () => {
   const { user } = useFirebase();
   const toast = useToast();
 
-  // Get database from the Firebase plugin
-  const database = nuxtApp.$firebase?.rtdb as Database;
-
   // State
   const members = ref<Member[]>([]);
   const isLoading = ref(false);
   const error = ref<string | null>(null);
+
+  // Get database from the Firebase plugin
+  const getDatabase = (): Database | null => {
+    return (nuxtApp.$firebase?.rtdb as Database) || null;
+  };
 
   /**
    * Get error message for Firebase errors
@@ -171,8 +173,11 @@ export const useMembers = () => {
    * Fetch members list with real-time updates
    */
   const fetchMembers = (): (() => void) => {
+    const database = getDatabase();
     if (!database) {
       error.value = "Database not initialized";
+      toast.error("Database not initialized");
+      isLoading.value = false;
       return () => {};
     }
 
@@ -218,6 +223,7 @@ export const useMembers = () => {
     memberData: Omit<Member, "id" | "createdAt" | "createdBy" | "updatedAt">,
   ): Promise<{ success: boolean; error?: string; id?: string }> => {
     try {
+      const database = getDatabase();
       if (!database) {
         throw new Error("Database not initialized");
       }
@@ -257,6 +263,7 @@ export const useMembers = () => {
     memberData: Partial<Omit<Member, "id" | "createdAt" | "createdBy">>,
   ): Promise<{ success: boolean; error?: string }> => {
     try {
+      const database = getDatabase();
       if (!database) {
         throw new Error("Database not initialized");
       }
@@ -293,6 +300,7 @@ export const useMembers = () => {
     memberId: string,
   ): Promise<{ success: boolean; error?: string }> => {
     try {
+      const database = getDatabase();
       if (!database) {
         throw new Error("Database not initialized");
       }
