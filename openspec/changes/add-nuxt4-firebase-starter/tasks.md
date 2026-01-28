@@ -2,13 +2,13 @@
 
 ## 1. Project Setup & Configuration
 
-- [ ] 1.1 Install Nuxt 4 dependencies
-- [ ] 1.2 Install Firebase SDK (firebase) for client-side authentication
-- [ ] 1.3 Install Firebase Admin SDK (firebase-admin) for server-side operations
-- [ ] 1.4 Install and configure Tailwind CSS
-- [ ] 1.5 Install icon library (e.g., @iconify/vue, nuxt-icon, or @heroicons/vue)
-- [ ] 1.6 Create Firebase configuration files (client and admin)
-- [ ] 1.7 Configure Nuxt modules for Tailwind and icons
+- [x] 1.1 Install Nuxt 4 dependencies
+- [x] 1.2 Install Firebase SDK (firebase) for client-side authentication
+- [x] 1.3 Install Firebase Admin SDK (firebase-admin) for server-side operations
+- [x] 1.4 Install and configure Tailwind CSS
+- [x] 1.5 Install icon library (e.g., @iconify/vue, nuxt-icon, or @heroicons/vue)
+- [x] 1.6 Create Firebase configuration files (client and admin)
+- [x] 1.7 Configure Nuxt modules for Tailwind and icons
 
 ## 2. Firebase Integration
 
