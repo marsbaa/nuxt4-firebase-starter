@@ -11,17 +11,18 @@ definePageMeta({
     <header class="page-header">
       <h1 class="page-title">Settings</h1>
       <p class="page-description">
-        Manage your account settings and preferences
+        Manage your account and how you use this space
       </p>
     </header>
 
     <div class="content-card">
       <div class="placeholder-content">
         <Icon name="mdi:cog-outline" class="placeholder-icon" />
-        <h2 class="placeholder-title">Coming Soon</h2>
+        <h2 class="placeholder-title">Settings Coming Soon</h2>
         <p class="placeholder-text">
-          This settings page is currently under development. Additional settings
-          and preferences will be added here in future updates.
+          Additional settings will be available here as we continue developing
+          this space. For now, you can manage your profile and update your
+          password from the navigation menu.
         </p>
       </div>
     </div>
@@ -31,6 +32,7 @@ definePageMeta({
 <style scoped>
 @import url("https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;600&family=Work+Sans:wght@400;500;600&display=swap");
 
+/* Page Structure */
 .page-container {
   width: 100%;
 }
@@ -56,21 +58,24 @@ definePageMeta({
   line-height: 1.5;
 }
 
+/* Content Card */
 .content-card {
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10px);
   border-radius: 20px;
-  padding: 4rem 2.5rem;
+  padding: 2.5rem;
   box-shadow:
     0 8px 32px rgba(0, 0, 0, 0.04),
     0 2px 8px rgba(0, 0, 0, 0.02);
   border: 1px solid rgba(255, 255, 255, 0.8);
 }
 
+/* Placeholder */
 .placeholder-content {
   text-align: center;
   max-width: 500px;
   margin: 0 auto;
+  padding: 1.5rem 0;
 }
 
 .placeholder-icon {
@@ -98,13 +103,18 @@ definePageMeta({
   line-height: 1.6;
 }
 
+/* Responsive */
 @media (max-width: 640px) {
   .content-card {
-    padding: 3rem 1.5rem;
+    padding: 1.5rem;
   }
 
   .page-title {
     font-size: 2rem;
+  }
+
+  .placeholder-content {
+    padding: 1rem 0;
   }
 
   .placeholder-icon {
