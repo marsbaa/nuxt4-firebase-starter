@@ -47,11 +47,11 @@
 
 ## 6. Dashboard
 
-- [ ] 6.1 Create dashboard layout component
-- [ ] 6.2 Create dashboard home page
-- [ ] 6.3 Add navigation menu
-- [ ] 6.4 Display user welcome message
-- [ ] 6.5 Add quick links to profile and settings
+- [x] 6.1 Create dashboard layout component
+- [x] 6.2 Create dashboard home page
+- [x] 6.3 Add navigation menu
+- [x] 6.4 Display user welcome message
+- [x] 6.5 Add quick links to profile and settings
 
 ## 7. Icon System
 
