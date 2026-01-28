@@ -109,7 +109,7 @@ const pageTitle = computed(() => {
       <!-- Sidebar header -->
       <div class="sidebar-header">
         <div class="sidebar-logo">
-          <Icon name="mdi:heart-outline" class="logo-icon" />
+          <Icon name="heroicons:heart" class="logo-icon" />
           <span class="logo-text">Pastoral Care</span>
         </div>
       </div>
