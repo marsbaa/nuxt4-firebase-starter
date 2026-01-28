@@ -44,11 +44,11 @@
 
 ## 6. Profile and Settings Pages
 
-- [ ] 6.1 Update `app/pages/profile.vue` styling for consistency
-- [ ] 6.2 Update `app/pages/settings.vue` styling for consistency
-- [ ] 6.3 Ensure form elements use new input styling
-- [ ] 6.4 Update section headers and spacing throughout
-- [ ] 6.5 Test page layouts and interactions
+- [x] 6.1 Update `app/pages/profile.vue` styling for consistency
+- [x] 6.2 Update `app/pages/settings.vue` styling for consistency
+- [x] 6.3 Ensure form elements use new input styling
+- [x] 6.4 Update section headers and spacing throughout
+- [x] 6.5 Test page layouts and interactions
 
 ## 7. Language and Copy Updates
 
