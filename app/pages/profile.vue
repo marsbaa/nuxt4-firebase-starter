@@ -238,7 +238,7 @@ const userInitials = computed(() => {
 
         <!-- Quick Links -->
         <div class="quick-links">
-          <NuxtLink to="/settings" class="quick-link">
+          <NuxtLink to="/change-password" class="quick-link">
             <Icon name="mdi:lock-reset" class="link-icon" />
             <span>Change Password</span>
             <Icon name="mdi:chevron-right" class="chevron-icon" />
