@@ -2,11 +2,11 @@
 
 ## 1. Theme Configuration
 
-- [ ] 1.1 Update color palette in `tailwind.config.ts` with pastoral earth tones
-- [ ] 1.2 Configure custom spacing scale if needed for generous whitespace
-- [ ] 1.3 Update font configuration (weights, line heights, tracking)
-- [ ] 1.4 Add custom color names (sage, taupe, warm-gray) to theme
-- [ ] 1.5 Test theme changes render correctly
+- [x] 1.1 Update color palette in `tailwind.config.ts` with pastoral earth tones
+- [x] 1.2 Configure custom spacing scale if needed for generous whitespace
+- [x] 1.3 Update font configuration (weights, line heights, tracking)
+- [x] 1.4 Add custom color names (sage, taupe, warm-gray) to theme
+- [x] 1.5 Test theme changes render correctly
 
 ## 2. Base Component Updates
 
