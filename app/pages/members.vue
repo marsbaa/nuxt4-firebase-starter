@@ -12,7 +12,7 @@ const {
   members,
   isLoading,
   error,
-  startPolling,
+  fetchMembers,
   deleteMember,
   searchMembers,
   sortMembersByName,
@@ -75,23 +75,18 @@ watch(searchQuery, () => {
 });
 
 // Lifecycle
-let unsubscribe: (() => void) | null = null;
-
 onMounted(() => {
   console.log("[Members Page] Component mounted");
   console.log("[Members Page] User:", user.value);
 
-  // Start polling for members data
-  unsubscribe = startPolling();
+  // Fetch members data once on mount
+  fetchMembers();
 
-  console.log("[Members Page] Polling initiated, isLoading:", isLoading.value);
+  console.log("[Members Page] Fetch initiated, isLoading:", isLoading.value);
 });
 
 onUnmounted(() => {
   console.log("[Members Page] Component unmounting");
-  if (unsubscribe) {
-    unsubscribe();
-  }
   clearError();
 });
 
@@ -191,7 +186,7 @@ const handlePageChange = (page: number) => {
     <div v-else-if="error" class="error-state">
       <Icon name="mdi:alert-circle-outline" class="error-icon" />
       <p class="error-text">{{ error }}</p>
-      <AppButton @click="startPolling" variant="secondary">
+      <AppButton @click="fetchMembers" variant="secondary">
         Try Again
       </AppButton>
     </div>
