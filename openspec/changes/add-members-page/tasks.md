@@ -2,11 +2,11 @@
 
 ## 1. Data Layer
 
-- [ ] 1.1 Define TypeScript interfaces for Member data model (matching RTDB structure)
-- [ ] 1.2 Create `useMembers.ts` composable for CRUD operations with Firebase RTDB
-- [ ] 1.3 Implement real-time member list fetching from `/members` path
-- [ ] 1.4 Create utility functions to parse "LASTNAME, FIRSTNAME" name format
-- [ ] 1.5 Create utility functions to calculate age from birthday string
+- [x] 1.1 Define TypeScript interfaces for Member data model (matching RTDB structure)
+- [x] 1.2 Create `useMembers.ts` composable for CRUD operations with Firebase RTDB
+- [x] 1.3 Implement real-time member list fetching from `/members` path
+- [x] 1.4 Create utility functions to parse "LASTNAME, FIRSTNAME" name format
+- [x] 1.5 Create utility functions to calculate age from birthday string
 
 ## 2. Components
 
