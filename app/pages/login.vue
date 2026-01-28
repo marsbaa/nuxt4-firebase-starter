@@ -20,13 +20,13 @@ const validateForm = (): boolean => {
   const errors: { email?: string; password?: string } = {};
 
   if (!email.value) {
-    errors.email = "Email is required";
+    errors.email = "Please enter your email address";
   } else if (!validateEmail(email.value)) {
-    errors.email = "Please enter a valid email address";
+    errors.email = "Please check your email address";
   }
 
   if (!password.value) {
-    errors.password = "Password is required";
+    errors.password = "Please enter your password";
   }
 
   validationErrors.value = errors;

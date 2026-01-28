@@ -1,71 +1,96 @@
-# Nuxt 4 + Firebase Starter
+# Pastoral Care App
 
-A production-ready starter template for building authenticated web applications with Nuxt 4 and Firebase. This template includes a complete authentication system, user profile management, and a modern UI built with Tailwind CSS.
+A purpose-built web application for pastors, chaplains, care coordinators, and ministry leaders to support their care work. Built with Nuxt 4 and Firebase, this application provides a calm, warm, and secure environment for managing pastoral relationships and sensitive information.
+
+## Purpose
+
+Pastoral care work involves sensitive conversations, confidential information, and the emotional weight of walking with people through life's challenges. This application is designed to support that sacred work with:
+
+- **Calm Interface** - Reduced visual noise and generous spacing for focus and peace
+- **Warm Design** - Earth tones and gentle styling that reflect the human nature of care
+- **Trust & Safety** - Secure authentication and data handling for confidential information
+- **Purposeful Tools** - Features designed to support care relationships, not metrics or productivity
 
 ## Features
 
-- 🔐 **Firebase Authentication** - Email/password authentication with login, registration, and password management
-- 👤 **User Profile Management** - Complete profile system with Firestore integration
-- 🎨 **Tailwind CSS** - Modern, responsive UI components
-- 🔔 **Toast Notifications** - User-friendly feedback system
-- 🎯 **Icon System** - Integrated icon library with accessibility support
-- 🛡️ **Protected Routes** - Authentication middleware for secure pages
-- 📱 **Responsive Design** - Mobile-first approach
-- 🚀 **Nuxt 4** - Built on the latest Nuxt framework
+- 🔐 **Secure Authentication** - Firebase-powered email/password authentication with privacy-focused design
+- 👤 **Profile Management** - Personal profile system with Firestore integration
+- 🎨 **Pastoral Design System** - Warm earth tones, generous spacing, and calming visual language
+- 🔔 **Gentle Notifications** - Supportive feedback system with respectful messaging
+- 🛡️ **Protected Routes** - Secure access to sensitive information
+- 📱 **Responsive Design** - Thoughtfully designed for mobile, tablet, and desktop use
+- ♿ **Accessible** - WCAG 2.1 AA compliant for inclusive access
+- 🚀 **Modern Stack** - Built on Nuxt 4 for performance and developer experience
+
+## Design Philosophy
+
+This application is designed to feel like **a quiet room, not an office system**. The interface prioritizes:
+
+- **Breathing room over information density** - Space to think and reflect
+- **Warmth over efficiency** - Human connection over transactions
+- **Clarity over complexity** - Clear guidance without overwhelming detail
+- **Dignity over urgency** - Respectful pacing that honors the weight of care work
+
+The visual design uses soft earth tones, generous whitespace, gentle curves, and supportive language to create a calm, trustworthy environment for sensitive work.
 
 ## Project Structure
 
 ```
-nuxt4-firebase-starter/
+care-covenant-app/
 ├── app/
 │   ├── components/          # Reusable UI components
-│   │   ├── AppAlert.vue     # Alert/notification component
-│   │   ├── AppButton.vue    # Button component
-│   │   ├── AppCard.vue      # Card container component
-│   │   ├── AppIcon.vue      # Icon component wrapper
-│   │   ├── AppInput.vue     # Form input component
+│   │   ├── AppAlert.vue     # Gentle alert/notification component
+│   │   ├── AppButton.vue    # Soft, accessible button component
+│   │   ├── AppCard.vue      # Card container with warm styling
+│   │   ├── AppIcon.vue      # Icon wrapper with rounded styling
+│   │   ├── AppInput.vue     # Form input with supportive design
 │   │   └── ToastContainer.vue # Toast notification system
-│   ├── composables/         # Vue composables
-│   │   ├── useAuth.ts       # Authentication logic
+│   ├── composables/         # Vue composables for logic
+│   │   ├── useAuth.ts       # Authentication management
 │   │   ├── useFirebase.ts   # Firebase client initialization
-│   │   ├── useProfile.ts    # Profile management
-│   │   └── useToast.ts      # Toast notification system
+│   │   ├── useProfile.ts    # Profile data management
+│   │   └── useToast.ts      # Notification system
 │   ├── layouts/
-│   │   └── dashboard.vue    # Dashboard layout with navigation
+│   │   └── dashboard.vue    # Main dashboard layout with navigation
 │   ├── middleware/
 │   │   └── auth.ts          # Authentication route protection
 │   ├── pages/               # Application pages
-│   │   ├── index.vue        # Home/landing page
-│   │   ├── login.vue        # Login page
-│   │   ├── register.vue     # Registration page
-│   │   ├── dashboard.vue    # User dashboard
-│   │   ├── profile.vue      # Profile management
-│   │   ├── settings.vue     # User settings
-│   │   └── change-password.vue # Password change
+│   │   ├── index.vue        # Welcome/landing page
+│   │   ├── login.vue        # Sign in page
+│   │   ├── register.vue     # Account creation page
+│   │   ├── dashboard.vue    # Main dashboard home
+│   │   ├── profile.vue      # User profile management
+│   │   ├── settings.vue     # Account settings
+│   │   └── change-password.vue # Password management
 │   ├── plugins/
 │   │   └── firebase.client.ts # Firebase client plugin
-│   └── app.vue              # Root app component
+│   └── app.vue              # Root application component
 ├── server/
 │   └── utils/
-│       └── firebase-admin.ts # Firebase Admin SDK initialization
+│       └── firebase-admin.ts # Firebase Admin SDK (server-side)
+├── openspec/                # OpenSpec specifications and proposals
+│   ├── project.md           # Project context and conventions
+│   ├── specs/               # Current feature specifications
+│   └── changes/             # Active and archived change proposals
 ├── .env.example             # Environment variables template
-└── nuxt.config.ts           # Nuxt configuration
+├── tailwind.config.ts       # Pastoral design system configuration
+└── nuxt.config.ts           # Nuxt framework configuration
 ```
 
 ## Prerequisites
 
-- Node.js 18+ or higher
-- npm, pnpm, yarn, or bun
-- A Firebase project (see Firebase Setup below)
+- **Node.js** 18 or higher
+- **npm**, pnpm, yarn, or bun
+- **Firebase Project** with Authentication and Firestore enabled
 
-## Quick Start
+## Getting Started
 
-### 1. Clone & Install
+### 1. Clone and Install
 
 ```bash
-# Clone the repository (or use as template)
+# Clone the repository
 git clone <your-repo-url>
-cd nuxt4-firebase-starter
+cd care-covenant-app
 
 # Install dependencies
 npm install
@@ -75,208 +100,197 @@ npm install
 
 #### Create Firebase Project
 
-1. Go to the [Firebase Console](https://console.firebase.google.com/)
-2. Click "Add project" and follow the setup wizard
-3. Once created, click on your project to open the dashboard
+1. Visit the [Firebase Console](https://console.firebase.google.com/)
+2. Click **"Add project"** and complete the setup wizard
+3. Open your new project dashboard
 
 #### Enable Authentication
 
-1. In the Firebase Console, navigate to **Build > Authentication**
-2. Click "Get Started"
-3. Go to the **Sign-in method** tab
-4. Enable **Email/Password** authentication
-5. Click "Save"
+1. Navigate to **Build > Authentication**
+2. Click **"Get Started"**
+3. Go to the **"Sign-in method"** tab
+4. Enable **"Email/Password"** authentication
+5. Save changes
 
 #### Create Firestore Database
 
 1. Navigate to **Build > Firestore Database**
-2. Click "Create database"
-3. Choose **Start in test mode** (for development) or **production mode** (for production)
-4. Select a location for your database
-5. Click "Enable"
+2. Click **"Create database"**
+3. Choose **"Start in test mode"** (development) or **"Production mode"** (production)
+4. Select a database location close to your users
+5. Click **"Enable"**
 
-#### Get Client SDK Configuration
+#### Get Firebase Credentials
 
-1. In the Firebase Console, go to **Project Settings** (gear icon)
-2. Scroll down to "Your apps" section
-3. Click on the web icon `</>` to add a web app
-4. Register your app with a nickname
-5. Copy the Firebase configuration object - you'll need these values:
-   - `apiKey`
-   - `authDomain`
-   - `projectId`
-   - `storageBucket`
-   - `messagingSenderId`
-   - `appId`
+**Client SDK (Public)**:
 
-#### Generate Service Account (Admin SDK)
+1. Go to **Project Settings** (gear icon)
+2. Scroll to **"Your apps"**
+3. Click the web icon `</>` to add a web app
+4. Register your app and copy the configuration values
 
-1. In Firebase Console, go to **Project Settings > Service accounts**
-2. Click "Generate new private key"
-3. Click "Generate key" - this downloads a JSON file
-4. Open the JSON file and note these values:
-   - `project_id`
-   - `client_email`
-   - `private_key`
+**Admin SDK (Server-side)**:
 
-### 3. Configure Environment Variables
+1. Go to **Project Settings > Service accounts**
+2. Click **"Generate new private key"**
+3. Download the JSON file
+4. Extract `project_id`, `client_email`, and `private_key`
 
-Create a `.env` file in the root directory:
+### 3. Configure Environment
+
+Create a `.env` file from the template:
 
 ```bash
 cp .env.example .env
 ```
 
-Edit `.env` and add your Firebase credentials:
+Edit `.env` with your Firebase credentials:
 
 ```env
-# Firebase Client SDK Configuration (Public)
-NUXT_PUBLIC_FIREBASE_API_KEY=your_firebase_api_key
-NUXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your_project_id.firebaseapp.com
+# Firebase Client SDK (Public - exposed to browser)
+NUXT_PUBLIC_FIREBASE_API_KEY=your_api_key
+NUXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com
 NUXT_PUBLIC_FIREBASE_PROJECT_ID=your_project_id
-NUXT_PUBLIC_FIREBASE_STORAGE_BUCKET=your_project_id.appspot.com
-NUXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=your_messaging_sender_id
+NUXT_PUBLIC_FIREBASE_STORAGE_BUCKET=your_project.appspot.com
+NUXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
 NUXT_PUBLIC_FIREBASE_APP_ID=your_app_id
 
-# Firebase Admin SDK Configuration (Server-side only - Keep Secret!)
+# Firebase Admin SDK (Server-only - KEEP SECRET)
 FIREBASE_PROJECT_ID=your_project_id
-FIREBASE_CLIENT_EMAIL=your_service_account_email@your_project_id.iam.gserviceaccount.com
-FIREBASE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\nYour_Private_Key_Here\n-----END PRIVATE KEY-----\n"
+FIREBASE_CLIENT_EMAIL=firebase-adminsdk@your_project.iam.gserviceaccount.com
+FIREBASE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\nYour_Key_Here\n-----END PRIVATE KEY-----\n"
 ```
 
-**Important Notes:**
+**Security Notes**:
 
-- The `NUXT_PUBLIC_*` variables are exposed to the client
-- Admin SDK variables (`FIREBASE_*`) are server-only and never exposed to the client
-- Keep your private key secure and never commit it to version control
-- The private key must include the full header/footer with `\n` newline characters
+- `NUXT_PUBLIC_*` variables are safe to expose to the browser
+- `FIREBASE_*` variables are server-only and must remain secret
+- Never commit `.env` to version control
+- The private key must include newline characters (`\n`)
 
 ### 4. Run Development Server
 
-Start the development server on `http://localhost:3000`:
+Start the local development server:
 
 ```bash
 npm run dev
 ```
 
-The app will automatically open in your browser. You can now:
+The app will be available at `http://localhost:3000`
 
-- Register a new account at `/register`
-- Login at `/login`
-- Access the dashboard at `/dashboard`
+You can now:
 
-## Icon System
+- Create an account at [`/register`](http://localhost:3000/register)
+- Sign in at [`/login`](http://localhost:3000/login)
+- Access the dashboard at [`/dashboard`](http://localhost:3000/dashboard)
 
-This project uses [Iconify](https://iconify.design/) for icons via the `AppIcon` component.
+## Development
 
-### Using Icons
+### Component Usage
 
-```vue
-<template>
-  <!-- Basic icon -->
-  <AppIcon name="mdi:account" />
-
-  <!-- With custom size -->
-  <AppIcon name="mdi:email" class="w-6 h-6" />
-
-  <!-- With custom color -->
-  <AppIcon name="mdi:check" class="text-green-600" />
-
-  <!-- Loading state -->
-  <AppIcon name="mdi:loading" class="animate-spin" />
-</template>
-```
-
-### Available Icon Collections
-
-The project is configured to use Material Design Icons (mdi), but you can use any [Iconify collection](https://icon-sets.iconify.design/):
-
-- `mdi:icon-name` - Material Design Icons
-- `heroicons:icon-name` - Heroicons
-- `ph:icon-name` - Phosphor Icons
-- `lucide:icon-name` - Lucide Icons
-- And 100+ more...
-
-### Accessibility
-
-All icons include proper ARIA labels by default. The `AppIcon` component automatically handles accessibility attributes.
-
-## UI Components
-
-### AppButton
+#### AppButton
 
 ```vue
-<AppButton variant="primary" @click="handleClick">
-  Click Me
+<AppButton variant="primary" @click="handleSave">
+  Save changes
 </AppButton>
 
 <!-- Variants: primary, secondary, danger -->
-<AppButton variant="danger" :loading="isLoading">
-  Delete
+<AppButton variant="secondary" :loading="isLoading">
+  Cancel
 </AppButton>
 ```
 
-### AppInput
+#### AppInput
 
 ```vue
 <AppInput
   v-model="email"
   type="email"
-  label="Email"
-  icon="mdi:email"
-  placeholder="Enter your email"
+  label="Email address"
+  icon="heroicons:envelope"
+  placeholder="your@email.com"
   :error="emailError"
 />
 ```
 
-### AppCard
+#### AppCard
 
 ```vue
 <AppCard>
   <template #header>
-    <h2>Card Title</h2>
+    <h2 class="text-lg font-medium text-stone-800">Card Title</h2>
   </template>
   <template #default>
-    Card content goes here
+    <p class="text-stone-600">Card content with warm styling</p>
   </template>
 </AppCard>
 ```
 
-### AppAlert
+#### AppAlert
 
 ```vue
 <AppAlert type="success" :dismissible="true">
-  Operation completed successfully!
+  Your profile has been updated.
 </AppAlert>
 
 <!-- Types: success, error, warning, info -->
 ```
 
-## Authentication
-
-### useAuth Composable
+### Authentication Composable
 
 ```typescript
-const { user, loading, signIn, signUp, signOut } = useAuth();
+const { user, loading, signIn, signUp, signOut, changePassword } = useAuth();
 
 // Sign in
 await signIn(email, password);
 
-// Sign up
+// Create account
 await signUp(email, password);
 
 // Sign out
 await signOut();
 
-// Check auth state
+// Change password
+await changePassword(currentPassword, newPassword);
+
+// Check authentication state
 if (user.value) {
-  console.log("User is logged in:", user.value.email);
+  console.log("Signed in as:", user.value.email);
 }
+```
+
+### Profile Management
+
+```typescript
+const { profile, loading, updateProfile } = useProfile();
+
+// Update profile
+await updateProfile({
+  displayName: "Pastor John",
+  bio: "Serving at Community Church",
+  photoURL: "https://example.com/photo.jpg",
+});
+
+// Access profile data
+console.log(profile.value?.displayName);
+```
+
+### Toast Notifications
+
+```typescript
+const toast = useToast();
+
+// Show supportive messages
+toast.success("Changes saved successfully");
+toast.error("Something went wrong—please try again");
+toast.info("Check your email for a verification link");
+toast.warning("Your session will expire soon");
 ```
 
 ### Protected Routes
 
-Add the auth middleware to any page that requires authentication:
+Add authentication middleware to pages requiring login:
 
 ```vue
 <script setup lang="ts">
@@ -286,42 +300,63 @@ definePageMeta({
 </script>
 ```
 
-## Profile Management
+### Icon System
 
-### useProfile Composable
+This project uses [Iconify](https://iconify.design/) with [Heroicons](https://heroicons.com/) for a warm, rounded icon style:
 
-```typescript
-const { profile, loading, updateProfile } = useProfile();
+```vue
+<template>
+  <!-- Basic icon -->
+  <AppIcon name="heroicons:user-circle" />
 
-// Update profile
-await updateProfile({
-  displayName: "John Doe",
-  bio: "Software developer",
-  photoURL: "https://example.com/photo.jpg",
-});
+  <!-- With custom size -->
+  <AppIcon name="heroicons:envelope" class="w-6 h-6" />
 
-// Access profile data
-console.log(profile.value?.displayName);
+  <!-- With custom color -->
+  <AppIcon name="heroicons:check-circle" class="text-green-600" />
+</template>
 ```
 
-## Toast Notifications
+Browse icons at [icon-sets.iconify.design](https://icon-sets.iconify.design/). Prefer rounded, outline-style icon families for consistency with the pastoral design language.
 
-### useToast Composable
+## Firestore Security Rules
 
-```typescript
-const toast = useToast();
+For production, implement proper security rules:
 
-// Show success
-toast.success("Profile updated successfully!");
+```javascript
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Users can only access their own profile
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+  }
+}
+```
 
-// Show error
-toast.error("Failed to update profile");
+Add these rules in the Firebase Console under **Firestore Database > Rules**.
 
-// Show info
-toast.info("Check your email for verification");
+## Testing
 
-// Show warning
-toast.warning("Your session is about to expire");
+This project includes configurations for unit, component, and end-to-end testing:
+
+```bash
+# Run all unit and component tests
+npm run test
+
+# Run tests in watch mode
+npm run test:watch
+
+# Run specific test suites
+npm run test:unit
+npm run test:nuxt
+
+# Run end-to-end tests
+npm run test:e2e
+
+# Run E2E tests with UI
+npm run test:e2e:ui
 ```
 
 ## Production Build
@@ -340,74 +375,91 @@ npm run preview
 
 ## Deployment
 
-### Environment Variables in Production
+### Environment Variables
 
-Ensure all environment variables are properly configured in your hosting platform:
+Configure all environment variables in your hosting platform:
 
-- Vercel: Add variables in Project Settings > Environment Variables
-- Netlify: Add variables in Site Settings > Build & Deploy > Environment
-- Firebase Hosting: Use `.env` files or Firebase Functions config
+- **Vercel**: Project Settings > Environment Variables
+- **Netlify**: Site Settings > Build & Deploy > Environment
+- **Firebase Hosting**: Use Firebase Functions config or `.env` files
 
-### Security Considerations
+### Security Checklist
 
-- Never commit `.env` to version control
-- Use environment variables for all sensitive credentials
-- Enable Firebase Security Rules for Firestore
-- Set up proper CORS policies
-- Use HTTPS in production
-- Implement rate limiting for authentication endpoints
+- ✅ Never commit `.env` or service account keys to version control
+- ✅ Use environment variables for all sensitive credentials
+- ✅ Configure Firestore security rules for production
+- ✅ Enable HTTPS (required for Firebase Authentication)
+- ✅ Set appropriate CORS policies
+- ✅ Consider rate limiting for authentication endpoints
+- ✅ Regularly review Firebase Authentication settings
 
-### Recommended Firestore Security Rules
+### Performance
 
-```javascript
-rules_version = '2';
-service cloud.firestore {
-  match /databases/{database}/documents {
-    // Users can only read/write their own profile
-    match /users/{userId} {
-      allow read, write: if request.auth != null && request.auth.uid == userId;
-    }
-  }
-}
-```
+- Enable Firebase hosting CDN for static assets
+- Configure proper caching headers
+- Monitor Firebase quotas and usage
+- Consider Firebase Performance Monitoring
 
-## Testing
+## OpenSpec Workflow
 
-The project includes test configurations for:
+This project uses [OpenSpec](https://openspec.dev/) for change management. When proposing changes:
 
-- Unit tests with Vitest
-- Component tests with Vitest
-- E2E tests with Playwright
+1. Create a proposal in [`openspec/changes/`](openspec/changes/)
+2. Document specifications and design decisions
+3. Create tasks and track progress
+4. Archive completed changes
 
-Run tests:
-
-```bash
-# Unit and component tests
-npm run test
-
-# E2E tests
-npm run test:e2e
-```
+See [`openspec/AGENTS.md`](openspec/AGENTS.md) for detailed workflow instructions.
 
 ## Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+Contributions should align with the pastoral care mission and design philosophy:
+
+- Maintain calm, warm visual design
+- Use respectful, supportive language
+- Prioritize accessibility and inclusivity
+- Follow existing code patterns and conventions
+- Add tests for new functionality
+
+## Design System
+
+The application uses a custom Tailwind configuration with pastoral design tokens:
+
+- **Colors**: Warm earth tones (sage, taupe, stone) with soft semantic colors
+- **Typography**: Softer weights with generous line height for readability
+- **Spacing**: Increased whitespace and breathing room throughout
+- **Components**: Gentle curves, subtle shadows, and warm interactions
+
+See [`openspec/changes/update-pastoral-care-ui-design/STYLE_GUIDE.md`](openspec/changes/update-pastoral-care-ui-design/STYLE_GUIDE.md) for complete design guidelines.
+
+## Technology Stack
+
+- **Framework**: [Nuxt 4](https://nuxt.com/) - Vue 3 meta-framework
+- **Authentication**: [Firebase Authentication](https://firebase.google.com/docs/auth)
+- **Database**: [Cloud Firestore](https://firebase.google.com/docs/firestore)
+- **Styling**: [Tailwind CSS](https://tailwindcss.com/) with custom pastoral theme
+- **Icons**: [Iconify](https://iconify.design/) via [@nuxt/icon](https://nuxt.com/modules/icon)
+- **Testing**: [Vitest](https://vitest.dev/) and [Playwright](https://playwright.dev/)
+
+## Support
+
+For questions and issues:
+
+- Review the [Nuxt documentation](https://nuxt.com/docs)
+- Check the [Firebase documentation](https://firebase.google.com/docs)
+- Open an issue on GitHub
+- Review [`openspec/project.md`](openspec/project.md) for project context
 
 ## License
 
 MIT
 
-## Support
-
-For issues and questions:
-
-- Check the [Nuxt documentation](https://nuxt.com/docs)
-- Check the [Firebase documentation](https://firebase.google.com/docs)
-- Open an issue on GitHub
-
 ## Acknowledgments
 
-- Built with [Nuxt 4](https://nuxt.com/)
-- Authentication powered by [Firebase](https://firebase.google.com/)
-- Styled with [Tailwind CSS](https://tailwindcss.com/)
-- Icons from [Iconify](https://iconify.design/)
+Built with care for those who care for others.
+
+- Framework: [Nuxt 4](https://nuxt.com/)
+- Authentication: [Firebase](https://firebase.google.com/)
+- Design: [Tailwind CSS](https://tailwindcss.com/)
+- Icons: [Iconify](https://iconify.design/) + [Heroicons](https://heroicons.com/)
+- Change Management: [OpenSpec](https://openspec.dev/)

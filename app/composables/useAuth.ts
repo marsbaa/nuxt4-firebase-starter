@@ -31,24 +31,22 @@ export const useAuth = () => {
    */
   const getErrorMessage = (errorCode: string): string => {
     const errorMessages: Record<string, string> = {
-      "auth/invalid-email": "Please enter a valid email address",
-      "auth/user-disabled": "This account has been disabled",
-      "auth/user-not-found": "No account found with this email",
-      "auth/wrong-password": "Incorrect password",
-      "auth/invalid-credential": "Invalid email or password",
+      "auth/invalid-email": "Please check your email address",
+      "auth/user-disabled": "This account is currently disabled",
+      "auth/user-not-found": "We couldn't find an account with this email",
+      "auth/wrong-password": "The password doesn't match our records",
+      "auth/invalid-credential":
+        "The email or password doesn't match our records",
       "auth/email-already-in-use": "An account with this email already exists",
-      "auth/weak-password": "Password should be at least 6 characters",
-      "auth/too-many-requests": "Too many attempts. Please try again later",
-      "auth/network-request-failed":
-        "Network error. Please check your connection",
+      "auth/weak-password":
+        "Please choose a password with at least 6 characters",
+      "auth/too-many-requests": "Please wait a moment before trying again",
+      "auth/network-request-failed": "Please check your internet connection",
       "auth/requires-recent-login":
-        "Please log out and log back in to perform this action",
+        "For security, please sign out and sign in again",
     };
 
-    return (
-      errorMessages[errorCode] ||
-      "An unexpected error occurred. Please try again"
-    );
+    return errorMessages[errorCode] || "Something went wrong. Please try again";
   };
 
   /**
@@ -63,7 +61,7 @@ export const useAuth = () => {
 
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      toast.success("Successfully logged in!");
+      toast.success("Welcome back");
       return { success: true };
     } catch (err) {
       const authError = err as AuthError;
@@ -88,7 +86,7 @@ export const useAuth = () => {
 
     try {
       await createUserWithEmailAndPassword(auth, email, password);
-      toast.success("Account created successfully!");
+      toast.success("Your account has been created");
       return { success: true };
     } catch (err) {
       const authError = err as AuthError;
@@ -111,7 +109,7 @@ export const useAuth = () => {
     try {
       await signOut(auth);
       await router.push("/login");
-      toast.info("You have been logged out");
+      toast.info("You have been signed out");
       return { success: true };
     } catch (err) {
       const authError = err as AuthError;
@@ -149,7 +147,7 @@ export const useAuth = () => {
 
       // Update password
       await updatePassword(currentUser, newPassword);
-      toast.success("Password changed successfully!");
+      toast.success("Your password has been updated");
       return { success: true };
     } catch (err) {
       const authError = err as AuthError;
@@ -160,9 +158,9 @@ export const useAuth = () => {
         authError.code === "auth/wrong-password" ||
         authError.code === "auth/invalid-credential"
       ) {
-        errorMessage = "Current password is incorrect";
+        errorMessage = "The current password doesn't match our records";
       } else if (authError.code === "auth/weak-password") {
-        errorMessage = "New password should be at least 6 characters";
+        errorMessage = "Please choose a password with at least 6 characters";
       } else {
         errorMessage = getErrorMessage(authError.code);
       }

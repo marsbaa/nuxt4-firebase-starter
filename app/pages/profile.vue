@@ -62,12 +62,13 @@ const handleUpdateProfile = async () => {
 
   // Validate display name
   if (!displayName.value.trim()) {
-    validationError.value = "Display name cannot be empty";
+    validationError.value = "Please enter a display name";
     return;
   }
 
   if (displayName.value.length > 50) {
-    validationError.value = "Display name must be less than 50 characters";
+    validationError.value =
+      "Please choose a shorter name (50 characters or less)";
     return;
   }
 
@@ -77,7 +78,7 @@ const handleUpdateProfile = async () => {
 
   if (result.success) {
     isEditMode.value = false;
-    successMessage.value = "Profile updated successfully!";
+    successMessage.value = "Your profile has been updated";
 
     // Clear success message after 5 seconds
     setTimeout(() => {
@@ -107,8 +108,8 @@ const userInitials = computed(() => {
 <template>
   <div class="page-container">
     <header class="page-header">
-      <h1 class="page-title">Profile</h1>
-      <p class="page-description">Manage your personal information</p>
+      <h1 class="page-title">Your Profile</h1>
+      <p class="page-description">View and update your personal information</p>
     </header>
 
     <div v-if="isLoading" class="loading-container">
@@ -186,7 +187,9 @@ const userInitials = computed(() => {
           <p class="info-value-readonly">
             {{ user?.email || "Not available" }}
           </p>
-          <p class="help-text">Email address cannot be changed</p>
+          <p class="help-text">
+            Your email address is permanent and cannot be changed
+          </p>
         </div>
       </form>
 
@@ -237,7 +240,7 @@ const userInitials = computed(() => {
       <div class="quick-links">
         <NuxtLink to="/change-password" class="quick-link">
           <Icon name="mdi:lock-reset" class="link-icon" />
-          <span>Change Password</span>
+          <span>Update Password</span>
           <Icon name="mdi:chevron-right" class="chevron-icon" />
         </NuxtLink>
       </div>

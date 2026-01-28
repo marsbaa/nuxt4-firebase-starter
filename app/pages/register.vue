@@ -23,7 +23,7 @@ const validateEmail = (email: string): boolean => {
 // Validate password strength
 const validatePassword = (password: string): string | null => {
   if (password.length < 6) {
-    return "Password must be at least 6 characters";
+    return "Please choose a password with at least 6 characters";
   }
   return null;
 };
@@ -37,13 +37,13 @@ const validateForm = (): boolean => {
   } = {};
 
   if (!email.value) {
-    errors.email = "Email is required";
+    errors.email = "Please enter your email address";
   } else if (!validateEmail(email.value)) {
-    errors.email = "Please enter a valid email address";
+    errors.email = "Please check your email address";
   }
 
   if (!password.value) {
-    errors.password = "Password is required";
+    errors.password = "Please enter a password";
   } else {
     const passwordError = validatePassword(password.value);
     if (passwordError) {
@@ -54,7 +54,7 @@ const validateForm = (): boolean => {
   if (!confirmPassword.value) {
     errors.confirmPassword = "Please confirm your password";
   } else if (password.value !== confirmPassword.value) {
-    errors.confirmPassword = "Passwords do not match";
+    errors.confirmPassword = "The passwords don't match";
   }
 
   validationErrors.value = errors;
@@ -243,7 +243,7 @@ watch([email, password, confirmPassword], () => {
   align-items: center;
   justify-content: center;
   padding: 2rem;
-  background: linear-gradient(135deg, #f7f9fa 0%, #eff3f5 100%);
+  background: linear-gradient(135deg, #faf9f7 0%, #f5f3ef 100%);
   overflow: hidden;
 }
 
@@ -256,8 +256,8 @@ watch([email, password, confirmPassword], () => {
   height: 60%;
   background: radial-gradient(
     circle,
-    rgba(155, 188, 217, 0.15) 0%,
-    rgba(155, 188, 217, 0) 70%
+    rgba(122, 155, 118, 0.15) 0%,
+    rgba(122, 155, 118, 0) 70%
   );
   border-radius: 50%;
   filter: blur(60px);
@@ -400,13 +400,13 @@ watch([email, password, confirmPassword], () => {
 
 .form-input:focus {
   background: #ffffff;
-  border-color: #9bbcd9;
-  box-shadow: 0 0 0 3px rgba(155, 188, 217, 0.1);
+  border-color: #7a9b76;
+  box-shadow: 0 0 0 3px rgba(122, 155, 118, 0.1);
 }
 
 .form-input:focus + .input-icon,
 .form-input:focus ~ .input-icon {
-  color: #9bbcd9;
+  color: #7a9b76;
 }
 
 .form-input.input-error {
@@ -432,7 +432,7 @@ watch([email, password, confirmPassword], () => {
 
 .password-toggle:focus {
   outline: none;
-  color: #9bbcd9;
+  color: #7a9b76;
 }
 
 .toggle-icon {
@@ -503,18 +503,18 @@ watch([email, password, confirmPassword], () => {
   font-size: 1rem;
   font-weight: 500;
   color: #ffffff;
-  background: linear-gradient(135deg, #9bbcd9 0%, #7ca6c9 100%);
+  background: linear-gradient(135deg, #7a9b76 0%, #5f7d5c 100%);
   border: none;
   border-radius: 12px;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(155, 188, 217, 0.25);
+  box-shadow: 0 4px 12px rgba(122, 155, 118, 0.25);
   animation: fadeIn 0.8s ease-out 0.5s both;
 }
 
 .btn-primary:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(155, 188, 217, 0.35);
+  box-shadow: 0 6px 20px rgba(122, 155, 118, 0.35);
 }
 
 .btn-primary:active:not(:disabled) {
@@ -576,7 +576,7 @@ watch([email, password, confirmPassword], () => {
 }
 
 .footer-link {
-  color: #9bbcd9;
+  color: #7a9b76;
   text-decoration: none;
   font-weight: 500;
   transition: color 0.2s ease;
@@ -584,7 +584,7 @@ watch([email, password, confirmPassword], () => {
 }
 
 .footer-link:hover {
-  color: #7ca6c9;
+  color: #5f7d5c;
   border-bottom-color: currentColor;
 }
 

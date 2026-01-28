@@ -40,17 +40,15 @@ export const useProfile = () => {
    */
   const getErrorMessage = (errorCode: string): string => {
     const errorMessages: Record<string, string> = {
-      "permission-denied": "You don't have permission to access this data",
-      "not-found": "Profile not found",
-      unavailable: "Service temporarily unavailable. Please try again",
-      cancelled: "Operation was cancelled",
-      "invalid-argument": "Invalid data provided",
+      "permission-denied":
+        "You don't have permission to access this information",
+      "not-found": "We couldn't find your profile",
+      unavailable: "The service is temporarily unavailable. Please try again",
+      cancelled: "The operation was cancelled",
+      "invalid-argument": "Please check the information provided",
     };
 
-    return (
-      errorMessages[errorCode] ||
-      "An unexpected error occurred. Please try again"
-    );
+    return errorMessages[errorCode] || "Something went wrong. Please try again";
   };
 
   /**
@@ -193,7 +191,7 @@ export const useProfile = () => {
         };
       }
 
-      toast.success("Profile updated successfully!");
+      toast.success("Your profile has been updated");
       return { success: true };
     } catch (err) {
       const firestoreError = err as FirestoreError;
