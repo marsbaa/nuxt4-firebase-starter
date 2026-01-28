@@ -42,16 +42,16 @@
 
 ## 6. Member Forms (Future)
 
-- [ ] 6.1 Create member creation page/modal
-- [ ] 6.2 Create member edit page/modal
-- [ ] 6.3 Create member detail view page
+- [x] 6.1 Create `app/pages/members/add.vue` page for member creation
+- [x] 6.2 Create `app/pages/members/[id].vue` page for member editing
+- [x] 6.3 Create member detail view page
 
 ## 7. Testing & Polish
 
-- [ ] 7.1 Test search functionality
-- [ ] 7.2 Test pagination with various data sizes
-- [ ] 7.3 Verify delete confirmation works properly
-- [ ] 7.4 Test responsive behavior
-- [ ] 7.5 Verify accessibility (keyboard navigation, screen readers)
-- [ ] 7.6 Add empty state for no members
-- [ ] 7.7 Add loading state for data fetching
+- [x] 7.1 Test search functionality
+- [x] 7.2 Test pagination with various data sizes
+- [x] 7.3 Verify delete confirmation works properly
+- [x] 7.4 Test responsive behavior
+- [x] 7.5 Verify accessibility (keyboard navigation, screen readers)
+- [x] 7.6 Add empty state for no members
+- [x] 7.7 Add loading state for data fetching
