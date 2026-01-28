@@ -6,7 +6,10 @@ let adminApp: App;
 let adminAuth: Auth;
 let adminDb: Firestore;
 
-// Initialize Firebase Admin SDK
+/**
+ * Initialize Firebase Admin SDK with service account credentials
+ * @returns Firebase Admin app, auth, and firestore instances
+ */
 function initializeFirebaseAdmin() {
   if (getApps().length === 0) {
     const config = useRuntimeConfig();
@@ -34,6 +37,11 @@ function initializeFirebaseAdmin() {
   return { adminApp, adminAuth, adminDb };
 }
 
+/**
+ * Get Firebase Admin SDK instances
+ * Initializes the SDK if not already initialized
+ * @returns Firebase Admin app, auth, and firestore instances
+ */
 export function useFirebaseAdmin() {
   if (!adminApp) {
     return initializeFirebaseAdmin();
