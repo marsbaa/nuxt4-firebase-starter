@@ -35,6 +35,11 @@ const navItems = [
     icon: "mdi:view-dashboard",
   },
   {
+    name: "Members",
+    path: "/members",
+    icon: "mdi:account-group",
+  },
+  {
     name: "Your Profile",
     path: "/profile",
     icon: "mdi:account",

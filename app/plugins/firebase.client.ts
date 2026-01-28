@@ -1,6 +1,7 @@
 import { initializeApp, getApps } from "firebase/app";
 import { getAuth, onAuthStateChanged, type User } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
+import { getDatabase } from "firebase/database";
 
 /**
  * Firebase client initialization plugin
@@ -17,6 +18,7 @@ export default defineNuxtPlugin((nuxtApp) => {
     storageBucket: config.public.firebaseStorageBucket as string,
     messagingSenderId: config.public.firebaseMessagingSenderId as string,
     appId: config.public.firebaseAppId as string,
+    databaseURL: config.public.firebaseDatabaseUrl as string,
   };
 
   // Initialize Firebase only if it hasn't been initialized yet
@@ -25,6 +27,7 @@ export default defineNuxtPlugin((nuxtApp) => {
 
   const auth = getAuth(firebaseApp);
   const db = getFirestore(firebaseApp);
+  const rtdb = getDatabase(firebaseApp);
 
   // Create a reactive user state
   const user = useState<User | null>("firebase-user", () => null);
@@ -44,6 +47,7 @@ export default defineNuxtPlugin((nuxtApp) => {
       firebase: {
         auth,
         db,
+        rtdb,
         user,
         isAuthReady,
       },

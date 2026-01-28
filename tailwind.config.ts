@@ -50,19 +50,20 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Primary: Soft sage green - Growth, peace, hope
+        // Primary: Warm tan - For members page and pastoral care aesthetic
         primary: {
-          50: "#f4f7f4",
-          100: "#e5ede4",
-          200: "#ccdccb",
-          300: "#a8c4a6",
-          400: "#89ab87",
-          500: "#7a9b76",
-          600: "#5f7d5c",
-          700: "#4d644b",
-          800: "#405340",
-          900: "#364537",
-          950: "#1c251c",
+          DEFAULT: "#c2a47a", // Base warm tan from style guide
+          50: "#faf8f4",
+          100: "#f3efd9",
+          200: "#e7ddb3",
+          300: "#dbc794",
+          400: "#ceb37d",
+          500: "#c2a47a", // Base color
+          600: "#a9896a",
+          700: "#8b6e56",
+          800: "#6d5645",
+          900: "#4f3f33",
+          950: "#2d2319",
         },
         // Secondary: Warm taupe - Stability, grounding, warmth
         secondary: {

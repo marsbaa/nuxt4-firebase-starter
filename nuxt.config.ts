@@ -16,7 +16,7 @@ export default defineNuxtConfig({
     // Use local server bundle mode for better performance
     serverBundle: "local",
     // Set preferred icon collections
-    collections: ["heroicons", "mdi"],
+    collections: ["heroicons", "mdi", "material-symbols"],
     // Customize default size
     size: "24px",
     // Optimize icons in production
@@ -41,6 +41,7 @@ export default defineNuxtConfig({
       firebaseMessagingSenderId:
         process.env.NUXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
       firebaseAppId: process.env.NUXT_PUBLIC_FIREBASE_APP_ID,
+      firebaseDatabaseUrl: process.env.NUXT_PUBLIC_FIREBASE_DATABASE_URL,
     },
   },
 });
