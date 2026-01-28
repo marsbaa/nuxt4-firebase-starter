@@ -39,11 +39,11 @@
 
 ## 5. User Profile
 
-- [ ] 5.1 Create profile page layout
-- [ ] 5.2 Display user information (email, display name, etc.)
-- [ ] 5.3 Create profile edit form
-- [ ] 5.4 Implement profile update functionality
-- [ ] 5.5 Store user profile data in Firestore
+- [x] 5.1 Create profile page layout
+- [x] 5.2 Display user information (email, display name, etc.)
+- [x] 5.3 Create profile edit form
+- [x] 5.4 Implement profile update functionality
+- [x] 5.5 Store user profile data in Firestore
 
 ## 6. Dashboard
 
