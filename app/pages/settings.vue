@@ -22,25 +22,11 @@ definePageMeta({
       <div class="content-card">
         <div class="placeholder-content">
           <Icon name="mdi:cog-outline" class="placeholder-icon" />
-          <h2 class="placeholder-title">Settings Page</h2>
+          <h2 class="placeholder-title">Coming Soon</h2>
           <p class="placeholder-text">
-            This settings page is currently a placeholder. Additional settings
-            and preferences will be added here in future updates.
+            This settings page is currently under development. Additional
+            settings and preferences will be added here in future updates.
           </p>
-
-          <div class="quick-links">
-            <NuxtLink to="/profile" class="quick-link">
-              <Icon name="mdi:account" class="link-icon" />
-              <span>Go to Profile</span>
-              <Icon name="mdi:chevron-right" class="chevron-icon" />
-            </NuxtLink>
-
-            <NuxtLink to="/change-password" class="quick-link">
-              <Icon name="mdi:lock-reset" class="link-icon" />
-              <span>Change Password</span>
-              <Icon name="mdi:chevron-right" class="chevron-icon" />
-            </NuxtLink>
-          </div>
         </div>
       </div>
     </div>
@@ -129,7 +115,7 @@ definePageMeta({
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10px);
   border-radius: 20px;
-  padding: 3rem 2.5rem;
+  padding: 4rem 2.5rem;
   box-shadow:
     0 8px 32px rgba(0, 0, 0, 0.04),
     0 2px 8px rgba(0, 0, 0, 0.02);
@@ -138,18 +124,21 @@ definePageMeta({
 
 .placeholder-content {
   text-align: center;
+  max-width: 500px;
+  margin: 0 auto;
 }
 
 .placeholder-icon {
-  width: 4rem;
-  height: 4rem;
+  width: 5rem;
+  height: 5rem;
   color: #d9bc9b;
   margin: 0 auto 1.5rem;
+  opacity: 0.7;
 }
 
 .placeholder-title {
   font-family: "Crimson Pro", serif;
-  font-size: 1.75rem;
+  font-size: 2rem;
   font-weight: 600;
   color: #2d2a26;
   margin: 0 0 1rem 0;
@@ -158,57 +147,10 @@ definePageMeta({
 
 .placeholder-text {
   font-family: "Work Sans", sans-serif;
-  font-size: 1rem;
+  font-size: 1.063rem;
   color: #706c64;
-  margin: 0 auto 3rem;
-  max-width: 500px;
+  margin: 0;
   line-height: 1.6;
-}
-
-.quick-links {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  max-width: 400px;
-  margin: 0 auto;
-}
-
-.quick-link {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 1rem 1.25rem;
-  font-family: "Work Sans", sans-serif;
-  font-size: 1rem;
-  color: #2d2a26;
-  text-decoration: none;
-  background: #fafaf9;
-  border-radius: 12px;
-  transition: all 0.2s ease;
-  border: 1.5px solid #e8e6e1;
-}
-
-.quick-link:hover {
-  background: #ffffff;
-  border-color: #d9bc9b;
-  transform: translateX(4px);
-}
-
-.link-icon {
-  width: 1.5rem;
-  height: 1.5rem;
-  color: #d9bc9b;
-}
-
-.quick-link span {
-  flex: 1;
-  text-align: left;
-}
-
-.chevron-icon {
-  width: 1.25rem;
-  height: 1.25rem;
-  color: #9c9790;
 }
 
 @media (max-width: 640px) {
@@ -217,7 +159,7 @@ definePageMeta({
   }
 
   .content-card {
-    padding: 2rem 1.5rem;
+    padding: 3rem 1.5rem;
   }
 
   .page-title {
@@ -225,12 +167,16 @@ definePageMeta({
   }
 
   .placeholder-icon {
-    width: 3rem;
-    height: 3rem;
+    width: 4rem;
+    height: 4rem;
   }
 
   .placeholder-title {
     font-size: 1.5rem;
+  }
+
+  .placeholder-text {
+    font-size: 1rem;
   }
 }
 </style>
