@@ -19,11 +19,11 @@
 
 ## 3. Dashboard Layout
 
-- [ ] 3.1 Update `app/layouts/dashboard.vue` navigation styling with soft backgrounds
-- [ ] 3.2 Adjust spacing and padding throughout layout for breathing room
-- [ ] 3.3 Update navigation active states with gentle highlights
-- [ ] 3.4 Ensure navigation icons use rounded style at comfortable size
-- [ ] 3.5 Test layout on mobile, tablet, and desktop viewports
+- [x] 3.1 Update `app/layouts/dashboard.vue` navigation styling with soft backgrounds
+- [x] 3.2 Adjust spacing and padding throughout layout for breathing room
+- [x] 3.3 Update navigation active states with gentle highlights
+- [x] 3.4 Ensure navigation icons use rounded style at comfortable size
+- [x] 3.5 Test layout on mobile, tablet, and desktop viewports
 
 ## 4. Authentication Pages
 
