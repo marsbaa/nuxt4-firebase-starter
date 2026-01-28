@@ -18,24 +18,24 @@ const emit = defineEmits<{
     :type="type || 'button'"
     :disabled="disabled || loading"
     :class="[
-      'inline-flex items-center justify-center font-medium rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed',
-      // Size variants
+      'inline-flex items-center justify-center font-medium rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-sm hover:shadow-md',
+      // Size variants - comfortable sizing
       {
-        'px-3 py-1.5 text-sm': size === 'sm',
-        'px-4 py-2 text-base': size === 'md' || !size,
+        'px-4 py-2 text-sm': size === 'sm',
+        'px-5 py-2.5 text-base': size === 'md' || !size,
         'px-6 py-3 text-lg': size === 'lg',
       },
-      // Color variants
+      // Color variants - pastoral earth tones
       {
         'bg-primary-600 hover:bg-primary-700 text-white focus:ring-primary-500':
           variant === 'primary' || !variant,
-        'bg-secondary-200 hover:bg-secondary-300 text-secondary-900 focus:ring-secondary-500':
+        'bg-stone-100 hover:bg-stone-200 text-stone-800 focus:ring-stone-400 border border-stone-300':
           variant === 'secondary',
-        'bg-danger-600 hover:bg-danger-700 text-white focus:ring-danger-500':
+        'bg-danger-500 hover:bg-danger-600 text-white focus:ring-danger-400':
           variant === 'danger',
-        'bg-success-600 hover:bg-success-700 text-white focus:ring-success-500':
+        'bg-success-500 hover:bg-success-600 text-white focus:ring-success-400':
           variant === 'success',
-        'bg-transparent hover:bg-secondary-100 text-secondary-700 focus:ring-secondary-500':
+        'bg-transparent hover:bg-stone-100 text-stone-700 focus:ring-stone-400 shadow-none':
           variant === 'ghost',
       },
       // Full width

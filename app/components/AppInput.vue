@@ -1,5 +1,5 @@
 <script setup lang="ts">
-defineProps<{
+const props = defineProps<{
   modelValue: string;
   type?: string;
   label?: string;
@@ -25,7 +25,7 @@ const inputId = computed(
     <label
       v-if="label"
       :for="inputId"
-      class="block text-sm font-medium text-secondary-700 mb-1.5"
+      class="block text-sm font-medium text-stone-800 mb-2"
     >
       {{ label }}
       <span v-if="required" class="text-danger-500 ml-0.5">*</span>
@@ -33,9 +33,9 @@ const inputId = computed(
     <div class="relative">
       <div
         v-if="icon"
-        class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
+        class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none"
       >
-        <AppIcon :name="icon" class="h-5 w-5 text-secondary-400" />
+        <AppIcon :name="icon" class="h-5 w-5 text-stone-500" />
       </div>
       <input
         :id="inputId"
@@ -45,17 +45,18 @@ const inputId = computed(
         :disabled="disabled"
         :required="required"
         :class="[
-          'block w-full rounded-lg border transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-0',
+          'block w-full rounded-md border transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-0 text-base',
           {
-            'pl-10': icon,
-            'pl-3': !icon,
-            'pr-3': true,
-            'py-2': true,
-            'border-danger-300 text-danger-900 placeholder-danger-300 focus:ring-danger-500 focus:border-danger-500':
+            'pl-11': icon,
+            'pl-4': !icon,
+            'pr-4': true,
+            'py-3': true,
+            'h-12': true,
+            'border-danger-300 text-danger-900 placeholder-danger-300 focus:ring-danger-400 focus:border-danger-400':
               error,
-            'border-secondary-300 text-secondary-900 placeholder-secondary-400 focus:ring-primary-500 focus:border-primary-500':
+            'border-stone-300 text-stone-900 placeholder-stone-400 focus:ring-primary-500 focus:border-primary-500':
               !error,
-            'bg-secondary-100 cursor-not-allowed': disabled,
+            'bg-stone-100 cursor-not-allowed': disabled,
             'bg-white': !disabled,
           },
         ]"
@@ -64,7 +65,7 @@ const inputId = computed(
         "
       />
     </div>
-    <p v-if="error" class="mt-1.5 text-sm text-danger-600">
+    <p v-if="error" class="mt-2 text-sm text-danger-600">
       {{ error }}
     </p>
   </div>

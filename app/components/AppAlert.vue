@@ -43,8 +43,7 @@ const handleDismiss = () => {
           'bg-danger-50 border-danger-200 text-danger-800': type === 'error',
           'bg-warning-50 border-warning-200 text-warning-800':
             type === 'warning',
-          'bg-primary-50 border-primary-200 text-primary-800':
-            type === 'info' || !type,
+          'bg-info-50 border-info-200 text-info-800': type === 'info' || !type,
         },
       ]"
     >
@@ -55,10 +54,10 @@ const handleDismiss = () => {
             :class="[
               'h-5 w-5',
               {
-                'text-success-400': type === 'success',
-                'text-danger-400': type === 'error',
-                'text-warning-400': type === 'warning',
-                'text-primary-400': type === 'info' || !type,
+                'text-success-500': type === 'success',
+                'text-danger-500': type === 'error',
+                'text-warning-500': type === 'warning',
+                'text-info-500': type === 'info' || !type,
               },
             ]"
           />
@@ -67,7 +66,7 @@ const handleDismiss = () => {
           <h3 v-if="title" class="text-sm font-medium">
             {{ title }}
           </h3>
-          <div class="text-sm" :class="{ 'mt-1': title }">
+          <div class="text-sm leading-relaxed" :class="{ 'mt-1': title }">
             <slot />
           </div>
         </div>
@@ -76,13 +75,13 @@ const handleDismiss = () => {
             type="button"
             class="inline-flex rounded-md p-1.5 focus:outline-none focus:ring-2 focus:ring-offset-2"
             :class="{
-              'text-success-500 hover:bg-success-100 focus:ring-success-600':
+              'text-success-600 hover:bg-success-100 focus:ring-success-500':
                 type === 'success',
-              'text-danger-500 hover:bg-danger-100 focus:ring-danger-600':
+              'text-danger-600 hover:bg-danger-100 focus:ring-danger-500':
                 type === 'error',
-              'text-warning-500 hover:bg-warning-100 focus:ring-warning-600':
+              'text-warning-600 hover:bg-warning-100 focus:ring-warning-500':
                 type === 'warning',
-              'text-primary-500 hover:bg-primary-100 focus:ring-primary-600':
+              'text-info-600 hover:bg-info-100 focus:ring-info-500':
                 type === 'info' || !type,
             }"
             @click="handleDismiss"
