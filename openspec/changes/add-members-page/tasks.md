@@ -29,11 +29,11 @@
 
 ## 4. Styling
 
-- [ ] 4.1 Apply warm, pastoral color palette
-- [ ] 4.2 Implement rounded corners and soft shadows
-- [ ] 4.3 Style table with generous spacing
-- [ ] 4.4 Create hover states for interactive elements
-- [ ] 4.5 Ensure responsive layout for mobile/tablet
+- [x] 4.1 Apply warm, pastoral color palette
+- [x] 4.2 Implement rounded corners and soft shadows
+- [x] 4.3 Style table with generous spacing
+- [x] 4.4 Create hover states for interactive elements
+- [x] 4.5 Ensure responsive layout for mobile/tablet
 
 ## 5. Navigation
 
