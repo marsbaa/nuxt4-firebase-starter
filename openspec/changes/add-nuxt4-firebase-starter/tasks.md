@@ -21,14 +21,14 @@
 
 ## 3. Authentication System
 
-- [ ] 3.1 Create login page with email/password form
-- [ ] 3.2 Create registration/signup page
-- [ ] 3.3 Implement authentication composable (useAuth)
-- [ ] 3.4 Create authentication state management
-- [ ] 3.5 Implement login functionality
-- [ ] 3.6 Implement logout functionality
-- [ ] 3.7 Implement user registration
-- [ ] 3.8 Create authentication middleware for protected routes
+- [x] 3.1 Create login page with email/password form
+- [x] 3.2 Create registration/signup page
+- [x] 3.3 Implement authentication composable (useAuth)
+- [x] 3.4 Create authentication state management
+- [x] 3.5 Implement login functionality
+- [x] 3.6 Implement logout functionality
+- [x] 3.7 Implement user registration
+- [x] 3.8 Create authentication middleware for protected routes
 
 ## 4. Password Management
 
