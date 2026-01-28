@@ -1,5 +1,44 @@
 import type { Config } from "tailwindcss";
 
+/**
+ * Pastoral Care App - Tailwind Configuration
+ *
+ * COLOR PALETTE USAGE GUIDE:
+ * ==========================
+ *
+ * PRIMARY (Soft Sage Green) - Growth, Peace, Hope
+ * - Use for: Primary actions, navigation highlights, success states
+ * - Text on white: primary-600+ (WCAG AA compliant)
+ * - Text on primary: Use white or stone-50
+ *
+ * SECONDARY (Warm Taupe) - Stability, Grounding, Warmth
+ * - Use for: Secondary actions, background sections, muted elements
+ * - Text on white: secondary-700+ (WCAG AA compliant)
+ * - Text on secondary: Use white or stone-50
+ *
+ * ACCENT (Gentle Gold) - Light, Guidance, Value
+ * - Use for: Highlights, special callouts, emphasis
+ * - Text on white: accent-700+ (WCAG AA compliant)
+ * - Text on accent: Use white or stone-50
+ *
+ * STONE (Warm Neutrals) - Soft, Paper-like Backgrounds
+ * - Use for: Body text, borders, backgrounds
+ * - Text on white: stone-700+ (WCAG AA compliant)
+ * - Text on stone-50: stone-700+
+ *
+ * SEMANTIC COLORS (Softened for Pastoral Context):
+ * - SUCCESS: Affirming completion, positive outcomes
+ * - WARNING: Gentle cautions, important notices
+ * - DANGER: Errors, critical alerts (softened tone)
+ * - INFO: Helpful information, guidance
+ *
+ * ACCESSIBILITY NOTES:
+ * - All text uses minimum 14px (0.875rem) for readability
+ * - Focus indicators are 2px wide with offset for visibility
+ * - Color combinations tested for WCAG 2.1 AA compliance (4.5:1 minimum)
+ * - Never rely on color alone - always include icons or text
+ */
+
 export default {
   content: [
     "./app/components/**/*.{js,vue,ts}",
