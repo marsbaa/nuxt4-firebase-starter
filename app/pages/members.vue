@@ -141,10 +141,8 @@ const handlePageChange = (page: number) => {
     <!-- Page header -->
     <div class="page-header">
       <div>
-        <h1 class="page-title">Members List</h1>
-        <p class="page-subtitle">
-          Manage and view all members of your pastoral care community
-        </p>
+        <h1 class="page-title">Members</h1>
+        <p class="page-subtitle">Manage and care for your community members</p>
       </div>
       <AppButton
         @click="handleNewMember"
@@ -164,15 +162,15 @@ const handlePageChange = (page: number) => {
           v-model="debouncedSearchValue"
           @input="updateSearch(($event.target as HTMLInputElement).value)"
           type="text"
-          placeholder="Search by name, location, or contact..."
+          placeholder="Search by name, email or location..."
           class="search-input"
         />
       </div>
       <div class="member-count">
         <span class="count-number">{{ totalMembers }}</span>
-        <span class="count-label">{{
-          totalMembers === 1 ? "member" : "members"
-        }}</span>
+        <span class="count-label"
+          >{{ totalMembers === 1 ? "member" : "members" }} total</span
+        >
       </div>
     </div>
 
@@ -376,23 +374,21 @@ const handlePageChange = (page: number) => {
 .member-count {
   display: flex;
   align-items: baseline;
-  gap: 0.5rem;
-  padding: 0.75rem 1.25rem;
-  background: rgba(194, 164, 122, 0.08);
-  border-radius: 0.75rem;
+  gap: 0.375rem;
 }
 
 .count-number {
   font-family: "Inter", sans-serif;
-  font-size: 1.5rem;
+  font-size: 1.125rem;
   font-weight: 600;
-  color: #c2a47a;
+  color: #2d2a26;
 }
 
 .count-label {
   font-family: "Inter", sans-serif;
-  font-size: 0.875rem;
-  color: #706c64;
+  font-size: 0.938rem;
+  color: #9a9690;
+  font-weight: 400;
 }
 
 /* Table container */

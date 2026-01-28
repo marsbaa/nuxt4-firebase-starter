@@ -24,21 +24,28 @@
       </button>
 
       <!-- Page numbers -->
-      <button
-        v-for="page in displayedPages"
-        :key="page"
-        :class="[
-          'px-3 py-1 rounded-lg text-sm font-medium transition-colors',
-          page === currentPage
-            ? 'bg-primary text-white'
-            : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800',
-        ]"
-        :aria-label="`Page ${page}`"
-        :aria-current="page === currentPage ? 'page' : undefined"
-        @click="goToPage(page)"
+      <template
+        v-for="(page, index) in displayedPagesWithEllipsis"
+        :key="index"
       >
-        {{ page }}
-      </button>
+        <span v-if="page === '...'" class="px-3 py-1 text-sm text-slate-400">
+          ...
+        </span>
+        <button
+          v-else
+          :class="[
+            'px-3 py-1 rounded-lg text-sm font-medium transition-colors',
+            page === currentPage
+              ? 'bg-primary text-white'
+              : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800',
+          ]"
+          :aria-label="`Page ${page}`"
+          :aria-current="page === currentPage ? 'page' : undefined"
+          @click="goToPage(page as number)"
+        >
+          {{ page }}
+        </button>
+      </template>
 
       <!-- Next button -->
       <button
@@ -100,21 +107,34 @@ const endItem = computed(() => {
   return Math.min(end, props.totalItems);
 });
 
-// Calculate which page numbers to display
-const displayedPages = computed(() => {
-  const pages: number[] = [];
-  const halfMax = Math.floor(props.maxPages / 2);
+// Calculate which page numbers to display with ellipsis
+const displayedPagesWithEllipsis = computed(() => {
+  const pages: (number | string)[] = [];
 
-  let startPage = Math.max(1, props.currentPage - halfMax);
-  let endPage = Math.min(props.totalPages, startPage + props.maxPages - 1);
+  if (props.totalPages <= 7) {
+    // Show all pages if total is 7 or less
+    for (let i = 1; i <= props.totalPages; i++) {
+      pages.push(i);
+    }
+  } else {
+    // Always show first page
+    pages.push(1);
 
-  // Adjust start if we're near the end
-  if (endPage - startPage < props.maxPages - 1) {
-    startPage = Math.max(1, endPage - props.maxPages + 1);
-  }
-
-  for (let i = startPage; i <= endPage; i++) {
-    pages.push(i);
+    if (props.currentPage <= 3) {
+      // Near the start: show 1, 2, 3, ..., last
+      pages.push(2, 3, "...", props.totalPages);
+    } else if (props.currentPage >= props.totalPages - 2) {
+      // Near the end: show 1, ..., last-2, last-1, last
+      pages.push(
+        "...",
+        props.totalPages - 2,
+        props.totalPages - 1,
+        props.totalPages,
+      );
+    } else {
+      // Middle: show 1, ..., current, ..., last
+      pages.push("...", props.currentPage, "...", props.totalPages);
+    }
   }
 
   return pages;

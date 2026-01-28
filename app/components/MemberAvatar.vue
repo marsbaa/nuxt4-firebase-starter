@@ -1,10 +1,11 @@
 <template>
   <div
     :class="[
-      'flex items-center justify-center rounded-full font-bold text-xs text-primary',
+      'flex items-center justify-center rounded-full font-bold text-xs',
       sizeClasses,
       bgClass,
     ]"
+    :style="{ color: '#a08670' }"
     :aria-label="`${name}'s avatar`"
   >
     {{ initials }}
@@ -81,12 +82,24 @@ const initials = computed(() => {
 // Uses a set of warm, pastoral colors that match the design aesthetic
 const bgClass = computed(() => {
   // Simple hash function to generate consistent index from name
-  const hash = props.name.split("").reduce((acc, char) => {
-    return char.charCodeAt(0) + ((acc << 5) - acc);
-  }, 0);
+  const hash = Math.abs(
+    props.name.split("").reduce((acc, char) => {
+      return char.charCodeAt(0) + ((acc << 5) - acc);
+    }, 0),
+  );
 
-  // Warm, pastoral color palette with primary color at 20% opacity
-  // This matches the design: bg-primary/20
-  return "bg-primary/20";
+  // Warm, muted color palette matching the design
+  const colors = [
+    "bg-[#e8ddd0]", // Soft beige (SA style)
+    "bg-[#e3d7c8]", // Light tan (LB style)
+    "bg-[#dfd6c8]", // Warm gray-beige (GB style)
+    "bg-[#e5d8ca]", // Peachy beige (PB style)
+    "bg-[#e0d0c3]", // Muted tan (MB style)
+    "bg-[#ddd4c8]", // Cool beige
+    "bg-[#e6dcd1]", // Warm cream
+    "bg-[#e1d5c6]", // Sandy beige
+  ];
+
+  return colors[hash % colors.length];
 });
 </script>

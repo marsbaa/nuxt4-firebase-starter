@@ -4,7 +4,7 @@
   >
     <table class="w-full text-left border-collapse">
       <thead
-        class="bg-slate-50 dark:bg-slate-800/50 text-slate-500 dark:text-slate-400 text-xs font-semibold uppercase tracking-wider"
+        class="bg-slate-50/50 dark:bg-slate-800/50 text-slate-400 dark:text-slate-500 text-xs font-semibold uppercase tracking-wider"
       >
         <tr>
           <th class="px-6 py-4">#</th>

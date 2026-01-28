@@ -16,7 +16,7 @@
             {{ parsedName.fullName }}
           </span>
           <div
-            class="flex items-center space-x-1 text-xs text-slate-500 dark:text-slate-400"
+            class="flex items-center space-x-1 text-xs text-slate-400 dark:text-slate-500"
           >
             <AppIcon
               name="material-symbols:cake"
@@ -33,10 +33,10 @@
     <!-- Contact Info -->
     <td class="px-6 py-4">
       <div
+        v-if="member.contact"
         class="flex items-center space-x-2 text-sm text-slate-600 dark:text-slate-300"
       >
         <AppIcon
-          v-if="member.contact"
           name="material-symbols:call"
           :size="18"
           decorative
@@ -44,6 +44,7 @@
         />
         <span>{{ formattedContact }}</span>
       </div>
+      <span v-else class="text-sm italic text-slate-400">No contact info</span>
     </td>
 
     <!-- Location -->
@@ -66,21 +67,21 @@
     <td class="px-6 py-4">
       <div class="flex items-center space-x-2">
         <button
-          class="p-2 text-slate-400 hover:text-primary hover:bg-primary/10 rounded-lg transition-colors"
+          class="p-2 text-slate-300 hover:text-primary hover:bg-primary/10 rounded-lg transition-colors"
           aria-label="View member details"
           @click="$emit('view')"
         >
           <AppIcon name="material-symbols:visibility" :size="20" decorative />
         </button>
         <button
-          class="p-2 text-slate-400 hover:text-primary hover:bg-primary/10 rounded-lg transition-colors"
+          class="p-2 text-slate-300 hover:text-primary hover:bg-primary/10 rounded-lg transition-colors"
           aria-label="Edit member"
           @click="$emit('edit')"
         >
           <AppIcon name="material-symbols:edit" :size="20" decorative />
         </button>
         <button
-          class="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-lg transition-colors"
+          class="p-2 text-slate-300 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-lg transition-colors"
           aria-label="Delete member"
           @click="$emit('delete')"
         >
