@@ -10,11 +10,11 @@
 
 ## 2. Components
 
-- [ ] 2.1 Create `MemberAvatar.vue` component with initials display
-- [ ] 2.2 Create `MemberTable.vue` component for table display
-- [ ] 2.3 Create `MemberTableRow.vue` for individual member entries
-- [ ] 2.4 Create `Pagination.vue` component for navigation
-- [ ] 2.5 Update `AppIcon.vue` with required icons (eye, pencil, trash, location-pin, search)
+- [x] 2.1 Create `MemberAvatar.vue` component with initials display
+- [x] 2.2 Create `MemberTable.vue` component for table display
+- [x] 2.3 Create `MemberTableRow.vue` for individual member entries
+- [x] 2.4 Create `Pagination.vue` component for navigation
+- [x] 2.5 Update `AppIcon.vue` with required icons (eye, pencil, trash, location-pin, search)
 
 ## 3. Main Page
 
