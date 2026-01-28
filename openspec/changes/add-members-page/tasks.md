@@ -18,14 +18,14 @@
 
 ## 3. Main Page
 
-- [ ] 3.1 Create `app/pages/members.vue` with layout structure
-- [ ] 3.2 Implement page header with title and subtitle
-- [ ] 3.3 Add "New Member" button with routing
-- [ ] 3.4 Implement search bar with debounced filtering
-- [ ] 3.5 Add member count display
-- [ ] 3.6 Integrate member table component
-- [ ] 3.7 Implement pagination logic
-- [ ] 3.8 Add action handlers (view, edit, delete with confirmation)
+- [x] 3.1 Create `app/pages/members.vue` with layout structure
+- [x] 3.2 Implement page header with title and subtitle
+- [x] 3.3 Add "New Member" button with routing
+- [x] 3.4 Implement search bar with debounced filtering
+- [x] 3.5 Add member count display
+- [x] 3.6 Integrate member table component
+- [x] 3.7 Implement pagination logic
+- [x] 3.8 Add action handlers (view, edit, delete with confirmation)
 
 ## 4. Styling
 
