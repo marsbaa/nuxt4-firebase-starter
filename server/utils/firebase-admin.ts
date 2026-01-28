@@ -9,16 +9,18 @@ let adminDb: Firestore;
 // Initialize Firebase Admin SDK
 function initializeFirebaseAdmin() {
   if (getApps().length === 0) {
+    const config = useRuntimeConfig();
+
     // Initialize with service account credentials from environment
     const serviceAccount = {
-      projectId: process.env.FIREBASE_PROJECT_ID,
-      clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-      privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, "\n"),
+      projectId: config.firebaseProjectId,
+      clientEmail: config.firebaseClientEmail,
+      privateKey: config.firebasePrivateKey?.replace(/\\n/g, "\n"),
     };
 
     adminApp = initializeApp({
       credential: cert(serviceAccount),
-      projectId: process.env.FIREBASE_PROJECT_ID,
+      projectId: config.firebaseProjectId,
     });
 
     adminAuth = getAuth(adminApp);

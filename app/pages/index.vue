@@ -1,16 +1,27 @@
 <script setup lang="ts">
+// Disable SSR for this page since it uses Firebase
+definePageMeta({
+  ssr: false,
+});
+
 const { user, isAuthReady } = useFirebase();
-const router = useRouter();
 
 // Wait for auth to be ready, then redirect
-watchEffect(async () => {
-  if (isAuthReady.value) {
-    if (user.value) {
-      await router.push("/dashboard");
-    } else {
-      await router.push("/login");
-    }
-  }
+onMounted(() => {
+  const stopWatch = watch(
+    isAuthReady,
+    (ready) => {
+      if (ready) {
+        if (user.value) {
+          navigateTo("/dashboard");
+        } else {
+          navigateTo("/login");
+        }
+        stopWatch();
+      }
+    },
+    { immediate: true },
+  );
 });
 </script>
 

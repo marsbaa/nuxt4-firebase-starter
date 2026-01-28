@@ -1,8 +1,14 @@
 /**
  * Authentication middleware to protect routes
  * Redirects unauthenticated users to the login page
+ * Client-side only since Firebase Auth is client-side
  */
 export default defineNuxtRouteMiddleware(async (to, from) => {
+  // Skip on server-side
+  if (process.server) {
+    return;
+  }
+
   const { user, isAuthReady } = useFirebase();
 
   // Wait for auth state to be initialized
