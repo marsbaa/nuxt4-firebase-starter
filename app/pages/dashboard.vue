@@ -48,8 +48,7 @@ const accountCreatedDate = computed(() => {
         <Icon name="mdi:hand-wave" class="welcome-icon" />
         <h2 class="welcome-title">Welcome back, {{ displayName }}!</h2>
         <p class="welcome-text">
-          You're successfully authenticated and accessing your protected
-          dashboard.
+          This is your space for caring well for those you serve.
         </p>
       </div>
     </section>
@@ -81,16 +80,16 @@ const accountCreatedDate = computed(() => {
       <div class="links-grid">
         <NuxtLink to="/profile" class="link-card">
           <Icon name="mdi:account" class="link-icon" />
-          <h4 class="link-title">Profile</h4>
-          <p class="link-description">View and edit your profile information</p>
+          <h4 class="link-title">Your Profile</h4>
+          <p class="link-description">
+            Update your information and preferences
+          </p>
         </NuxtLink>
 
         <NuxtLink to="/settings" class="link-card">
           <Icon name="mdi:cog" class="link-icon" />
-          <h4 class="link-title">Settings</h4>
-          <p class="link-description">
-            Manage your account settings and preferences
-          </p>
+          <h4 class="link-title">Your Settings</h4>
+          <p class="link-description">Adjust your account settings as needed</p>
         </NuxtLink>
       </div>
     </section>
