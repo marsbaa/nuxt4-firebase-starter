@@ -1,20 +1,36 @@
 <template>
-  <div
-    class="bg-white dark:bg-sidebar-dark rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden"
-  >
+  <div class="bg-white dark:bg-sidebar-dark">
     <table class="w-full text-left border-collapse">
-      <thead
-        class="bg-slate-50/50 dark:bg-slate-800/50 text-slate-400 dark:text-slate-500 text-xs font-semibold uppercase tracking-wider"
-      >
-        <tr>
-          <th class="px-6 py-4">#</th>
-          <th class="px-6 py-4">Member</th>
-          <th class="px-6 py-4">Contact Info</th>
-          <th class="px-6 py-4">Location</th>
-          <th class="px-6 py-4">Actions</th>
+      <thead>
+        <tr class="border-b border-slate-200">
+          <th
+            class="px-6 py-3 text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400"
+          >
+            #
+          </th>
+          <th
+            class="px-6 py-3 text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400"
+          >
+            Member
+          </th>
+          <th
+            class="px-6 py-3 text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400"
+          >
+            Contact Info
+          </th>
+          <th
+            class="px-6 py-3 text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400"
+          >
+            Location
+          </th>
+          <th
+            class="px-6 py-3 text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 text-right"
+          >
+            Actions
+          </th>
         </tr>
       </thead>
-      <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+      <tbody>
         <MemberTableRow
           v-for="(member, index) in members"
           :key="member.id"
@@ -49,6 +65,13 @@
           </td>
         </tr>
       </tbody>
+      <tfoot v-if="$slots.footer">
+        <tr>
+          <td colspan="5" class="px-6 py-4 border-t border-slate-200">
+            <slot name="footer" />
+          </td>
+        </tr>
+      </tfoot>
     </table>
   </div>
 </template>

@@ -212,28 +212,31 @@ const handlePageChange = (page: number) => {
     </div>
 
     <!-- Members table -->
-    <div v-else class="table-container">
-      <MemberTable
-        :members="paginatedMembers"
-        :start-index="(currentPage - 1) * itemsPerPage"
-        @view="handleView"
-        @edit="handleEdit"
-        @delete="handleDeleteClick"
-      />
-
-      <!-- Pagination -->
-      <div class="pagination-wrapper">
-        <div class="pagination-info">
-          Showing {{ displayRange.start }} to {{ displayRange.end }} of
-          {{ totalMembers }} members
-        </div>
-        <Pagination
-          :current-page="currentPage"
-          :total-pages="totalPages"
-          :total-items="totalMembers"
-          :items-per-page="itemsPerPage"
-          @page-change="handlePageChange"
-        />
+    <div v-else>
+      <div class="table-container">
+        <MemberTable
+          :members="paginatedMembers"
+          :start-index="(currentPage - 1) * itemsPerPage"
+          @view="handleView"
+          @edit="handleEdit"
+          @delete="handleDeleteClick"
+        >
+          <template #footer>
+            <div class="pagination-wrapper">
+              <div class="pagination-info">
+                Showing {{ displayRange.start }} to {{ displayRange.end }} of
+                {{ totalMembers }} members
+              </div>
+              <Pagination
+                :current-page="currentPage"
+                :total-pages="totalPages"
+                :total-items="totalMembers"
+                :items-per-page="itemsPerPage"
+                @page-change="handlePageChange"
+              />
+            </div>
+          </template>
+        </MemberTable>
       </div>
     </div>
 
@@ -398,6 +401,7 @@ const handlePageChange = (page: number) => {
   border-radius: 1rem;
   overflow: hidden;
   box-shadow: 0 1px 3px 0 rgba(44, 44, 42, 0.05);
+  margin-bottom: 1.5rem;
 }
 
 /* Pagination */
@@ -405,9 +409,7 @@ const handlePageChange = (page: number) => {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1.5rem 2rem;
-  border-top: 1px solid #e8e8e5;
-  background: rgba(247, 246, 244, 0.5);
+  padding: 0;
 }
 
 .pagination-info {

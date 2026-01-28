@@ -1,68 +1,55 @@
 <template>
-  <div class="flex items-center justify-between">
-    <!-- Results info -->
-    <div class="text-sm text-slate-600 dark:text-slate-400">
-      Showing {{ startItem }} to {{ endItem }} of {{ totalItems }} members
-    </div>
+  <div class="flex items-center space-x-1">
+    <!-- Previous button -->
+    <button
+      :disabled="currentPage === 1"
+      :class="[
+        'p-2 rounded-lg transition-colors',
+        currentPage === 1
+          ? 'text-slate-300 dark:text-slate-600 cursor-not-allowed'
+          : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800',
+      ]"
+      aria-label="Previous page"
+      @click="goToPreviousPage"
+    >
+      <AppIcon name="material-symbols:chevron-left" :size="20" decorative />
+    </button>
 
-    <!-- Pagination controls -->
-    <div class="flex items-center space-x-2">
-      <!-- Previous button -->
+    <!-- Page numbers -->
+    <template v-for="(page, index) in displayedPagesWithEllipsis" :key="index">
+      <span v-if="page === '...'" class="px-2 py-1 text-sm text-slate-400">
+        ...
+      </span>
       <button
-        :disabled="currentPage === 1"
+        v-else
         :class="[
-          'px-3 py-2 rounded-lg transition-colors flex items-center space-x-1',
-          currentPage === 1
-            ? 'text-slate-300 dark:text-slate-600 cursor-not-allowed'
-            : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-700',
+          'min-w-[2.5rem] px-3 py-1.5 rounded-lg text-sm font-medium transition-colors',
+          page === currentPage
+            ? 'bg-[#c2a47a] text-white'
+            : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800',
         ]"
-        aria-label="Previous page"
-        @click="goToPreviousPage"
+        :aria-label="`Page ${page}`"
+        :aria-current="page === currentPage ? 'page' : undefined"
+        @click="goToPage(page as number)"
       >
-        <AppIcon name="material-symbols:chevron-left" :size="20" decorative />
-        <span class="text-sm font-medium">Previous</span>
+        {{ page }}
       </button>
+    </template>
 
-      <!-- Page numbers -->
-      <template
-        v-for="(page, index) in displayedPagesWithEllipsis"
-        :key="index"
-      >
-        <span v-if="page === '...'" class="px-3 py-1 text-sm text-slate-400">
-          ...
-        </span>
-        <button
-          v-else
-          :class="[
-            'px-3 py-1 rounded-lg text-sm font-medium transition-colors',
-            page === currentPage
-              ? 'bg-primary text-white'
-              : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800',
-          ]"
-          :aria-label="`Page ${page}`"
-          :aria-current="page === currentPage ? 'page' : undefined"
-          @click="goToPage(page as number)"
-        >
-          {{ page }}
-        </button>
-      </template>
-
-      <!-- Next button -->
-      <button
-        :disabled="currentPage === totalPages"
-        :class="[
-          'px-3 py-2 rounded-lg transition-colors flex items-center space-x-1',
-          currentPage === totalPages
-            ? 'text-slate-300 dark:text-slate-600 cursor-not-allowed'
-            : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-700',
-        ]"
-        aria-label="Next page"
-        @click="goToNextPage"
-      >
-        <span class="text-sm font-medium">Next</span>
-        <AppIcon name="material-symbols:chevron-right" :size="20" decorative />
-      </button>
-    </div>
+    <!-- Next button -->
+    <button
+      :disabled="currentPage === totalPages"
+      :class="[
+        'p-2 rounded-lg transition-colors',
+        currentPage === totalPages
+          ? 'text-slate-300 dark:text-slate-600 cursor-not-allowed'
+          : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800',
+      ]"
+      aria-label="Next page"
+      @click="goToNextPage"
+    >
+      <AppIcon name="material-symbols:chevron-right" :size="20" decorative />
+    </button>
   </div>
 </template>
 
@@ -94,17 +81,6 @@ const emit = defineEmits<{
 
 const props = withDefaults(defineProps<Props>(), {
   maxPages: 5,
-});
-
-// Calculate start and end item numbers for display
-const startItem = computed(() => {
-  if (props.totalItems === 0) return 0;
-  return (props.currentPage - 1) * props.itemsPerPage + 1;
-});
-
-const endItem = computed(() => {
-  const end = props.currentPage * props.itemsPerPage;
-  return Math.min(end, props.totalItems);
 });
 
 // Calculate which page numbers to display with ellipsis

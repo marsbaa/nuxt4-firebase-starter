@@ -1,18 +1,18 @@
 <template>
-  <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
+  <tr class="border-b border-slate-200 hover:bg-slate-50/50 transition-colors">
     <!-- Row Number -->
     <td
-      class="px-6 py-4 text-sm text-slate-500 dark:text-slate-400 whitespace-nowrap"
+      class="px-6 py-5 text-sm text-slate-400 dark:text-slate-500 whitespace-nowrap"
     >
       {{ rowNumber }}
     </td>
 
     <!-- Member Info -->
-    <td class="px-6 py-4">
+    <td class="px-6 py-5">
       <div class="flex items-center space-x-3">
         <MemberAvatar :name="parsedName.fullName" />
         <div class="flex flex-col">
-          <span class="text-sm font-semibold text-slate-900 dark:text-white">
+          <span class="text-sm font-semibold text-slate-900">
             {{ parsedName.fullName }}
           </span>
           <div
@@ -31,16 +31,16 @@
     </td>
 
     <!-- Contact Info -->
-    <td class="px-6 py-4">
+    <td class="px-6 py-5">
       <div
         v-if="member.contact"
-        class="flex items-center space-x-2 text-sm text-slate-600 dark:text-slate-300"
+        class="flex items-center space-x-2 text-sm text-slate-700"
       >
         <AppIcon
           name="material-symbols:call"
-          :size="18"
+          :size="16"
           decorative
-          class-name="text-slate-400"
+          class-name="text-amber-700"
         />
         <span>{{ formattedContact }}</span>
       </div>
@@ -48,40 +48,40 @@
     </td>
 
     <!-- Location -->
-    <td class="px-6 py-4">
+    <td class="px-6 py-5">
       <div
-        class="flex items-center space-x-2 text-sm text-slate-600 dark:text-slate-300"
+        v-if="member.suburb"
+        class="flex items-center space-x-2 text-sm text-slate-900"
       >
         <AppIcon
-          v-if="member.suburb"
           name="material-symbols:location-on"
-          :size="18"
+          :size="16"
           decorative
-          class-name="text-slate-400"
+          class-name="text-amber-700"
         />
-        <span>{{ member.suburb || "No location" }}</span>
+        <span>{{ member.suburb }}</span>
       </div>
     </td>
 
     <!-- Actions -->
-    <td class="px-6 py-4">
-      <div class="flex items-center space-x-2">
+    <td class="px-6 py-5 text-right">
+      <div class="flex items-center justify-end space-x-1">
         <button
-          class="p-2 text-slate-300 hover:text-primary hover:bg-primary/10 rounded-lg transition-colors"
+          class="p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors"
           aria-label="View member details"
           @click="$emit('view')"
         >
           <AppIcon name="material-symbols:visibility" :size="20" decorative />
         </button>
         <button
-          class="p-2 text-slate-300 hover:text-primary hover:bg-primary/10 rounded-lg transition-colors"
+          class="p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors"
           aria-label="Edit member"
           @click="$emit('edit')"
         >
           <AppIcon name="material-symbols:edit" :size="20" decorative />
         </button>
         <button
-          class="p-2 text-slate-300 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-lg transition-colors"
+          class="p-2 text-slate-400 hover:text-red-500 transition-colors"
           aria-label="Delete member"
           @click="$emit('delete')"
         >
