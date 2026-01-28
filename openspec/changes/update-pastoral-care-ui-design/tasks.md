@@ -36,11 +36,11 @@
 
 ## 5. Dashboard Pages
 
-- [ ] 5.1 Update `app/pages/dashboard.vue` welcome banner with warm styling
-- [ ] 5.2 Update account summary cards with generous spacing and soft design
-- [ ] 5.3 Update quick links with approachable styling
-- [ ] 5.4 Revise copy to be care-focused rather than productivity-focused
-- [ ] 5.5 Test content hierarchy and readability
+- [x] 5.1 Update `app/pages/dashboard.vue` welcome banner with warm styling
+- [x] 5.2 Update account summary cards with generous spacing and soft design
+- [x] 5.3 Update quick links with approachable styling
+- [x] 5.4 Revise copy to be care-focused rather than productivity-focused
+- [x] 5.5 Test content hierarchy and readability
 
 ## 6. Profile and Settings Pages
 
