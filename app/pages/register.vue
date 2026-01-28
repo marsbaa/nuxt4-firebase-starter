@@ -23,7 +23,7 @@ const validateEmail = (email: string): boolean => {
 // Validate password strength
 const validatePassword = (password: string): string | null => {
   if (password.length < 6) {
-    return "Password must be at least 6 characters";
+    return "Please choose a password with at least 6 characters";
   }
   return null;
 };
@@ -37,13 +37,13 @@ const validateForm = (): boolean => {
   } = {};
 
   if (!email.value) {
-    errors.email = "Email is required";
+    errors.email = "Please enter your email address";
   } else if (!validateEmail(email.value)) {
-    errors.email = "Please enter a valid email address";
+    errors.email = "Please check your email address";
   }
 
   if (!password.value) {
-    errors.password = "Password is required";
+    errors.password = "Please enter a password";
   } else {
     const passwordError = validatePassword(password.value);
     if (passwordError) {
@@ -54,7 +54,7 @@ const validateForm = (): boolean => {
   if (!confirmPassword.value) {
     errors.confirmPassword = "Please confirm your password";
   } else if (password.value !== confirmPassword.value) {
-    errors.confirmPassword = "Passwords do not match";
+    errors.confirmPassword = "The passwords don't match";
   }
 
   validationErrors.value = errors;

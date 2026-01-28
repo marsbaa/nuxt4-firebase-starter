@@ -24,7 +24,7 @@ const validationErrors = ref<{
 // Validate password strength
 const validatePassword = (password: string): string | null => {
   if (password.length < 6) {
-    return "Password must be at least 6 characters";
+    return "Please choose a password with at least 6 characters";
   }
   return null;
 };
@@ -38,11 +38,11 @@ const validateForm = (): boolean => {
   } = {};
 
   if (!currentPassword.value) {
-    errors.currentPassword = "Current password is required";
+    errors.currentPassword = "Please enter your current password";
   }
 
   if (!newPassword.value) {
-    errors.newPassword = "New password is required";
+    errors.newPassword = "Please enter a new password";
   } else {
     const passwordError = validatePassword(newPassword.value);
     if (passwordError) {
@@ -53,7 +53,7 @@ const validateForm = (): boolean => {
   if (!confirmPassword.value) {
     errors.confirmPassword = "Please confirm your new password";
   } else if (newPassword.value !== confirmPassword.value) {
-    errors.confirmPassword = "Passwords do not match";
+    errors.confirmPassword = "The passwords don't match";
   }
 
   validationErrors.value = errors;
@@ -76,7 +76,7 @@ const handleChangePassword = async () => {
     currentPassword.value = "";
     newPassword.value = "";
     confirmPassword.value = "";
-    successMessage.value = "Password changed successfully!";
+    successMessage.value = "Your password has been updated";
 
     // Clear success message after 5 seconds
     setTimeout(() => {
@@ -96,9 +96,9 @@ watch([currentPassword, newPassword, confirmPassword], () => {
 <template>
   <div class="page-container">
     <header class="page-header">
-      <h1 class="page-title">Change Password</h1>
+      <h1 class="page-title">Update Your Password</h1>
       <p class="page-description">
-        Update your account password to keep your account secure
+        Keep your account secure by updating your password
       </p>
     </header>
 

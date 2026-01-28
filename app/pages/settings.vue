@@ -9,20 +9,18 @@ definePageMeta({
 <template>
   <div class="page-container">
     <header class="page-header">
-      <h1 class="page-title">Settings</h1>
-      <p class="page-description">
-        Manage your account and how you use this space
-      </p>
+      <h1 class="page-title">Your Settings</h1>
+      <p class="page-description">Adjust your account preferences</p>
     </header>
 
     <div class="content-card">
       <div class="placeholder-content">
         <Icon name="mdi:cog-outline" class="placeholder-icon" />
-        <h2 class="placeholder-title">Settings Coming Soon</h2>
+        <h2 class="placeholder-title">More Settings On The Way</h2>
         <p class="placeholder-text">
-          Additional settings will be available here as we continue developing
-          this space. For now, you can manage your profile and update your
-          password from the navigation menu.
+          We're working on additional settings to help you customize your
+          experience. In the meantime, you can update your profile and password
+          from the navigation menu.
         </p>
       </div>
     </div>
