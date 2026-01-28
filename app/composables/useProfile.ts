@@ -28,6 +28,7 @@ interface FirestoreError {
 export const useProfile = () => {
   const { db, user } = useFirebase();
   const { user: authUser } = useAuth();
+  const toast = useToast();
 
   // Loading and error states
   const isLoading = ref(false);
@@ -141,6 +142,7 @@ export const useProfile = () => {
       const firestoreError = err as FirestoreError;
       const errorMessage = getErrorMessage(firestoreError.code);
       error.value = errorMessage;
+      toast.error(errorMessage);
       return { success: false, error: errorMessage };
     } finally {
       isLoading.value = false;
@@ -191,11 +193,13 @@ export const useProfile = () => {
         };
       }
 
+      toast.success("Profile updated successfully!");
       return { success: true };
     } catch (err) {
       const firestoreError = err as FirestoreError;
       const errorMessage = getErrorMessage(firestoreError.code);
       error.value = errorMessage;
+      toast.error(errorMessage);
       return { success: false, error: errorMessage };
     } finally {
       isLoading.value = false;

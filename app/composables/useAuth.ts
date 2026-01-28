@@ -20,6 +20,7 @@ interface AuthError {
 export const useAuth = () => {
   const { auth, user, isAuthReady } = useFirebase();
   const router = useRouter();
+  const toast = useToast();
 
   // Loading and error states
   const isLoading = ref(false);
@@ -62,11 +63,13 @@ export const useAuth = () => {
 
     try {
       await signInWithEmailAndPassword(auth, email, password);
+      toast.success("Successfully logged in!");
       return { success: true };
     } catch (err) {
       const authError = err as AuthError;
       const errorMessage = getErrorMessage(authError.code);
       error.value = errorMessage;
+      toast.error(errorMessage);
       return { success: false, error: errorMessage };
     } finally {
       isLoading.value = false;
@@ -85,11 +88,13 @@ export const useAuth = () => {
 
     try {
       await createUserWithEmailAndPassword(auth, email, password);
+      toast.success("Account created successfully!");
       return { success: true };
     } catch (err) {
       const authError = err as AuthError;
       const errorMessage = getErrorMessage(authError.code);
       error.value = errorMessage;
+      toast.error(errorMessage);
       return { success: false, error: errorMessage };
     } finally {
       isLoading.value = false;
@@ -106,11 +111,13 @@ export const useAuth = () => {
     try {
       await signOut(auth);
       await router.push("/login");
+      toast.info("You have been logged out");
       return { success: true };
     } catch (err) {
       const authError = err as AuthError;
       const errorMessage = getErrorMessage(authError.code);
       error.value = errorMessage;
+      toast.error(errorMessage);
       return { success: false, error: errorMessage };
     } finally {
       isLoading.value = false;
@@ -142,6 +149,7 @@ export const useAuth = () => {
 
       // Update password
       await updatePassword(currentUser, newPassword);
+      toast.success("Password changed successfully!");
       return { success: true };
     } catch (err) {
       const authError = err as AuthError;
@@ -160,6 +168,7 @@ export const useAuth = () => {
       }
 
       error.value = errorMessage;
+      toast.error(errorMessage);
       return { success: false, error: errorMessage };
     } finally {
       isLoading.value = false;
