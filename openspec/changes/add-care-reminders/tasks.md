@@ -24,11 +24,11 @@
 
 ## 4. Care Reminder Input
 
-- [ ] 4.1 Implement text input with pastoral placeholder
-- [ ] 4.2 Add optional date picker for due date
-- [ ] 4.3 Implement "Add care reminder" button with pastoral styling
-- [ ] 4.4 Handle empty input prevention with gentle feedback
-- [ ] 4.5 Clear input after successful submission
+- [x] 4.1 Implement text input with pastoral placeholder
+- [x] 4.2 Add optional date picker for due date
+- [x] 4.3 Implement "Add care reminder" button with pastoral styling
+- [x] 4.4 Handle empty input prevention with gentle feedback
+- [x] 4.5 Clear input after successful submission
 
 ## 5. Care Reminder Display
 
