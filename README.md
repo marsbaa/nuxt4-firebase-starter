@@ -16,6 +16,7 @@ Pastoral care work involves sensitive conversations, confidential information, a
 - 🔐 **Secure Authentication** - Firebase-powered email/password authentication with privacy-focused design
 - 👤 **Profile Management** - Personal profile system with Firestore integration
 - 📝 **Care Space** - Real-time pastoral care notes with edit history preservation
+- 🔔 **Care Reminders** - Gentle follow-up intentions held in mind for members
 - 👥 **Member Management** - Compassionate member directory and profiles
 - 🎨 **Pastoral Design System** - Warm earth tones, generous spacing, and calming visual language
 - 🔔 **Gentle Notifications** - Supportive feedback system with respectful messaging
@@ -49,6 +50,9 @@ care-covenant-app/
 │   │   ├── CareNote.vue     # Individual care note with edit & history
 │   │   ├── CareNoteInput.vue # Gentle care note input interface
 │   │   ├── CareNoteList.vue # Timeline view for care notes
+│   │   ├── CareReminder.vue # Individual care reminder display
+│   │   ├── CareReminderInput.vue # Gentle care reminder input interface
+│   │   ├── CareReminderList.vue # Care reminders section (max 3)
 │   │   ├── CareSpace.vue    # Main Care Space orchestrator
 │   │   ├── MemberAvatar.vue # Member avatar display
 │   │   ├── MemberTable.vue  # Member directory table
@@ -59,12 +63,14 @@ care-covenant-app/
 │   ├── composables/         # Vue composables for logic
 │   │   ├── useAuth.ts       # Authentication management
 │   │   ├── useCareNotes.ts  # Care notes management (Firestore)
+│   │   ├── useCareReminders.ts # Care reminders management (Firestore)
 │   │   ├── useFirebase.ts   # Firebase client initialization
 │   │   ├── useMembers.ts    # Member data management
 │   │   ├── useProfile.ts    # Profile data management
 │   │   └── useToast.ts      # Notification system
 │   ├── types/               # TypeScript type definitions
-│   │   └── careNotes.ts     # Care note types and interfaces
+│   │   ├── careNotes.ts     # Care note types and interfaces
+│   │   └── careReminders.ts # Care reminder types and interfaces
 │   ├── layouts/
 │   │   └── dashboard.vue    # Main dashboard layout with navigation
 │   ├── middleware/
@@ -226,6 +232,15 @@ The Care Space is designed to feel like **"a journal for caring for someone"**, 
 - **Inline editing** - Authors can edit their notes directly with a gentle edit interface
 - **Edit history** - All previous versions are preserved automatically with timestamps and author information
 
+#### Care Reminders
+
+- **Gentle intentions** - Hold follow-up thoughts in mind for members without task-like pressure
+- **Optional due dates** - Add dates when you want to remember something, or leave undated
+- **Smart ordering** - Soonest due dates appear first, undated reminders appear last
+- **Automatic expiry** - Reminders past their due date are automatically filtered from view
+- **Maximum 3 displayed** - Focus on what matters most right now
+- **Pastoral language** - "Held by [Name]" instead of "Created by" or "Assigned to"
+
 #### Pastoral Language
 
 - "Share a care note" (not "Add log" or "Create entry")
@@ -243,11 +258,15 @@ The Care Space is designed to feel like **"a journal for caring for someone"**, 
 
 The Care Space uses several specialized components:
 
-- **`CareSpace.vue`** - Main orchestrator for the care space (combines input and list)
+- **`CareSpace.vue`** - Main orchestrator for the care space (combines notes and reminders)
 - **`CareNoteInput.vue`** - Gentle input interface with auto-expanding textarea
 - **`CareNoteList.vue`** - Timeline view with loading and empty states
 - **`CareNote.vue`** - Individual note display with inline edit and history viewer
+- **`CareReminderInput.vue`** - Gentle input interface for adding reminders with optional dates
+- **`CareReminderList.vue`** - Display section for care reminders (max 3)
+- **`CareReminder.vue`** - Individual reminder display with due date and author
 - **`useCareNotes()`** - Composable for real-time note management and CRUD operations
+- **`useCareReminders()`** - Composable for real-time reminder management with automatic expiry
 
 ### Usage Example
 
@@ -469,6 +488,51 @@ collection("careNotes")
 - The `updatedAt` timestamp reflects the most recent edit
 - History is preserved for memory and integrity but not surfaced in v1 UI
 
+### Care Reminders Collection
+
+Care Reminders are gentle follow-up intentions held in mind for members. They are NOT tasks, obligations, or deadlines—they exist to support memory and pastoral presence.
+
+**Collection**: `/careReminders/{reminderId}`
+
+**Schema**:
+
+```typescript
+{
+  memberId: string; // Reference to member (indexed for queries)
+  text: string; // The reminder text describing what to hold in mind
+  dueDate: Timestamp | null; // Optional due date when to remember this
+  authorId: string; // User ID of the reminder author
+  authorName: string; // Display name (shown as "Held by [Name]")
+  createdAt: Timestamp; // Creation timestamp
+  isExpired: boolean; // Whether the reminder is expired (past due date)
+}
+```
+
+**Query Pattern**:
+
+```typescript
+// Fetch active care reminders for a specific member
+// Query filters by memberId, client-side filtering for expiry
+// Sorted by soonest due date first, undated last, limited to 3
+collection("careReminders").where("memberId", "==", memberId);
+```
+
+**Expiry Logic**:
+
+- A reminder is considered expired once its `dueDate` has passed
+- Only active (non-expired) reminders are displayed on the Member Detail page
+- Reminders with `null` dueDate never expire
+- Client-side filtering handles expiry checking for better control
+- Sorting places dated reminders (soonest first) before undated reminders
+- Future Calendar feature will surface all reminders for review
+
+**Display Rules**:
+
+- Maximum 3 reminders displayed per member
+- Ordered by: soonest due date first, undated last
+- Real-time synchronization via Firestore snapshot listeners
+- Automatic filtering of expired reminders
+
 ## Firestore Security Rules
 
 For production, implement proper security rules:
@@ -485,6 +549,13 @@ service cloud.firestore {
     // Care Notes: Pastoral team-only access (v1 - authenticated users)
     // Future: Add role-based checks (e.g., request.auth.token.role == 'pastor')
     match /careNotes/{noteId} {
+      allow read, write: if request.auth != null;
+    }
+
+    // Care Reminders: Pastoral team-only access (v1 - authenticated users)
+    // All authenticated users can read and create reminders
+    // This mirrors the Care Notes approach for v1 simplification
+    match /careReminders/{reminderId} {
       allow read, write: if request.auth != null;
     }
   }

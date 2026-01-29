@@ -80,6 +80,6 @@
 
 ## 11. Documentation
 
-- [ ] 11.1 Update spec delta with ADDED requirements
-- [ ] 11.2 Document Firestore structure in code comments
-- [ ] 11.3 Update any relevant user documentation (if applicable)
+- [x] 11.1 Update spec delta with ADDED requirements
+- [x] 11.2 Document Firestore structure in code comments
+- [x] 11.3 Update any relevant user documentation (if applicable)
