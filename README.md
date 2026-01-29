@@ -319,6 +319,58 @@ This project uses [Iconify](https://iconify.design/) with [Heroicons](https://he
 
 Browse icons at [icon-sets.iconify.design](https://icon-sets.iconify.design/). Prefer rounded, outline-style icon families for consistency with the pastoral design language.
 
+## Data Structure
+
+### Care Notes Collection
+
+Care Notes are stored in Firestore to provide a flexible, queryable structure for pastoral care records. Each note represents a care interaction or observation about a member.
+
+**Collection**: `/careNotes/{noteId}`
+
+**Schema**:
+
+```typescript
+{
+  memberId: string; // Reference to member (indexed for queries)
+  content: string; // The care note narrative text
+  authorId: string; // User ID of the note author
+  authorName: string; // Display name of the author
+  createdAt: Timestamp; // Original creation timestamp (never changes)
+  updatedAt: Timestamp; // Last update timestamp
+  history: Array<{
+    // Edit history for integrity and memory
+    content: string; // Previous content before edit
+    editedAt: Timestamp; // When the edit occurred
+    editedBy: string; // User ID who made the edit
+    editedByName: string; // Display name of the editor
+  }>;
+}
+```
+
+**Query Pattern**:
+
+```typescript
+// Fetch care notes for a specific member, most recent first
+collection("careNotes")
+  .where("memberId", "==", memberId)
+  .orderBy("createdAt", "desc")
+  .limit(50);
+```
+
+**Why Firestore (not RTDB)**:
+
+- Better ordering and pagination with `.orderBy()` and `.limit()`
+- Supports future filtering with `.where()` clauses
+- Built-in offline caching
+- More efficient queries for structured data
+
+**Edit History Approach**:
+
+- When a note is edited, the previous content is preserved in the `history` array
+- The original `createdAt` timestamp never changes (maintains chronological integrity)
+- The `updatedAt` timestamp reflects the most recent edit
+- History is preserved for memory and integrity but not surfaced in v1 UI
+
 ## Firestore Security Rules
 
 For production, implement proper security rules:
@@ -330,6 +382,12 @@ service cloud.firestore {
     // Users can only access their own profile
     match /users/{userId} {
       allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+
+    // Care Notes: Pastoral team-only access (v1 - authenticated users)
+    // Future: Add role-based checks (e.g., request.auth.token.role == 'pastor')
+    match /careNotes/{noteId} {
+      allow read, write: if request.auth != null;
     }
   }
 }
