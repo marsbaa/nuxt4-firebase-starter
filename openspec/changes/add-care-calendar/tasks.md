@@ -24,10 +24,10 @@
 
 ## 4. Event Display
 
-- [ ] 4.1 Create `CalendarEvent.vue` component for individual events
-- [ ] 4.2 Implement visual distinction for event types (color coding)
-- [ ] 4.3 Add event type icons
-- [ ] 4.4 Create calendar legend component
+- [x] 4.1 Create `CalendarEvent.vue` component for individual events
+- [x] 4.2 Implement visual distinction for event types (color coding)
+- [x] 4.3 Add event type icons
+- [x] 4.4 Create calendar legend component
 
 ## 5. Agenda View Implementation
 

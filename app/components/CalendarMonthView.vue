@@ -1,5 +1,17 @@
 <script setup lang="ts">
 import { ref, computed } from "vue";
+import CalendarEvent from "./CalendarEvent.vue";
+import CalendarLegend from "./CalendarLegend.vue";
+import type { CalendarEventType } from "~/types/calendarEvents";
+
+// Mock event type for demonstration
+interface MockEvent {
+  id: string;
+  date: Date;
+  title: string;
+  type: CalendarEventType;
+  icon: string;
+}
 
 // Props for passing events (will be used later)
 interface Props {
@@ -9,6 +21,16 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
   events: () => [],
 });
+
+// Event click handler
+const handleEventClick = (event: any) => {
+  // TODO: Implement navigation based on event type
+  // - member-milestone: navigate to member detail page
+  // - care-reminder: navigate to member detail page
+  // - care-update: navigate to member detail page
+  // - community-gathering: show event details
+  console.log("Event clicked:", event);
+};
 
 // Current displayed month
 const currentDate = ref(new Date());
@@ -83,7 +105,7 @@ const nextMonth = () => {
 const dayNames = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
 
 // Mock events for demonstration (matching the screenshot)
-const mockEvents = computed(() => {
+const mockEvents = computed<MockEvent[]>(() => {
   const year = currentDate.value.getFullYear();
   const month = currentDate.value.getMonth();
 
@@ -95,28 +117,28 @@ const mockEvents = computed(() => {
       id: "1",
       date: new Date(2024, 10, 4),
       title: "Arthur P. Birthday",
-      type: "member-milestone",
+      type: "member-milestone" as CalendarEventType,
       icon: "mdi:cake-variant",
     },
     {
       id: "2",
       date: new Date(2024, 10, 14),
       title: "Church Picnic",
-      type: "community-gathering",
+      type: "community-gathering" as CalendarEventType,
       icon: "mdi:church",
     },
     {
       id: "3",
       date: new Date(2024, 10, 20),
       title: "The Millers Anniv.",
-      type: "member-milestone",
+      type: "member-milestone" as CalendarEventType,
       icon: "mdi:cake-variant",
     },
     {
       id: "4",
       date: new Date(2024, 10, 28),
       title: "Thanksgiving",
-      type: "liturgical-event",
+      type: "liturgical-event" as CalendarEventType,
       icon: "mdi:food-turkey",
     },
   ];
@@ -130,12 +152,6 @@ const getEventsForDay = (date: Date) => {
       event.date.getMonth() === date.getMonth() &&
       event.date.getFullYear() === date.getFullYear(),
   );
-};
-
-// Get event style classes
-const getEventClass = (eventType: string) => {
-  const baseClass = "calendar-event";
-  return `${baseClass} ${baseClass}--${eventType}`;
 };
 </script>
 
@@ -189,33 +205,26 @@ const getEventClass = (eventType: string) => {
 
         <!-- Events for this day -->
         <div class="day-events">
-          <div
+          <CalendarEvent
             v-for="event in getEventsForDay(day.date)"
             :key="event.id"
-            :class="getEventClass(event.type)"
-          >
-            <Icon :name="event.icon" class="event-icon" />
-            <span class="event-title">{{ event.title }}</span>
-          </div>
+            :title="event.title"
+            :type="event.type"
+            :icon="event.icon"
+            @click="handleEventClick(event)"
+          />
         </div>
       </div>
     </div>
 
     <!-- Calendar Legend -->
-    <div class="calendar-legend">
-      <div class="legend-item">
-        <span class="legend-dot legend-dot--member-milestone"></span>
-        <span class="legend-label">Member Milestones</span>
-      </div>
-      <div class="legend-item">
-        <span class="legend-dot legend-dot--community-gathering"></span>
-        <span class="legend-label">Community Gatherings</span>
-      </div>
-      <div class="legend-item">
-        <span class="legend-dot legend-dot--liturgical-event"></span>
-        <span class="legend-label">Liturgical Events</span>
-      </div>
-    </div>
+    <CalendarLegend
+      :show-types="[
+        'member-milestone',
+        'community-gathering',
+        'liturgical-event',
+      ]"
+    />
 
     <!-- Tagline -->
     <div class="calendar-footer">
@@ -370,137 +379,6 @@ const getEventClass = (eventType: string) => {
   flex: 1;
 }
 
-.calendar-event {
-  display: flex;
-  align-items: center;
-  gap: 0.375rem;
-  padding: 0.375rem 0.5rem;
-  border-radius: 6px;
-  font-family: "Work Sans", sans-serif;
-  font-size: 0.75rem;
-  font-weight: 500;
-  line-height: 1.3;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.calendar-event:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 2px 4px rgba(44, 44, 42, 0.08);
-}
-
-.calendar-event--member-milestone {
-  background: rgba(207, 184, 203, 0.15);
-  color: #8b6d88;
-  border: 1px solid rgba(207, 184, 203, 0.3);
-}
-
-.calendar-event--member-milestone:hover {
-  background: rgba(207, 184, 203, 0.2);
-  border-color: rgba(207, 184, 203, 0.4);
-}
-
-.calendar-event--community-gathering {
-  background: rgba(169, 193, 205, 0.15);
-  color: #5a7a8c;
-  border: 1px solid rgba(169, 193, 205, 0.3);
-}
-
-.calendar-event--community-gathering:hover {
-  background: rgba(169, 193, 205, 0.2);
-  border-color: rgba(169, 193, 205, 0.4);
-}
-
-.calendar-event--liturgical-event {
-  background: rgba(217, 188, 155, 0.15);
-  color: #9c8b7a;
-  border: 1px solid rgba(217, 188, 155, 0.3);
-}
-
-.calendar-event--liturgical-event:hover {
-  background: rgba(217, 188, 155, 0.2);
-  border-color: rgba(217, 188, 155, 0.4);
-}
-
-.calendar-event--care-reminder {
-  background: rgba(122, 155, 118, 0.15);
-  color: #5f7d5c;
-  border: 1px solid rgba(122, 155, 118, 0.3);
-}
-
-.calendar-event--care-reminder:hover {
-  background: rgba(122, 155, 118, 0.2);
-  border-color: rgba(122, 155, 118, 0.4);
-}
-
-.calendar-event--care-update {
-  background: rgba(191, 174, 157, 0.15);
-  color: #8c7a6a;
-  border: 1px solid rgba(191, 174, 157, 0.3);
-}
-
-.calendar-event--care-update:hover {
-  background: rgba(191, 174, 157, 0.2);
-  border-color: rgba(191, 174, 157, 0.4);
-}
-
-.event-icon {
-  width: 0.875rem;
-  height: 0.875rem;
-  flex-shrink: 0;
-}
-
-.event-title {
-  flex: 1;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-/* Calendar Legend */
-.calendar-legend {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1.5rem;
-  justify-content: center;
-  padding: 1.5rem 1rem;
-  border-top: 1px solid #e8e8e5;
-}
-
-.legend-item {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.legend-dot {
-  width: 0.75rem;
-  height: 0.75rem;
-  border-radius: 50%;
-  flex-shrink: 0;
-}
-
-.legend-dot--member-milestone {
-  background: rgba(207, 184, 203, 0.6);
-  border: 1px solid rgba(207, 184, 203, 0.8);
-}
-
-.legend-dot--community-gathering {
-  background: rgba(169, 193, 205, 0.6);
-  border: 1px solid rgba(169, 193, 205, 0.8);
-}
-
-.legend-dot--liturgical-event {
-  background: rgba(217, 188, 155, 0.6);
-  border: 1px solid rgba(217, 188, 155, 0.8);
-}
-
-.legend-label {
-  font-family: "Work Sans", sans-serif;
-  font-size: 0.813rem;
-  color: #706c64;
-}
-
 /* Calendar Footer */
 .calendar-footer {
   text-align: center;
@@ -520,16 +398,6 @@ const getEventClass = (eventType: string) => {
   .calendar-day {
     min-height: 100px;
     padding: 0.625rem;
-  }
-
-  .calendar-event {
-    font-size: 0.688rem;
-    padding: 0.313rem 0.438rem;
-  }
-
-  .event-icon {
-    width: 0.75rem;
-    height: 0.75rem;
   }
 }
 
@@ -554,21 +422,6 @@ const getEventClass = (eventType: string) => {
 
   .today-label {
     font-size: 0.563rem;
-  }
-
-  .calendar-event {
-    font-size: 0.625rem;
-    padding: 0.25rem 0.375rem;
-    gap: 0.25rem;
-  }
-
-  .event-icon {
-    width: 0.688rem;
-    height: 0.688rem;
-  }
-
-  .legend-item {
-    font-size: 0.75rem;
   }
 }
 
@@ -604,19 +457,6 @@ const getEventClass = (eventType: string) => {
   .calendar-day-header {
     padding: 0.75rem 0.5rem;
     font-size: 0.625rem;
-  }
-
-  .event-title {
-    display: none;
-  }
-
-  .legend-item {
-    gap: 0.375rem;
-  }
-
-  .legend-dot {
-    width: 0.625rem;
-    height: 0.625rem;
   }
 
   .tagline {
