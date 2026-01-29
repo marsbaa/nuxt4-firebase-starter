@@ -19,6 +19,7 @@ const isEmpty = computed(() => !props.loading && props.notes.length === 0);
       v-if="loading"
       class="loading-state"
       role="status"
+      aria-live="polite"
       aria-label="Loading care notes"
     >
       <div class="skeleton-note" v-for="i in 3" :key="i">

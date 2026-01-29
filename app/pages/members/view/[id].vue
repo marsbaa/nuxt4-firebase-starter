@@ -59,6 +59,9 @@ const handleSendMessage = () => {
 
 <template>
   <div class="member-detail-page">
+    <!-- Skip to main content link for keyboard navigation -->
+    <a href="#main-content" class="skip-to-content">Skip to main content</a>
+
     <!-- Back button -->
     <button
       @click="handleBack"
@@ -70,15 +73,20 @@ const handleSendMessage = () => {
     </button>
 
     <!-- Loading state -->
-    <div v-if="isLoading" class="loading-state">
-      <div class="loading-spinner"></div>
+    <div
+      v-if="isLoading"
+      class="loading-state"
+      role="status"
+      aria-live="polite"
+    >
+      <div class="loading-spinner" aria-hidden="true"></div>
       <p class="loading-text">Loading member details...</p>
     </div>
 
     <!-- Member Detail -->
     <template v-else-if="member">
       <!-- Content Grid -->
-      <div class="content-grid">
+      <div id="main-content" class="content-grid">
         <!-- Left Column: Personal Context -->
         <div class="left-column">
           <PersonalContext
@@ -119,25 +127,65 @@ const handleSendMessage = () => {
   }
 }
 
+/* Skip to content link for keyboard accessibility */
+.skip-to-content {
+  position: absolute;
+  left: -9999px;
+  top: 1rem;
+  z-index: 999;
+  padding: 0.75rem 1.5rem;
+  background: #c2a47a;
+  color: #ffffff;
+  text-decoration: none;
+  border-radius: 0.25rem;
+  font-family: "Inter", sans-serif;
+  font-size: 0.875rem;
+  font-weight: 500;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+}
+
+.skip-to-content:focus {
+  left: 1rem;
+  outline: 2px solid #292524;
+  outline-offset: 2px;
+}
+
 /* Back button */
 .back-button {
   display: inline-flex;
   align-items: center;
   gap: 0.375rem;
-  padding: 0;
+  padding: 0.5rem;
   margin-bottom: 0.75rem;
+  margin-left: -0.5rem;
   font-family: "Inter", sans-serif;
   font-size: 0.813rem;
   font-weight: 400;
   color: #9e9287;
   background: none;
   border: none;
+  border-radius: 0.25rem;
   cursor: pointer;
-  transition: opacity 0.2s ease;
+  transition: all 0.2s ease;
+  min-height: 2.75rem;
 }
 
 .back-button:hover {
   opacity: 0.7;
+}
+
+.back-button:focus {
+  outline: 2px solid #c2a47a;
+  outline-offset: 2px;
+}
+
+.back-button:focus:not(:focus-visible) {
+  outline: none;
+}
+
+.back-button:focus-visible {
+  outline: 2px solid #c2a47a;
+  outline-offset: 2px;
 }
 
 .back-icon {

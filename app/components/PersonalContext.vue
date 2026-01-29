@@ -97,13 +97,29 @@ const formattedJoiningDate = computed(() => {
       <h3 class="section-heading">Care Intentions</h3>
 
       <div class="action-buttons">
-        <button class="care-action-button" @click="emit('edit-profile')">
-          <AppIcon name="heroicons:pencil" class="action-icon" />
+        <button
+          class="care-action-button"
+          @click="emit('edit-profile')"
+          aria-label="Update member profile"
+        >
+          <AppIcon
+            name="heroicons:pencil"
+            class="action-icon"
+            aria-hidden="true"
+          />
           <span>Update her story</span>
         </button>
 
-        <button class="care-action-button" @click="emit('send-message')">
-          <AppIcon name="heroicons:chat-bubble-left" class="action-icon" />
+        <button
+          class="care-action-button"
+          @click="emit('send-message')"
+          aria-label="Send a message to member"
+        >
+          <AppIcon
+            name="heroicons:chat-bubble-left"
+            class="action-icon"
+            aria-hidden="true"
+          />
           <span>Reach out with a word</span>
         </button>
       </div>
@@ -308,15 +324,32 @@ const formattedJoiningDate = computed(() => {
   color: #57534e;
   cursor: pointer;
   text-align: left;
-  transition: color 0.15s ease;
+  transition: all 0.15s ease;
   padding: 1rem;
   border-radius: 1rem;
   border: 1px solid #fcfcfc;
   box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.03);
+  /* Minimum touch target size for accessibility */
+  min-height: 2.75rem;
 }
 
 .care-action-button:hover {
   color: #292524;
+  background: #fafaf9;
+}
+
+.care-action-button:focus {
+  outline: 2px solid #c2a47a;
+  outline-offset: 2px;
+}
+
+.care-action-button:focus:not(:focus-visible) {
+  outline: none;
+}
+
+.care-action-button:focus-visible {
+  outline: 2px solid #c2a47a;
+  outline-offset: 2px;
 }
 
 .action-icon {
