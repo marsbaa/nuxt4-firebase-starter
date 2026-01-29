@@ -101,7 +101,7 @@ const isEmpty = computed(() => !props.loading && props.reminders.length === 0);
 /* Loading State */
 .loading-state {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: 1rem;
   width: 100%;
 }
@@ -214,7 +214,7 @@ const isEmpty = computed(() => !props.loading && props.reminders.length === 0);
 /* Reminders Collection */
 .reminders-collection {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: 1rem;
   width: 100%;
 }
