@@ -25,15 +25,15 @@
 
 ## 3. Page Refactoring
 
-- [ ] 3.1 Backup current `[id].vue` implementation (git commit before changes)
-- [ ] 3.2 Remove "Export PDF" button from page header
-- [ ] 3.3 Remove Export PDF functionality and related code
-- [ ] 3.4 Restructure page layout to use new components
-- [ ] 3.5 Replace placeholder notes with real Care Notes from Firestore via `useCareNotes()`
-- [ ] 3.6 Integrate `PersonalContext.vue` for left column
-- [ ] 3.7 Integrate `CareSpace.vue` for right column
-- [ ] 3.8 Remove old "Pastoral Notes" and "Member Information" card implementations
-- [ ] 3.9 Update page title and metadata if needed
+- [x] 3.1 Backup current `[id].vue` implementation (git commit before changes)
+- [x] 3.2 Remove "Export PDF" button from page header
+- [x] 3.3 Remove Export PDF functionality and related code
+- [x] 3.4 Restructure page layout to use new components
+- [x] 3.5 Replace placeholder notes with real Care Notes from Firestore via `useCareNotes()`
+- [x] 3.6 Integrate `PersonalContext.vue` for left column
+- [x] 3.7 Integrate `CareSpace.vue` for right column
+- [x] 3.8 Remove old "Pastoral Notes" and "Member Information" card implementations
+- [x] 3.9 Update page title and metadata if needed
 
 ## 4. Language & Copy Updates
 
