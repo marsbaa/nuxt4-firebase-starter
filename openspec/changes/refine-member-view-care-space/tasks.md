@@ -48,14 +48,14 @@
 
 ## 5. Styling & Visual Hierarchy
 
-- [ ] 5.1 Update Care Space card styling (larger heading, prominent position)
-- [ ] 5.2 Soften left column visual density (spacing, separators)
-- [ ] 5.3 Reduce prominence of Quick Actions (smaller heading, subtle buttons)
-- [ ] 5.4 Style CareNote component with subtle date/time and author
-- [ ] 5.5 Style CareNote edit mode (inline textarea, Save/Cancel buttons)
-- [ ] 5.6 Style CareNoteInput with gentle, inviting design
-- [ ] 5.7 Ensure consistent use of warm, pastoral color palette
-- [ ] 5.8 Test visual hierarchy: Care Space should be obvious focal point
+- [x] 5.1 Update Care Space card styling (larger heading, prominent position)
+- [x] 5.2 Soften left column visual density (spacing, separators)
+- [x] 5.3 Reduce prominence of Quick Actions (smaller heading, subtle buttons)
+- [x] 5.4 Style CareNote component with subtle date/time and author
+- [x] 5.5 Style CareNote edit mode (inline textarea, Save/Cancel buttons)
+- [x] 5.6 Style CareNoteInput with gentle, inviting design
+- [x] 5.7 Ensure consistent use of warm, pastoral color palette
+- [x] 5.8 Test visual hierarchy: Care Space should be obvious focal point
 
 ## 6. Responsive Behavior
 
