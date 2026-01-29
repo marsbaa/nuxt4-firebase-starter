@@ -104,10 +104,12 @@ export function useCareReminders(memberId: Ref<string> | string) {
    * Sets up Firestore snapshot listener for the specified member
    *
    * Query logic:
-   * - Filters by memberId
-   * - Orders by dueDate ascending (soonest first)
-   * - Limits to 3 reminders
-   * - Filters expired reminders client-side (since Firestore can't filter null orderBy fields)
+   * - Filters by memberId only in Firestore
+   * - All sorting and limiting done client-side for better control
+   * - Filters out expired reminders
+   * - Sorts dated reminders by soonest first
+   * - Places undated reminders last
+   * - Limits final result to 3 reminders
    */
   const subscribe = () => {
     if (!db) {
@@ -126,14 +128,11 @@ export function useCareReminders(memberId: Ref<string> | string) {
     error.value = null;
 
     try {
-      // Query care reminders for the member, ordered by due date (soonest first)
-      // Note: We can't filter by isExpired in Firestore when using orderBy on a different field
-      // So we'll filter expired reminders client-side after fetching
+      // Query all care reminders for the member (without orderBy)
+      // We'll filter and sort client-side to properly handle null dates and expiry
       const careRemindersQuery = query(
         collection(db, "careReminders"),
         where("memberId", "==", memberIdRef.value),
-        orderBy("dueDate", "asc"),
-        limit(10), // Fetch more than 3 to account for filtering expired ones
       );
 
       // Set up real-time listener
@@ -155,7 +154,7 @@ export function useCareReminders(memberId: Ref<string> | string) {
             } as CareReminder;
           });
 
-          // Filter out expired reminders and limit to 3
+          // Filter out expired reminders
           const activeReminders = allReminders.filter((r) => !r.isExpired);
 
           // Separate reminders with dates and without dates
@@ -164,7 +163,13 @@ export function useCareReminders(memberId: Ref<string> | string) {
             (r) => r.dueDate === null,
           );
 
-          // Combine: dated first (already sorted by query), undated last, limit to 3
+          // Sort dated reminders by due date (soonest first)
+          withDates.sort((a, b) => {
+            if (!a.dueDate || !b.dueDate) return 0;
+            return a.dueDate.toMillis() - b.dueDate.toMillis();
+          });
+
+          // Combine: dated first (sorted by soonest), undated last, limit to 3
           reminders.value = [...withDates, ...withoutDates].slice(0, 3);
 
           loading.value = false;
