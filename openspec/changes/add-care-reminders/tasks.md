@@ -32,12 +32,12 @@
 
 ## 5. Care Reminder Display
 
-- [ ] 5.1 Implement display of reminder text
-- [ ] 5.2 Display optional due date with calm formatting (e.g., "Jan 15")
-- [ ] 5.3 Display author name subtly (e.g., "Held by [Name]")
-- [ ] 5.4 Show only active (non-expired) reminders
-- [ ] 5.5 Limit display to 3 reminders maximum
-- [ ] 5.6 Order by: soonest due date first, undated last
+- [x] 5.1 Implement display of reminder text
+- [x] 5.2 Display optional due date with calm formatting (e.g., "Jan 15")
+- [x] 5.3 Display author name subtly (e.g., "Held by [Name]")
+- [x] 5.4 Show only active (non-expired) reminders
+- [x] 5.5 Limit display to 3 reminders maximum
+- [x] 5.6 Order by: soonest due date first, undated last
 
 ## 6. Loading and Empty States
 
