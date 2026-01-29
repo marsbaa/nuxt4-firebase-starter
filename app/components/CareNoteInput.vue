@@ -71,7 +71,7 @@ onMounted(() => {
         class="input-textarea"
         placeholder="Share a care note…"
         rows="3"
-        aria-label="Add a care note"
+        aria-label="Share a care note for this person"
         :disabled="loading || isSubmitting"
         @keydown="handleKeydown"
       />

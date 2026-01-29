@@ -65,7 +65,7 @@ const isAuthor = computed(() => user.value?.uid === props.note.authorId);
 </script>
 
 <template>
-  <div class="care-note">
+  <div class="care-note" role="listitem">
     <!-- View Mode -->
     <div v-if="!isEditing" class="note-view">
       <!-- Content -->
@@ -84,7 +84,7 @@ const isAuthor = computed(() => user.value?.uid === props.note.authorId);
           type="button"
           class="edit-button"
           @click="startEdit"
-          aria-label="Edit this care note"
+          aria-label="Edit care note"
         >
           Edit
         </button>
@@ -98,8 +98,8 @@ const isAuthor = computed(() => user.value?.uid === props.note.authorId);
         v-model="editContent"
         class="edit-textarea"
         rows="4"
-        placeholder="Edit care note..."
-        aria-label="Edit care note content"
+        placeholder="Edit your care note…"
+        aria-label="Care note content editor"
         @keydown.escape="cancelEdit"
         @keydown.meta.enter="saveEdit"
         @keydown.ctrl.enter="saveEdit"

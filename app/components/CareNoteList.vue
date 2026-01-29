@@ -17,7 +17,12 @@ const isEmpty = computed(() => !props.loading && props.notes.length === 0);
 <template>
   <div class="care-note-list">
     <!-- Loading State -->
-    <div v-if="loading" class="loading-state">
+    <div
+      v-if="loading"
+      class="loading-state"
+      role="status"
+      aria-label="Loading care notes"
+    >
       <div class="skeleton-note" v-for="i in 3" :key="i">
         <div class="skeleton-content"></div>
         <div class="skeleton-meta"></div>
@@ -25,14 +30,28 @@ const isEmpty = computed(() => !props.loading && props.notes.length === 0);
     </div>
 
     <!-- Empty State -->
-    <div v-else-if="isEmpty" class="empty-state">
-      <AppIcon name="heroicons:chat-bubble-left-right" class="empty-icon" />
+    <div
+      v-else-if="isEmpty"
+      class="empty-state"
+      role="status"
+      aria-label="No care notes yet"
+    >
+      <AppIcon
+        name="heroicons:chat-bubble-left-right"
+        class="empty-icon"
+        aria-hidden="true"
+      />
       <p class="empty-message">No care notes yet</p>
       <p class="empty-hint">Share the first note to begin the care story</p>
     </div>
 
     <!-- Notes Timeline -->
-    <div v-else class="notes-timeline">
+    <div
+      v-else
+      class="notes-timeline"
+      role="list"
+      aria-label="Care notes timeline"
+    >
       <CareNote
         v-for="note in notes"
         :key="note.id"

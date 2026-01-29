@@ -60,8 +60,12 @@ const handleSendMessage = () => {
 <template>
   <div class="member-detail-page">
     <!-- Back button -->
-    <button @click="handleBack" class="back-button">
-      <Icon name="mdi:arrow-left" class="back-icon" />
+    <button
+      @click="handleBack"
+      class="back-button"
+      aria-label="Back to Members List"
+    >
+      <Icon name="mdi:arrow-left" class="back-icon" aria-hidden="true" />
       <span>Back to Members List</span>
     </button>
 

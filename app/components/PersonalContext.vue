@@ -46,7 +46,11 @@ const formattedJoiningDate = computed(() => {
 </script>
 
 <template>
-  <div class="personal-context">
+  <div
+    class="personal-context"
+    role="complementary"
+    aria-label="Personal Journey"
+  >
     <!-- Profile Section -->
     <div class="profile-section">
       <!-- Avatar -->

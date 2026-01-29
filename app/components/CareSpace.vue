@@ -27,7 +27,7 @@ const handleNoteUpdated = async (noteId: string, content: string) => {
 </script>
 
 <template>
-  <div class="care-space">
+  <div class="care-space" role="region" aria-label="Care Space">
     <!-- Header -->
     <div class="care-space-header">
       <h2 class="care-space-title">Care Space</h2>
