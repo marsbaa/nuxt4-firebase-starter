@@ -40,6 +40,11 @@ const navItems = [
     icon: "mdi:account-group",
   },
   {
+    name: "Calendar",
+    path: "/calendar",
+    icon: "mdi:calendar",
+  },
+  {
     name: "Your Profile",
     path: "/profile",
     icon: "mdi:account",
