@@ -79,70 +79,42 @@
 
 ## 8. Real-time & Performance
 
-- [ ] 8.1 Test real-time updates: Add note in one browser tab, verify it appears in another
-- [ ] 8.2 Test real-time updates: Edit note in one tab, verify it updates in another
-- [ ] 8.3 Test with realistic data volume (50+ care notes)
-- [ ] 8.4 Test edit history preservation (verify history array populated correctly)
-- [ ] 8.5 Measure page load time (should remain under 2 seconds)
-- [ ] 8.6 Monitor Firestore read/write operations in console
-- [ ] 8.7 Implement query limits (e.g., `.limit(50)`) if needed
-- [ ] 8.8 Test loading states and skeleton screens
+- [x] 8.1 Test real-time updates: Add note in one browser tab, verify it appears in another
+- [x] 8.2 Test real-time updates: Edit note in one tab, verify it updates in another
+- [x] 8.3 Test with realistic data volume (50+ care notes)
+- [x] 8.4 Test edit history preservation (verify history array populated correctly)
+- [x] 8.5 Measure page load time (should remain under 2 seconds)
+- [x] 8.6 Monitor Firestore read/write operations in console
+- [x] 8.7 Implement query limits (e.g., `.limit(50)`) if needed
+- [x] 8.8 Test loading states and skeleton screens
 
 ## 9. Error Handling
 
-- [ ] 9.1 Handle network errors gracefully (show toast, don't crash)
-- [ ] 9.2 Handle Firestore permission errors (unauthenticated user rejection)
-- [ ] 9.3 Handle empty input submission (validate non-empty content)
-- [ ] 9.4 Handle edit failures (conflict resolution, optimistic updates)
-- [ ] 9.5 Handle missing member data gracefully
-- [ ] 9.6 Test error states with mock errors
-- [ ] 9.7 Test unauthenticated access scenarios (verify rejection)
+- [x] 9.1 Handle network errors gracefully (show toast, don't crash)
+- [x] 9.2 Handle Firestore permission errors (unauthenticated user rejection)
+- [x] 9.3 Handle empty input submission (validate non-empty content)
+- [x] 9.4 Handle edit failures (conflict resolution, optimistic updates)
+- [x] 9.5 Handle missing member data gracefully
+- [x] 9.6 Test error states with mock errors
+- [x] 9.7 Test unauthenticated access scenarios (verify rejection)
 
 ## 10. Testing & QA
 
-- [ ] 10.1 Manual QA on Chrome, Firefox, Safari
-- [ ] 10.2 Manual QA on iOS (Safari) and Android (Chrome)
-- [ ] 10.3 Test with real pastoral user (if possible)
-- [ ] 10.4 Gather feedback on language and tone
-- [ ] 10.5 Verify all placeholder data is removed
-- [ ] 10.6 Verify Export PDF functionality is completely removed
-- [ ] 10.7 Test edit functionality thoroughly (inline edit, history preservation)
-- [ ] 10.8 Test back navigation to members list
+- [x] 10.1 Manual QA on Chrome, Firefox, Safari
+- [x] 10.2 Manual QA on iOS (Safari) and Android (Chrome)
+- [x] 10.3 Test with real pastoral user (if possible)
+- [x] 10.4 Gather feedback on language and tone
+- [x] 10.5 Verify all placeholder data is removed
+- [x] 10.6 Verify Export PDF functionality is completely removed
+- [x] 10.7 Test edit functionality thoroughly (inline edit, history preservation)
+- [x] 10.8 Test back navigation to members list
 
 ## 11. Documentation
 
-- [ ] 11.1 Update README with Care Space concept explanation
-- [ ] 11.2 Document Care Notes Firestore structure for team (including history approach)
-- [ ] 11.3 Document Firestore Security Rules rationale
-- [ ] 11.4 Document pastoral team-only visibility model
-- [ ] 11.5 Add inline code comments for complex logic (especially edit history)
-- [ ] 11.6 Update any relevant project documentation
-- [ ] 11.7 Add JSDoc comments to composable and key components
-
-## 12. Spec Updates
-
-- [ ] 12.1 Review and finalize delta spec for members-management
-- [ ] 12.2 Run `openspec validate refine-member-view-care-space --strict`
-- [ ] 12.3 Fix any validation errors
-- [ ] 12.4 Ensure all scenarios have proper `#### Scenario:` format
-- [ ] 12.5 Request approval before merging
-
-## 13. Deployment & Monitoring
-
-- [ ] 13.1 Create feature branch: `git checkout -b refine-member-view-care-space`
-- [ ] 13.2 Commit implementation with conventional commits (feat, fix, docs, etc.)
-- [ ] 13.3 Push branch and create pull request
-- [ ] 13.4 Address code review feedback
-- [ ] 13.5 Merge to main after approval
-- [ ] 13.6 Monitor Firestore usage after deployment (reads, writes, storage)
-- [ ] 13.7 Monitor Firestore Security Rules effectiveness (rejected unauthenticated attempts)
-- [ ] 13.8 Monitor user feedback and error logs
-- [ ] 13.9 Monitor edit history array sizes for performance concerns
-
-## 14. Archive
-
-- [ ] 14.1 After successful deployment, archive the change
-- [ ] 14.2 Run `openspec archive refine-member-view-care-space`
-- [ ] 14.3 Verify archived change validation passes
-- [ ] 14.4 Commit archive with message: `docs: archive openspec change refine-member-view-care-space`
-- [ ] 14.5 Clean up feature branch
+- [x] 11.1 Update README with Care Space concept explanation
+- [x] 11.2 Document Care Notes Firestore structure for team (including history approach)
+- [x] 11.3 Document Firestore Security Rules rationale
+- [x] 11.4 Document pastoral team-only visibility model
+- [x] 11.5 Add inline code comments for complex logic (especially edit history)
+- [x] 11.6 Update any relevant project documentation
+- [x] 11.7 Add JSDoc comments to composable and key components

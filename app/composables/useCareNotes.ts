@@ -12,6 +12,7 @@ import {
   getDoc,
   serverTimestamp,
   arrayUnion,
+  Timestamp,
   type Unsubscribe,
 } from "firebase/firestore";
 import type {
@@ -22,10 +23,57 @@ import type {
 
 /**
  * Composable for managing Care Notes with Firestore
- * Provides real-time updates via snapshot listener and CRUD operations
  *
- * @param memberId - The ID of the member whose care notes to manage
- * @returns Care notes state, loading state, error state, and CRUD operations
+ * Provides real-time synchronization of care notes for a specific member.
+ * Uses Firestore snapshot listeners for live updates across all connected clients.
+ *
+ * **Features:**
+ * - Real-time synchronization via onSnapshot()
+ * - Automatic edit history preservation
+ * - Optimistic UI with instant feedback
+ * - Automatic cleanup on component unmount
+ * - Reactive memberId support (re-subscribes on change)
+ *
+ * **Security Model:**
+ * - All authenticated users can read all care notes (pastoral team-only)
+ * - Only note authors can edit their own notes (checked in UI)
+ * - History is preserved automatically on every edit
+ *
+ * **Data Flow:**
+ * 1. Component mounts → subscribe() called → onSnapshot() listener established
+ * 2. Firestore changes → callback triggered → notes.value updated → Vue reactivity
+ * 3. Component unmounts → cleanup() called → listener unsubscribed
+ *
+ * **Edit History Approach:**
+ * - Previous content stored in history[] array with Timestamp.now()
+ * - createdAt never changes (maintains chronological integrity)
+ * - updatedAt reflects most recent edit
+ * - History viewable in UI via CareNote component
+ *
+ * @param memberId - The ID of the member whose care notes to manage (can be reactive)
+ * @returns Object containing:
+ *   - notes: Readonly ref of care notes array (newest first, limited to 50)
+ *   - loading: Readonly ref indicating loading state
+ *   - error: Readonly ref containing any error that occurred
+ *   - addNote: Function to create a new care note
+ *   - updateNote: Function to edit existing note (preserves history)
+ *   - deleteNote: Function to remove a care note
+ *
+ * @example
+ * ```vue
+ * <script setup>
+ * const memberId = ref('member-123');
+ * const { notes, loading, error, addNote, updateNote } = useCareNotes(memberId);
+ *
+ * const handleAddNote = async (content) => {
+ *   await addNote(content);
+ * };
+ *
+ * const handleEditNote = async (noteId, newContent) => {
+ *   await updateNote(noteId, newContent);
+ * };
+ * </script>
+ * ```
  */
 export function useCareNotes(memberId: Ref<string> | string) {
   const { db, user } = useFirebase();
@@ -183,7 +231,7 @@ export function useCareNotes(memberId: Ref<string> | string) {
         updatedAt: serverTimestamp(),
         history: arrayUnion({
           content: currentData.content,
-          editedAt: serverTimestamp(),
+          editedAt: Timestamp.now(),
           editedBy: user.value.uid,
           editedByName: user.value.displayName || user.value.email || "Unknown",
         }),

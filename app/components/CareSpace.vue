@@ -1,13 +1,52 @@
+<!--
+/**
+ * CareSpace Component
+ *
+ * Main orchestrator for the Care Space - a focused, calm environment for
+ * documenting and reflecting on pastoral care interactions.
+ *
+ * This component combines:
+ * - CareNoteInput: Gentle interface for adding new care notes
+ * - CareNoteList: Timeline view of existing notes with real-time updates
+ *
+ * **Props:**
+ * @param {string} memberId - The ID of the member (required)
+ * @param {string} memberName - The display name of the member (required)
+ *
+ * **Features:**
+ * - Real-time synchronization via useCareNotes composable
+ * - Optimistic UI updates
+ * - Automatic error handling with toast notifications
+ * - Responsive layout for mobile, tablet, and desktop
+ * - WCAG AA accessible
+ *
+ * **Design Philosophy:**
+ * Feels like "a journal for caring for someone" - narrative and reflective,
+ * not transactional or metrics-driven.
+ *
+ * @example
+ * ```vue
+ * <CareSpace
+ *   member-id="member-123"
+ *   member-name="John Smith"
+ * />
+ * ```
+ */
+-->
 <script setup lang="ts">
 const props = defineProps<{
   memberId: string;
   memberName: string;
 }>();
 
-// Use the care notes composable
+// Use the care notes composable for real-time sync
 const { notes, loading, addNote, updateNote } = useCareNotes(props.memberId);
 
-// Handle adding a new note
+/**
+ * Handle adding a new care note
+ * Delegates to useCareNotes addNote function
+ * Errors are handled by the composable with toast notifications
+ */
 const handleNoteAdded = async (content: string) => {
   try {
     await addNote(content);
@@ -16,7 +55,11 @@ const handleNoteAdded = async (content: string) => {
   }
 };
 
-// Handle updating an existing note
+/**
+ * Handle updating an existing care note
+ * Preserves edit history automatically via useCareNotes
+ * Errors are handled by the composable with toast notifications
+ */
 const handleNoteUpdated = async (noteId: string, content: string) => {
   try {
     await updateNote(noteId, content);
@@ -58,6 +101,7 @@ const handleNoteUpdated = async (noteId: string, content: string) => {
   display: flex;
   flex-direction: column;
   gap: 2rem;
+  padding: 1rem;
 }
 
 /* Header */
