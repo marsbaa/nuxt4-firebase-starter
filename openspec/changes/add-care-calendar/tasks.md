@@ -3,9 +3,9 @@
 ## 1. Foundation Setup
 
 - [x] 1.1 Create calendar event types (`app/types/calendarEvents.ts`)
-- [ ] 1.2 Create Firestore collection structure for calendar events
-- [ ] 1.3 Create `useCalendarEvents()` composable for Firestore operations
-- [ ] 1.4 Add Firestore security rules for calendar events
+- [x] 1.2 Create Firestore collection structure for calendar events
+- [x] 1.3 Create `useCalendarEvents()` composable for Firestore operations
+- [x] 1.4 Add Firestore security rules for calendar events
 
 ## 2. Calendar Page Structure
 
