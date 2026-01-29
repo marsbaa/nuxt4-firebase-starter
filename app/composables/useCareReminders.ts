@@ -92,11 +92,18 @@ export function useCareReminders(memberId: Ref<string> | string) {
    */
   const isReminderExpired = (dueDate: Timestamp | null): boolean => {
     if (!dueDate) return false; // Reminders with no due date never expire
-    const now = new Date();
+
     const due = dueDate.toDate();
-    // Consider expired if due date is before today (start of day)
+
+    // Get start of today in local timezone
+    const now = new Date();
     const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    return due < today;
+
+    // Get start of due date in local timezone
+    const dueDay = new Date(due.getFullYear(), due.getMonth(), due.getDate());
+
+    // Consider expired only if due date is before today
+    return dueDay < today;
   };
 
   /**
