@@ -212,7 +212,7 @@ const handleSendMessage = () => {
 .content-grid {
   display: grid;
   grid-template-columns: 20rem 1fr;
-  gap: 2rem;
+  gap: 2.5rem;
   align-items: start;
 }
 
@@ -221,6 +221,8 @@ const handleSendMessage = () => {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
+  position: sticky;
+  top: 2rem;
 }
 
 /* Right Column */
@@ -228,6 +230,11 @@ const handleSendMessage = () => {
   display: flex;
   flex-direction: column;
   gap: 2rem;
+  background-color: white;
+  border: 1px solid #e7e5e4;
+  border-radius: 0.75rem;
+  padding: 2.5rem;
+  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.05);
 }
 
 /* Responsive - Tablet */

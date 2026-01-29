@@ -171,12 +171,12 @@ const formattedJoiningDate = computed(() => {
 .personal-context {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
-  background-color: white;
-  border: 1px solid #e5e7eb;
+  gap: 2rem;
+  background-color: #fafaf9;
+  border: 1px solid #f5f4f2;
   border-radius: 0.75rem;
   padding: 2rem;
-  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.05);
+  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.03);
 }
 
 /* Profile Section */
@@ -209,20 +209,21 @@ const formattedJoiningDate = computed(() => {
 /* Context Divider */
 .context-divider {
   height: 1px;
-  background-color: #f5f4f2;
+  background-color: #e7e5e4;
+  margin: 0.5rem 0;
 }
 
 /* Context Section */
 .context-section {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 1rem;
 }
 
 .section-heading {
   font-size: 0.6875rem;
   font-weight: 600;
-  color: #78716c;
+  color: #a8a29e;
   margin: 0;
   letter-spacing: 0.1em;
   text-transform: uppercase;

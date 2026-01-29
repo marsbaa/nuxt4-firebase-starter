@@ -105,27 +105,29 @@ onMounted(() => {
 }
 
 .input-container {
-  background-color: white;
-  border: 1.5px solid #e5e7eb;
-  border-radius: 0.625rem;
-  padding: 1rem;
+  background-color: #fafaf9;
+  border: 1.5px solid #e7e5e4;
+  border-radius: 0.75rem;
+  padding: 1.25rem;
   transition: all 0.2s ease;
+  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.02);
 }
 
 .input-container:focus-within {
-  border-color: #d97706;
-  box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.1);
+  background-color: #ffffff;
+  border-color: #c2a47a;
+  box-shadow: 0 0 0 4px rgba(194, 164, 122, 0.1);
 }
 
 /* Textarea */
 .input-textarea {
   width: 100%;
-  min-height: 4.5rem;
+  min-height: 5rem;
   max-height: 20rem;
   padding: 0;
   font-size: 0.9375rem;
-  line-height: 1.6;
-  color: #1f2937;
+  line-height: 1.65;
+  color: #292524;
   background-color: transparent;
   border: none;
   resize: none;
@@ -135,7 +137,8 @@ onMounted(() => {
 }
 
 .input-textarea::placeholder {
-  color: #9ca3af;
+  color: #a8a29e;
+  font-style: italic;
 }
 
 .input-textarea:disabled {
@@ -147,9 +150,9 @@ onMounted(() => {
 .input-actions {
   display: flex;
   justify-content: flex-end;
-  margin-top: 0.75rem;
-  padding-top: 0.75rem;
-  border-top: 1px solid #f3f4f6;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e7e5e4;
 }
 
 /* Keyboard Hint */
@@ -157,9 +160,9 @@ onMounted(() => {
   display: flex;
   align-items: center;
   gap: 0.375rem;
-  margin-top: 0.5rem;
+  margin-top: 0.625rem;
   font-size: 0.75rem;
-  color: #9ca3af;
+  color: #a8a29e;
 }
 
 .hint-icon {
@@ -173,9 +176,9 @@ kbd {
   font-family:
     ui-monospace, SFMono-Regular, "SF Mono", Menlo, Monaco, Consolas,
     "Liberation Mono", "Courier New", monospace;
-  color: #4b5563;
-  background-color: #f3f4f6;
-  border: 1px solid #d1d5db;
+  color: #78716c;
+  background-color: #f5f4f2;
+  border: 1px solid #e7e5e4;
   border-radius: 0.25rem;
 }
 

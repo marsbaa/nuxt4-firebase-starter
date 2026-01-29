@@ -126,16 +126,17 @@ const isAuthor = computed(() => user.value?.uid === props.note.authorId);
 <style scoped>
 /* Care Note Container */
 .care-note {
-  padding: 1.25rem;
-  border-radius: 0.5rem;
-  background-color: white;
-  border: 1px solid #e5e7eb;
+  padding: 1.5rem;
+  border-radius: 0.625rem;
+  background-color: #ffffff;
+  border: 1px solid #e7e5e4;
   transition: all 0.2s ease;
+  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.02);
 }
 
 .care-note:hover {
-  border-color: #d1d5db;
-  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.05);
+  border-color: #d6d3d1;
+  box-shadow: 0 2px 4px 0 rgb(0 0 0 / 0.06);
 }
 
 /* View Mode */
@@ -146,9 +147,9 @@ const isAuthor = computed(() => user.value?.uid === props.note.authorId);
 }
 
 .note-content {
-  color: #1f2937;
+  color: #292524;
   font-size: 0.9375rem;
-  line-height: 1.6;
+  line-height: 1.65;
   white-space: pre-wrap;
   word-break: break-word;
   margin: 0;
@@ -160,21 +161,21 @@ const isAuthor = computed(() => user.value?.uid === props.note.authorId);
   gap: 0.5rem;
   flex-wrap: wrap;
   font-size: 0.8125rem;
-  color: #6b7280;
+  color: #a8a29e;
 }
 
 .note-author {
   font-weight: 500;
-  color: #4b5563;
+  color: #78716c;
 }
 
 .note-separator {
-  color: #d1d5db;
+  color: #d6d3d1;
 }
 
 .note-date,
 .note-time {
-  color: #6b7280;
+  color: #a8a29e;
 }
 
 .edit-button {
@@ -182,22 +183,22 @@ const isAuthor = computed(() => user.value?.uid === props.note.authorId);
   padding: 0.25rem 0.625rem;
   font-size: 0.8125rem;
   font-weight: 500;
-  color: #6b7280;
+  color: #a8a29e;
   background-color: transparent;
-  border: 1px solid #d1d5db;
+  border: 1px solid #e7e5e4;
   border-radius: 0.375rem;
   cursor: pointer;
   transition: all 0.15s ease;
 }
 
 .edit-button:hover {
-  color: #4b5563;
-  background-color: #f9fafb;
-  border-color: #9ca3af;
+  color: #78716c;
+  background-color: #fafaf9;
+  border-color: #d6d3d1;
 }
 
 .edit-button:focus {
-  outline: 2px solid #d97706;
+  outline: 2px solid #c2a47a;
   outline-offset: 2px;
 }
 
@@ -205,18 +206,18 @@ const isAuthor = computed(() => user.value?.uid === props.note.authorId);
 .note-edit {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 1rem;
 }
 
 .edit-textarea {
   width: 100%;
-  padding: 0.75rem;
+  padding: 1rem;
   font-size: 0.9375rem;
-  line-height: 1.6;
-  color: #1f2937;
-  background-color: #f9fafb;
-  border: 1px solid #d1d5db;
-  border-radius: 0.375rem;
+  line-height: 1.65;
+  color: #292524;
+  background-color: #fafaf9;
+  border: 1.5px solid #e7e5e4;
+  border-radius: 0.5rem;
   resize: vertical;
   min-height: 6rem;
   font-family: inherit;
@@ -225,13 +226,13 @@ const isAuthor = computed(() => user.value?.uid === props.note.authorId);
 
 .edit-textarea:focus {
   outline: none;
-  background-color: white;
-  border-color: #d97706;
-  box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.1);
+  background-color: #ffffff;
+  border-color: #c2a47a;
+  box-shadow: 0 0 0 3px rgba(194, 164, 122, 0.1);
 }
 
 .edit-textarea::placeholder {
-  color: #9ca3af;
+  color: #a8a29e;
 }
 
 .edit-actions {

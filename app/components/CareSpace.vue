@@ -57,22 +57,24 @@ const handleNoteUpdated = async (noteId: string, content: string) => {
 .care-space {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 2rem;
 }
 
 /* Header */
 .care-space-header {
   display: flex;
   flex-direction: column;
-  gap: 0.375rem;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
 }
 
 .care-space-title {
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: #292524;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #2d2a26;
   margin: 0;
-  letter-spacing: -0.025em;
+  letter-spacing: -0.03em;
+  line-height: 1.2;
 }
 
 .care-space-subtitle {
