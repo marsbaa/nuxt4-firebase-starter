@@ -31,9 +31,9 @@
 
 ## 5. Agenda View Implementation
 
-- [ ] 5.1 Create `CalendarAgendaView.vue` component
-- [ ] 5.2 Implement chronological event list
-- [ ] 5.3 Add date grouping for agenda items
+- [x] 5.1 Create `CalendarAgendaView.vue` component
+- [x] 5.2 Implement chronological event list
+- [x] 5.3 Add date grouping for agenda items
 
 ## 6. Focus Panel
 
