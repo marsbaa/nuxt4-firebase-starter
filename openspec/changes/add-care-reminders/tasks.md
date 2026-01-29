@@ -2,11 +2,11 @@
 
 ## 1. Data Layer
 
-- [ ] 1.1 Create Firestore collection structure for `/careReminders`
-- [ ] 1.2 Create `useCareReminders()` composable for Firestore operations
-- [ ] 1.3 Implement `addCareReminder()` method with Firestore write
-- [ ] 1.4 Implement `getCareReminders()` query with filtering and ordering
-- [ ] 1.5 Update Firestore Security Rules for authenticated-user access to Care Reminders
+- [x] 1.1 Create Firestore collection structure for `/careReminders`
+- [x] 1.2 Create `useCareReminders()` composable for Firestore operations
+- [x] 1.3 Implement `addCareReminder()` method with Firestore write
+- [x] 1.4 Implement `getCareReminders()` query with filtering and ordering
+- [x] 1.5 Update Firestore Security Rules for authenticated-user access to Care Reminders
 
 ## 2. UI Components
 
