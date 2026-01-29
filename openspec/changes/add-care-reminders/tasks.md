@@ -10,10 +10,10 @@
 
 ## 2. UI Components
 
-- [ ] 2.1 Create `CareReminder.vue` component for individual reminder display
-- [ ] 2.2 Create `CareReminderList.vue` component for reminder collection (max 3)
-- [ ] 2.3 Create `CareReminderInput.vue` component for adding new reminders
-- [ ] 2.4 Design visual treatment (warm background, subtle outline, low-contrast icon)
+- [x] 2.1 Create `CareReminder.vue` component for individual reminder display
+- [x] 2.2 Create `CareReminderList.vue` component for reminder collection (max 3)
+- [x] 2.3 Create `CareReminderInput.vue` component for adding new reminders
+- [x] 2.4 Design visual treatment (warm background, subtle outline, low-contrast icon)
 
 ## 3. Care Space Integration
 
