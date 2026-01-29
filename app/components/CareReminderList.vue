@@ -30,7 +30,7 @@
 import type { CareReminder } from "~/types/careReminders";
 
 const props = defineProps<{
-  reminders: CareReminder[];
+  reminders: readonly CareReminder[];
   loading: boolean;
 }>();
 

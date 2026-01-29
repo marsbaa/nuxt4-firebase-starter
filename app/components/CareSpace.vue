@@ -7,6 +7,8 @@
  *
  * This component combines:
  * - CareNoteInput: Gentle interface for adding new care notes
+ * - CareReminderInput: Interface for adding care reminders
+ * - CareReminderList: Display of active care reminders (max 3)
  * - CareNoteList: Timeline view of existing notes with real-time updates
  *
  * **Props:**
@@ -14,7 +16,7 @@
  * @param {string} memberName - The display name of the member (required)
  *
  * **Features:**
- * - Real-time synchronization via useCareNotes composable
+ * - Real-time synchronization via useCareNotes and useCareReminders composables
  * - Optimistic UI updates
  * - Automatic error handling with toast notifications
  * - Responsive layout for mobile, tablet, and desktop
@@ -42,6 +44,13 @@ const props = defineProps<{
 // Use the care notes composable for real-time sync
 const { notes, loading, addNote, updateNote } = useCareNotes(props.memberId);
 
+// Use the care reminders composable for real-time sync
+const {
+  reminders,
+  loading: remindersLoading,
+  addReminder,
+} = useCareReminders(props.memberId);
+
 /**
  * Handle adding a new care note
  * Delegates to useCareNotes addNote function
@@ -67,6 +76,19 @@ const handleNoteUpdated = async (noteId: string, content: string) => {
     console.error("Error updating care note:", error);
   }
 };
+
+/**
+ * Handle adding a new care reminder
+ * Delegates to useCareReminders addReminder function
+ * Errors are handled by the composable with toast notifications
+ */
+const handleReminderAdded = async (text: string, dueDate: Date | null) => {
+  try {
+    await addReminder(text, dueDate);
+  } catch (error) {
+    console.error("Error adding care reminder:", error);
+  }
+};
 </script>
 
 <template>
@@ -82,6 +104,26 @@ const handleNoteUpdated = async (noteId: string, content: string) => {
     <!-- Care Note Input -->
     <div class="care-space-input">
       <CareNoteInput :loading="loading" @note-added="handleNoteAdded" />
+    </div>
+
+    <!-- Care Reminders Section -->
+    <div class="care-space-reminders">
+      <div class="reminders-header">
+        <h3 class="reminders-title">Care Reminders</h3>
+      </div>
+
+      <!-- Care Reminder Input -->
+      <div class="reminders-input">
+        <CareReminderInput
+          :loading="remindersLoading"
+          @reminder-added="handleReminderAdded"
+        />
+      </div>
+
+      <!-- Care Reminder List -->
+      <div class="reminders-list">
+        <CareReminderList :reminders="reminders" :loading="remindersLoading" />
+      </div>
     </div>
 
     <!-- Care Notes Timeline -->
@@ -129,6 +171,39 @@ const handleNoteUpdated = async (noteId: string, content: string) => {
   font-style: italic;
 }
 
+/* Care Reminders Section */
+.care-space-reminders {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding-top: 2rem;
+  margin-top: 2rem;
+  border-top: 1px solid #f5f1e8;
+}
+
+.reminders-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.reminders-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #44403c;
+  margin: 0;
+  letter-spacing: -0.02em;
+  line-height: 1.3;
+}
+
+.reminders-input {
+  width: 100%;
+}
+
+.reminders-list {
+  width: 100%;
+}
+
 /* Responsive adjustments */
 @media (max-width: 640px) {
   .care-space {
@@ -141,6 +216,16 @@ const handleNoteUpdated = async (noteId: string, content: string) => {
 
   .care-space-subtitle {
     font-size: 0.875rem;
+  }
+
+  .care-space-reminders {
+    gap: 1rem;
+    padding-top: 1.5rem;
+    margin-top: 1.5rem;
+  }
+
+  .reminders-title {
+    font-size: 1rem;
   }
 }
 
