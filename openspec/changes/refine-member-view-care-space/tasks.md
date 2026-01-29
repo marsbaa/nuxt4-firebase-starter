@@ -69,13 +69,13 @@
 
 ## 7. Accessibility
 
-- [ ] 7.1 Keyboard navigation: Tab through page elements in logical order
-- [ ] 7.2 Ensure all interactive elements have visible focus indicators
-- [ ] 7.3 Test with screen reader (VoiceOver on macOS or NVDA/JAWS on Windows)
-- [ ] 7.4 Verify ARIA labels and roles are correct
-- [ ] 7.5 Check color contrast ratios (4.5:1 for text, 3:1 for large text)
-- [ ] 7.6 Test with keyboard-only navigation
-- [ ] 7.7 Run automated accessibility audit (axe DevTools or Lighthouse)
+- [x] 7.1 Keyboard navigation: Tab through page elements in logical order
+- [x] 7.2 Ensure all interactive elements have visible focus indicators
+- [x] 7.3 Test with screen reader (VoiceOver on macOS or NVDA/JAWS on Windows)
+- [x] 7.4 Verify ARIA labels and roles are correct
+- [x] 7.5 Check color contrast ratios (4.5:1 for text, 3:1 for large text)
+- [x] 7.6 Test with keyboard-only navigation
+- [x] 7.7 Run automated accessibility audit (axe DevTools or Lighthouse)
 
 ## 8. Real-time & Performance
 
