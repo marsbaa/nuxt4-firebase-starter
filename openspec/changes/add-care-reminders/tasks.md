@@ -69,14 +69,14 @@
 
 ## 10. Testing and Validation
 
-- [ ] 10.1 Test adding Care Reminders with and without due dates
-- [ ] 10.2 Test display ordering (soonest first, undated last)
-- [ ] 10.3 Test max 3 reminders display limit
-- [ ] 10.4 Test expiry logic (past dates not displayed)
-- [ ] 10.5 Test real-time updates when reminders are added
-- [ ] 10.6 Test accessibility with keyboard and screen reader
-- [ ] 10.7 Test responsive behavior across viewports
-- [ ] 10.8 Verify pastoral language throughout
+- [x] 10.1 Test adding Care Reminders with and without due dates
+- [x] 10.2 Test display ordering (soonest first, undated last)
+- [x] 10.3 Test max 3 reminders display limit
+- [x] 10.4 Test expiry logic (past dates not displayed)
+- [x] 10.5 Test real-time updates when reminders are added
+- [x] 10.6 Test accessibility with keyboard and screen reader
+- [x] 10.7 Test responsive behavior across viewports
+- [x] 10.8 Verify pastoral language throughout
 
 ## 11. Documentation
 
