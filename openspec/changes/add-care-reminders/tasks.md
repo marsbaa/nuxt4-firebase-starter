@@ -47,25 +47,25 @@
 
 ## 7. Styling and Visual Design
 
-- [ ] 7.1 Apply warm, subtle background tint (lightest amber/beige)
-- [ ] 7.2 Add gentle inset or outline border
-- [ ] 7.3 Include small, low-contrast "remembering" icon
-- [ ] 7.4 Ensure no urgency colors (red, orange)
-- [ ] 7.5 Ensure no task indicators (checkboxes, progress bars)
-- [ ] 7.6 Maintain generous spacing consistent with Care Space
+- [x] 7.1 Apply warm, subtle background tint (lightest amber/beige)
+- [x] 7.2 Add gentle inset or outline border
+- [x] 7.3 Include small, low-contrast "remembering" icon
+- [x] 7.4 Ensure no urgency colors (red, orange)
+- [x] 7.5 Ensure no task indicators (checkboxes, progress bars)
+- [x] 7.6 Maintain generous spacing consistent with Care Space
 
 ## 8. Accessibility
 
-- [ ] 8.1 Ensure keyboard navigation works for reminder input and display
-- [ ] 8.2 Add ARIA labels for screen readers
-- [ ] 8.3 Verify color contrast meets WCAG 2.1 Level AA standards
-- [ ] 8.4 Ensure focus indicators are visible on interactive elements
+- [x] 8.1 Ensure keyboard navigation works for reminder input and display
+- [x] 8.2 Add ARIA labels for screen readers
+- [x] 8.3 Verify color contrast meets WCAG 2.1 Level AA standards
+- [x] 8.4 Ensure focus indicators are visible on interactive elements
 
 ## 9. Responsive Design
 
-- [ ] 9.1 Ensure Care Reminders display properly on mobile viewports
-- [ ] 9.2 Verify touch target sizes meet 44x44px minimum
-- [ ] 9.3 Maintain layout order: input → reminders → timeline on mobile
+- [x] 9.1 Ensure Care Reminders display properly on mobile viewports
+- [x] 9.2 Verify touch target sizes meet 44x44px minimum
+- [x] 9.3 Maintain layout order: input → reminders → timeline on mobile
 
 ## 10. Testing and Validation
 
