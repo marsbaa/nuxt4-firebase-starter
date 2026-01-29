@@ -38,24 +38,11 @@ const formatDate = (timestamp: any) => {
   // Handle Firestore Timestamp
   const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
 
-  // Format as "Oct 12, 2023"
+  // Format as "October 12, 2023"
   return date.toLocaleDateString("en-US", {
-    month: "short",
+    month: "long",
     day: "numeric",
     year: "numeric",
-  });
-};
-
-const formatTime = (timestamp: any) => {
-  if (!timestamp) return "";
-
-  // Handle Firestore Timestamp
-  const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
-
-  // Format as "2:30 PM"
-  return date.toLocaleTimeString("en-US", {
-    hour: "numeric",
-    minute: "2-digit",
   });
 };
 
@@ -66,58 +53,65 @@ const isAuthor = computed(() => user.value?.uid === props.note.authorId);
 
 <template>
   <div class="care-note" role="listitem">
-    <!-- View Mode -->
-    <div v-if="!isEditing" class="note-view">
-      <!-- Content -->
-      <p class="note-content">{{ note.content }}</p>
-
-      <!-- Meta information -->
-      <div class="note-meta">
-        <span class="note-author">{{ note.authorName }} shared</span>
-        <span class="note-separator">·</span>
-        <span class="note-date">{{ formatDate(note.createdAt) }}</span>
-        <span class="note-time">{{ formatTime(note.createdAt) }}</span>
-
-        <!-- Edit button (only for author) -->
-        <button
-          v-if="isAuthor"
-          type="button"
-          class="edit-button"
-          @click="startEdit"
-          aria-label="Edit care note"
-        >
-          Edit
-        </button>
-      </div>
+    <!-- Timeline Dot -->
+    <div class="timeline-indicator">
+      <div class="timeline-dot"></div>
+      <div class="timeline-line"></div>
     </div>
 
-    <!-- Edit Mode -->
-    <div v-else class="note-edit">
-      <!-- Textarea for editing -->
-      <textarea
-        v-model="editContent"
-        class="edit-textarea"
-        rows="4"
-        placeholder="Edit your care note…"
-        aria-label="Care note content editor"
-        @keydown.escape="cancelEdit"
-        @keydown.meta.enter="saveEdit"
-        @keydown.ctrl.enter="saveEdit"
-      />
+    <!-- Note Content Area -->
+    <div class="note-content-area">
+      <!-- Header: Date on left, Shared by on right -->
+      <div class="note-header">
+        <div class="note-date">{{ formatDate(note.createdAt) }}</div>
+        <div class="note-meta-right">
+          <span class="note-author">Shared by {{ note.authorName }}</span>
+          <!-- Edit button (only for author) -->
+          <button
+            v-if="isAuthor"
+            type="button"
+            class="edit-button"
+            @click="startEdit"
+            aria-label="Edit care note"
+          >
+            <AppIcon name="heroicons:pencil" class="edit-icon" />
+          </button>
+        </div>
+      </div>
 
-      <!-- Action buttons -->
-      <div class="edit-actions">
-        <AppButton variant="secondary" size="sm" @click="cancelEdit">
-          Cancel
-        </AppButton>
-        <AppButton
-          variant="primary"
-          size="sm"
-          @click="saveEdit"
-          :disabled="!editContent.trim()"
-        >
-          Save
-        </AppButton>
+      <!-- View Mode -->
+      <div v-if="!isEditing" class="note-view">
+        <p class="note-content">{{ note.content }}</p>
+      </div>
+
+      <!-- Edit Mode -->
+      <div v-else class="note-edit">
+        <!-- Textarea for editing -->
+        <textarea
+          v-model="editContent"
+          class="edit-textarea"
+          rows="4"
+          placeholder="Edit your care note…"
+          aria-label="Care note content editor"
+          @keydown.escape="cancelEdit"
+          @keydown.meta.enter="saveEdit"
+          @keydown.ctrl.enter="saveEdit"
+        />
+
+        <!-- Action buttons -->
+        <div class="edit-actions">
+          <AppButton variant="secondary" size="sm" @click="cancelEdit">
+            Cancel
+          </AppButton>
+          <AppButton
+            variant="primary"
+            size="sm"
+            @click="saveEdit"
+            :disabled="!editContent.trim()"
+          >
+            Save
+          </AppButton>
+        </div>
       </div>
     </div>
   </div>
@@ -126,26 +120,95 @@ const isAuthor = computed(() => user.value?.uid === props.note.authorId);
 <style scoped>
 /* Care Note Container */
 .care-note {
-  padding: 1.5rem;
-  border-radius: 0.625rem;
-  background-color: #ffffff;
-  border: 1px solid #e7e5e4;
+  display: flex;
+  gap: 1rem;
+  padding: 0;
+  margin-bottom: 2rem;
+  position: relative;
   transition: all 0.2s ease;
-  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.02);
 }
 
-.care-note:hover {
-  border-color: #d6d3d1;
-  box-shadow: 0 2px 4px 0 rgb(0 0 0 / 0.06);
+.care-note:last-child {
+  margin-bottom: 0;
+}
+
+.care-note:last-child .timeline-line {
+  display: none;
+}
+
+/* Timeline Indicator */
+.timeline-indicator {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+  width: 1.25rem;
+  padding-top: 0.125rem;
+}
+
+.timeline-dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background-color: #ffffff;
+  border: 2px solid #d6d3d1;
+  z-index: 1;
+  transition: all 0.2s ease;
+}
+
+.timeline-line {
+  position: absolute;
+  top: 0.75rem;
+  bottom: -2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 1px;
+  background-color: #e7e5e4;
+}
+
+/* Note Content Area */
+.note-content-area {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Note Header */
+.note-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 0.5rem;
+}
+
+.note-date {
+  font-size: 0.6875rem;
+  font-weight: 400;
+  color: #d6d3d1;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.note-meta-right {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.note-author {
+  font-size: 0.6875rem;
+  font-weight: 400;
+  color: #d6d3d1;
+  font-style: italic;
 }
 
 /* View Mode */
 .note-view {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
 }
 
+/* Note Content */
 .note-content {
   color: #292524;
   font-size: 0.9375rem;
@@ -155,51 +218,40 @@ const isAuthor = computed(() => user.value?.uid === props.note.authorId);
   margin: 0;
 }
 
-.note-meta {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  flex-wrap: wrap;
-  font-size: 0.8125rem;
-  color: #a8a29e;
-}
-
-.note-author {
-  font-weight: 500;
-  color: #78716c;
-}
-
-.note-separator {
-  color: #d6d3d1;
-}
-
-.note-date,
-.note-time {
-  color: #a8a29e;
-}
-
 .edit-button {
-  margin-left: auto;
-  padding: 0.25rem 0.625rem;
-  font-size: 0.8125rem;
-  font-weight: 500;
+  padding: 0.5rem;
   color: #a8a29e;
   background-color: transparent;
-  border: 1px solid #e7e5e4;
-  border-radius: 0.375rem;
+  border: none;
+  border-radius: 0.25rem;
   cursor: pointer;
   transition: all 0.15s ease;
+  opacity: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2rem;
+  min-height: 2rem;
+}
+
+.care-note:hover .edit-button {
+  opacity: 1;
 }
 
 .edit-button:hover {
   color: #78716c;
-  background-color: #fafaf9;
-  border-color: #d6d3d1;
+  background-color: #f5f5f4;
 }
 
 .edit-button:focus {
   outline: 2px solid #c2a47a;
   outline-offset: 2px;
+  opacity: 1;
+}
+
+.edit-icon {
+  width: 0.875rem;
+  height: 0.875rem;
 }
 
 /* Edit Mode */
@@ -216,8 +268,8 @@ const isAuthor = computed(() => user.value?.uid === props.note.authorId);
   line-height: 1.65;
   color: #292524;
   background-color: #fafaf9;
-  border: 1.5px solid #e7e5e4;
-  border-radius: 0.5rem;
+  border: 1px solid #f5f5f4;
+  border-radius: 0.375rem;
   resize: vertical;
   min-height: 6rem;
   font-family: inherit;
@@ -227,8 +279,8 @@ const isAuthor = computed(() => user.value?.uid === props.note.authorId);
 .edit-textarea:focus {
   outline: none;
   background-color: #ffffff;
-  border-color: #c2a47a;
-  box-shadow: 0 0 0 3px rgba(194, 164, 122, 0.1);
+  border-color: #e7e5e4;
+  box-shadow: 0 0 0 3px rgba(194, 164, 122, 0.05);
 }
 
 .edit-textarea::placeholder {
@@ -244,20 +296,39 @@ const isAuthor = computed(() => user.value?.uid === props.note.authorId);
 /* Responsive adjustments */
 @media (max-width: 640px) {
   .care-note {
-    padding: 1rem;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .timeline-line {
+    bottom: -1.5rem;
+  }
+
+  .timeline-indicator {
+    width: 1rem;
+  }
+
+  .timeline-dot {
+    width: 0.375rem;
+    height: 0.375rem;
+  }
+
+  .note-date,
+  .note-author {
+    font-size: 0.625rem;
   }
 
   .note-content {
     font-size: 0.875rem;
   }
 
-  .note-meta {
-    font-size: 0.75rem;
-  }
-
   .edit-button {
-    font-size: 0.75rem;
-    padding: 0.1875rem 0.5rem;
+    /* Ensure touch target is at least 44x44px */
+    min-width: 2.75rem;
+    min-height: 2.75rem;
+    padding: 0.625rem;
+    /* Always visible on mobile since hover doesn't work well on touch */
+    opacity: 1;
   }
 
   .edit-actions {

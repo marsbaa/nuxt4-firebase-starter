@@ -63,10 +63,10 @@ const handleSendMessage = () => {
     <button
       @click="handleBack"
       class="back-button"
-      aria-label="Back to Members List"
+      aria-label="Back to members"
     >
       <Icon name="mdi:arrow-left" class="back-icon" aria-hidden="true" />
-      <span>Back to Members List</span>
+      <span>Back to members</span>
     </button>
 
     <!-- Loading state -->
@@ -77,13 +77,6 @@ const handleSendMessage = () => {
 
     <!-- Member Detail -->
     <template v-else-if="member">
-      <!-- Page header -->
-      <div class="page-header">
-        <div class="header-content">
-          <h1 class="member-name">{{ parsedName.fullName }}</h1>
-        </div>
-      </div>
-
       <!-- Content Grid -->
       <div class="content-grid">
         <!-- Left Column: Personal Context -->
@@ -112,6 +105,7 @@ const handleSendMessage = () => {
   max-width: 90rem;
   margin: 0 auto;
   animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow-x: hidden;
 }
 
 @keyframes fadeIn {
@@ -129,12 +123,13 @@ const handleSendMessage = () => {
 .back-button {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem 0;
-  margin-bottom: 1.5rem;
+  gap: 0.375rem;
+  padding: 0;
+  margin-bottom: 0.75rem;
   font-family: "Inter", sans-serif;
-  font-size: 0.938rem;
-  color: #c2a47a;
+  font-size: 0.813rem;
+  font-weight: 400;
+  color: #9e9287;
   background: none;
   border: none;
   cursor: pointer;
@@ -146,8 +141,8 @@ const handleSendMessage = () => {
 }
 
 .back-icon {
-  width: 1.25rem;
-  height: 1.25rem;
+  width: 0.875rem;
+  height: 0.875rem;
 }
 
 /* Loading state */
@@ -184,30 +179,6 @@ const handleSendMessage = () => {
   color: #706c64;
 }
 
-/* Page header */
-.page-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 2rem;
-  gap: 1rem;
-}
-
-.header-content {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
-.member-name {
-  font-family: "Crimson Pro", serif;
-  font-size: 2rem;
-  font-weight: 700;
-  color: #2d2a26;
-  margin: 0;
-  letter-spacing: -0.02em;
-}
-
 /* Content Grid */
 .content-grid {
   display: grid;
@@ -230,21 +201,18 @@ const handleSendMessage = () => {
   display: flex;
   flex-direction: column;
   gap: 2rem;
-  background-color: white;
-  border: 1px solid #e7e5e4;
-  border-radius: 0.75rem;
-  padding: 2.5rem;
-  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.05);
 }
 
 /* Responsive - Tablet */
 @media (max-width: 1024px) {
   .content-grid {
     grid-template-columns: 1fr;
+    gap: 2rem;
   }
 
   .left-column {
     order: 2;
+    position: static;
   }
 
   .right-column {
@@ -254,15 +222,12 @@ const handleSendMessage = () => {
 
 /* Responsive - Mobile */
 @media (max-width: 768px) {
-  .page-header {
-    flex-direction: column;
-    align-items: flex-start;
+  .content-grid {
+    gap: 1.5rem;
   }
 
-  .header-content {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.5rem;
+  .back-button {
+    margin-bottom: 1rem;
   }
 }
 </style>
