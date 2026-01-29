@@ -16,11 +16,11 @@
 
 ## 3. Month View Implementation
 
-- [ ] 3.1 Create `CalendarMonthView.vue` component
-- [ ] 3.2 Implement month grid layout with proper date handling
-- [ ] 3.3 Add month navigation (previous/next)
-- [ ] 3.4 Implement today indicator
-- [ ] 3.5 Add liturgical context subtitle display
+- [x] 3.1 Create `CalendarMonthView.vue` component
+- [x] 3.2 Implement month grid layout with proper date handling
+- [x] 3.3 Add month navigation (previous/next)
+- [x] 3.4 Implement today indicator
+- [x] 3.5 Add liturgical context subtitle display
 
 ## 4. Event Display
 
