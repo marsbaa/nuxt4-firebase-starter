@@ -223,7 +223,7 @@ const handleKeydown = (event: KeyboardEvent) => {
             aria-label="Edit care reminder"
             title="Edit reminder"
           >
-            <AppIcon name="heroicons:pencil" />
+            <AppIcon name="heroicons:pencil-square" />
           </button>
           <AppIcon
             name="heroicons:bookmark"
@@ -260,6 +260,9 @@ const handleKeydown = (event: KeyboardEvent) => {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid rgba(245, 241, 232, 0.6);
 }
 
 .header-actions {
@@ -288,8 +291,8 @@ const handleKeydown = (event: KeyboardEvent) => {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 1rem;
-  height: 1rem;
+  width: 1.5rem;
+  height: 1.5rem;
   padding: 0;
   background: transparent;
   border: none;
@@ -309,11 +312,6 @@ const handleKeydown = (event: KeyboardEvent) => {
   opacity: 1;
   outline: 2px solid rgba(194, 164, 122, 0.2);
   outline-offset: 2px;
-}
-
-.edit-button :deep(svg) {
-  width: 1rem;
-  height: 1rem;
 }
 
 /* Show edit button on card hover */
@@ -471,10 +469,15 @@ const handleKeydown = (event: KeyboardEvent) => {
   height: 2rem;
   padding: 0;
   border: 1px solid;
-  border-radius: 50%;
+  border-radius: 0.375rem;
   cursor: pointer;
   transition: all 0.15s ease;
   background: transparent;
+}
+
+.action-button :deep(svg) {
+  width: 1.125rem;
+  height: 1.125rem;
 }
 
 .cancel-button {
@@ -550,8 +553,8 @@ const handleKeydown = (event: KeyboardEvent) => {
   }
 
   .edit-button {
-    width: 1.25rem;
-    height: 1.25rem;
+    width: 1rem;
+    height: 1rem;
   }
 
   .edit-button :deep(svg) {
