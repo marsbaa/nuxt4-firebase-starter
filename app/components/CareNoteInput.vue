@@ -5,12 +5,21 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   "note-added": [content: string];
+  cancel: [];
 }>();
 
 // Input state
 const content = ref("");
 const textareaRef = ref<HTMLTextAreaElement | null>(null);
 const isSubmitting = ref(false);
+
+// Handle cancel
+const handleCancel = () => {
+  if (!content.value.trim() || confirm("Discard your note?")) {
+    content.value = "";
+    emit("cancel");
+  }
+};
 
 // Auto-expand textarea
 const adjustHeight = () => {
@@ -53,6 +62,10 @@ const handleKeydown = (event: KeyboardEvent) => {
     event.preventDefault();
     handleSubmit();
   }
+  // Escape to cancel
+  if (event.key === "Escape" && !content.value.trim()) {
+    emit("cancel");
+  }
 };
 
 // Auto-focus on mount
@@ -76,25 +89,36 @@ onMounted(() => {
         @keydown="handleKeydown"
       />
 
-      <!-- Submit Button -->
+      <!-- Actions -->
       <div class="input-actions">
-        <AppButton
-          variant="primary"
-          size="sm"
-          :disabled="!content.trim() || loading || isSubmitting"
-          :loading="isSubmitting"
-          @click="handleSubmit"
-        >
-          Add Care Note
-        </AppButton>
+        <!-- Keyboard hint -->
+        <p class="keyboard-hint">
+          <AppIcon name="heroicons:command-line" class="hint-icon" />
+          Press <kbd>⌘ Enter</kbd> or <kbd>Ctrl Enter</kbd> to share
+        </p>
+
+        <!-- Buttons -->
+        <div class="action-buttons">
+          <AppButton
+            variant="secondary"
+            size="sm"
+            :disabled="loading || isSubmitting"
+            @click="handleCancel"
+          >
+            Cancel
+          </AppButton>
+          <AppButton
+            variant="primary"
+            size="sm"
+            :disabled="!content.trim() || loading || isSubmitting"
+            :loading="isSubmitting"
+            @click="handleSubmit"
+          >
+            Add Care Note
+          </AppButton>
+        </div>
       </div>
     </div>
-
-    <!-- Keyboard hint -->
-    <p class="keyboard-hint">
-      <AppIcon name="heroicons:command-line" class="hint-icon" />
-      Press <kbd>⌘ Enter</kbd> or <kbd>Ctrl Enter</kbd> to share
-    </p>
   </div>
 </template>
 
@@ -149,10 +173,16 @@ onMounted(() => {
 /* Actions */
 .input-actions {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
+  align-items: center;
   margin-top: 1rem;
   padding-top: 1rem;
   border-top: 1px solid #f5f5f4;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 0.5rem;
 }
 
 /* Keyboard Hint */
@@ -160,7 +190,7 @@ onMounted(() => {
   display: flex;
   align-items: center;
   gap: 0.375rem;
-  margin-top: 0.625rem;
+  margin: 0;
   font-size: 0.75rem;
   color: #a8a29e;
 }
@@ -193,12 +223,22 @@ kbd {
     min-height: 4rem;
   }
 
+  .input-actions {
+    flex-direction: column;
+    gap: 0.75rem;
+    align-items: stretch;
+  }
+
   .keyboard-hint {
     display: none; /* Hide keyboard hint on mobile */
   }
 
-  .input-actions button {
+  .action-buttons {
     width: 100%;
+  }
+
+  .action-buttons button {
+    flex: 1;
   }
 }
 

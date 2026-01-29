@@ -38,6 +38,7 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   "reminder-added": [text: string, dueDate: Date | null];
+  cancel: [];
 }>();
 
 // Input state
@@ -45,6 +46,15 @@ const text = ref("");
 const dueDate = ref("");
 const textareaRef = ref<HTMLTextAreaElement | null>(null);
 const isSubmitting = ref(false);
+
+// Handle cancel
+const handleCancel = () => {
+  if (!text.value.trim() || confirm("Discard your reminder?")) {
+    text.value = "";
+    dueDate.value = "";
+    emit("cancel");
+  }
+};
 
 // Auto-expand textarea
 const adjustHeight = () => {
@@ -94,6 +104,10 @@ const handleKeydown = (event: KeyboardEvent) => {
     event.preventDefault();
     handleSubmit();
   }
+  // Escape to cancel
+  if (event.key === "Escape" && !text.value.trim()) {
+    emit("cancel");
+  }
 };
 
 // Auto-focus and adjust height on mount
@@ -142,25 +156,36 @@ const minDate = computed(() => {
         </div>
       </div>
 
-      <!-- Submit Button -->
+      <!-- Actions -->
       <div class="input-actions">
-        <AppButton
-          variant="primary"
-          size="sm"
-          :disabled="!text.trim() || loading || isSubmitting"
-          :loading="isSubmitting"
-          @click="handleSubmit"
-        >
-          Add Care Reminder
-        </AppButton>
+        <!-- Keyboard hint -->
+        <p class="keyboard-hint">
+          <AppIcon name="heroicons:command-line" class="hint-icon" />
+          Press <kbd>⌘ Enter</kbd> or <kbd>Ctrl Enter</kbd> to add
+        </p>
+
+        <!-- Buttons -->
+        <div class="action-buttons">
+          <AppButton
+            variant="secondary"
+            size="sm"
+            :disabled="loading || isSubmitting"
+            @click="handleCancel"
+          >
+            Cancel
+          </AppButton>
+          <AppButton
+            variant="primary"
+            size="sm"
+            :disabled="!text.trim() || loading || isSubmitting"
+            :loading="isSubmitting"
+            @click="handleSubmit"
+          >
+            Add Care Reminder
+          </AppButton>
+        </div>
       </div>
     </div>
-
-    <!-- Keyboard hint -->
-    <p class="keyboard-hint">
-      <AppIcon name="heroicons:command-line" class="hint-icon" />
-      Press <kbd>⌘ Enter</kbd> or <kbd>Ctrl Enter</kbd> to add
-    </p>
   </div>
 </template>
 
@@ -283,8 +308,16 @@ const minDate = computed(() => {
 /* Actions */
 .input-actions {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
+  align-items: center;
   margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #f5f1e8;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 0.5rem;
 }
 
 /* Keyboard Hint */
@@ -292,7 +325,7 @@ const minDate = computed(() => {
   display: flex;
   align-items: center;
   gap: 0.375rem;
-  margin-top: 0.625rem;
+  margin: 0;
   font-size: 0.75rem;
   color: #a8a29e;
 }
@@ -330,12 +363,22 @@ kbd {
     font-size: 0.875rem;
   }
 
+  .input-actions {
+    flex-direction: column;
+    gap: 0.75rem;
+    align-items: stretch;
+  }
+
   .keyboard-hint {
     display: none; /* Hide keyboard hint on mobile */
   }
 
-  .input-actions button {
+  .action-buttons {
     width: 100%;
+  }
+
+  .action-buttons button {
+    flex: 1;
   }
 }
 
