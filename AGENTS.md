@@ -22,6 +22,30 @@ Keep this managed block so 'openspec update' can refresh the instructions.
 
 ---
 
+## ⚠️ CRITICAL: Pastoral Care Principles
+
+**Before any work on this project, you MUST read:**
+
+[`openspec/PASTORAL_CARE_PRINCIPLES.md`](openspec/PASTORAL_CARE_PRINCIPLES.md)
+
+This document defines non-negotiable principles for all features, naming, design, and language in the Pastoral Care App. Every proposal and implementation must align with these principles or be rejected.
+
+**Decision Rule**: Before proposing or implementing anything, ask:
+
+> "Does this help someone care better for a person — or does it just help manage information?"
+
+If the answer is the latter, do not proceed without reframing.
+
+**Key Concepts**:
+
+- Use "Care Notes" (not "activities" or "logs")
+- Use "Care Reminders" (not "tasks" or "assignments")
+- Use "Life Moments" (not "milestones")
+- Tone must be calm, respectful, pastoral (never corporate or metrics-driven)
+- UI should feel like "a quiet, trustworthy space for caring for people"
+
+---
+
 ## Git Workflow for OpenSpec Changes
 
 When implementing an openspec change, follow this git workflow:
