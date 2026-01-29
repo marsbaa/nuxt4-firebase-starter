@@ -9,10 +9,10 @@
 
 ## 2. Calendar Page Structure
 
-- [ ] 2.1 Create main calendar page (`app/pages/calendar.vue`)
-- [ ] 2.2 Add Calendar to navigation in dashboard layout
-- [ ] 2.3 Create `CareCalendar.vue` main container component
-- [ ] 2.4 Implement view toggle (Month/Agenda)
+- [x] 2.1 Create main calendar page (`app/pages/calendar.vue`)
+- [x] 2.2 Add Calendar to navigation in dashboard layout
+- [x] 2.3 Create `CareCalendar.vue` main container component
+- [x] 2.4 Implement view toggle (Month/Agenda)
 
 ## 3. Month View Implementation
 
