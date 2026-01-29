@@ -5,12 +5,31 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   "note-added": [content: string];
+  cancel: [];
 }>();
 
 // Input state
 const content = ref("");
 const textareaRef = ref<HTMLTextAreaElement | null>(null);
 const isSubmitting = ref(false);
+const isExpanded = ref(false);
+
+// Handle expand
+const handleExpand = () => {
+  isExpanded.value = true;
+  nextTick(() => {
+    textareaRef.value?.focus();
+    adjustHeight();
+  });
+};
+
+// Handle cancel
+const handleCancel = () => {
+  if (!content.value.trim() || confirm("Discard your note?")) {
+    content.value = "";
+    isExpanded.value = false;
+  }
+};
 
 // Auto-expand textarea
 const adjustHeight = () => {
@@ -35,7 +54,8 @@ const handleSubmit = async () => {
   try {
     emit("note-added", content.value.trim());
     content.value = "";
-    // Reset textarea height
+    // Collapse and reset textarea height
+    isExpanded.value = false;
     nextTick(() => {
       if (textareaRef.value) {
         textareaRef.value.style.height = "auto";
@@ -53,6 +73,11 @@ const handleKeydown = (event: KeyboardEvent) => {
     event.preventDefault();
     handleSubmit();
   }
+  // Escape to collapse
+  if (event.key === "Escape" && !content.value.trim()) {
+    isExpanded.value = false;
+    textareaRef.value?.blur();
+  }
 };
 
 // Auto-focus on mount
@@ -63,7 +88,23 @@ onMounted(() => {
 
 <template>
   <div class="care-note-input">
-    <div class="input-container">
+    <!-- Collapsed State -->
+    <div
+      v-if="!isExpanded"
+      class="collapsed-input"
+      @click="handleExpand"
+      role="button"
+      tabindex="0"
+      @keydown.enter="handleExpand"
+      @keydown.space.prevent="handleExpand"
+    >
+      <span class="collapsed-placeholder"
+        >Share an update...After a visit or conversation</span
+      >
+    </div>
+
+    <!-- Expanded State -->
+    <div v-else class="input-container">
       <!-- Textarea -->
       <textarea
         ref="textareaRef"
@@ -76,25 +117,36 @@ onMounted(() => {
         @keydown="handleKeydown"
       />
 
-      <!-- Submit Button -->
+      <!-- Actions -->
       <div class="input-actions">
-        <AppButton
-          variant="primary"
-          size="sm"
-          :disabled="!content.trim() || loading || isSubmitting"
-          :loading="isSubmitting"
-          @click="handleSubmit"
-        >
-          Add Care Note
-        </AppButton>
+        <!-- Keyboard hint -->
+        <p class="keyboard-hint">
+          <AppIcon name="heroicons:command-line" class="hint-icon" />
+          Press <kbd>⌘ Enter</kbd> or <kbd>Ctrl Enter</kbd> to share
+        </p>
+
+        <!-- Buttons -->
+        <div class="action-buttons">
+          <AppButton
+            variant="secondary"
+            size="sm"
+            :disabled="loading || isSubmitting"
+            @click="handleCancel"
+          >
+            Cancel
+          </AppButton>
+          <AppButton
+            variant="primary"
+            size="sm"
+            :disabled="!content.trim() || loading || isSubmitting"
+            :loading="isSubmitting"
+            @click="handleSubmit"
+          >
+            Add Care Note
+          </AppButton>
+        </div>
       </div>
     </div>
-
-    <!-- Keyboard hint -->
-    <p class="keyboard-hint">
-      <AppIcon name="heroicons:command-line" class="hint-icon" />
-      Press <kbd>⌘ Enter</kbd> or <kbd>Ctrl Enter</kbd> to share
-    </p>
   </div>
 </template>
 
@@ -104,6 +156,38 @@ onMounted(() => {
   width: 100%;
 }
 
+/* Collapsed State */
+.collapsed-input {
+  background-color: #fafaf9;
+  border: 1px solid #f5f5f4;
+  border-radius: 0.5rem;
+  padding: 1rem 1.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+}
+
+.collapsed-input:hover {
+  background-color: #ffffff;
+  border-color: #e7e5e4;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.collapsed-input:focus {
+  outline: none;
+  background-color: #ffffff;
+  border-color: #e7e5e4;
+  box-shadow: 0 0 0 3px rgba(194, 164, 122, 0.05);
+}
+
+.collapsed-placeholder {
+  font-size: 0.9375rem;
+  color: #a8a29e;
+  font-style: italic;
+}
+
+/* Expanded State */
 .input-container {
   background-color: #fafaf9;
   border: 1px solid #f5f5f4;
@@ -149,10 +233,16 @@ onMounted(() => {
 /* Actions */
 .input-actions {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
+  align-items: center;
   margin-top: 1rem;
   padding-top: 1rem;
   border-top: 1px solid #f5f5f4;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 0.5rem;
 }
 
 /* Keyboard Hint */
@@ -160,7 +250,7 @@ onMounted(() => {
   display: flex;
   align-items: center;
   gap: 0.375rem;
-  margin-top: 0.625rem;
+  margin: 0;
   font-size: 0.75rem;
   color: #a8a29e;
 }
@@ -184,6 +274,10 @@ kbd {
 
 /* Responsive adjustments */
 @media (max-width: 640px) {
+  .collapsed-input {
+    padding: 0.875rem 1rem;
+  }
+
   .input-container {
     padding: 0.875rem;
   }
@@ -193,12 +287,22 @@ kbd {
     min-height: 4rem;
   }
 
+  .input-actions {
+    flex-direction: column;
+    gap: 0.75rem;
+    align-items: stretch;
+  }
+
   .keyboard-hint {
     display: none; /* Hide keyboard hint on mobile */
   }
 
-  .input-actions button {
+  .action-buttons {
     width: 100%;
+  }
+
+  .action-buttons button {
+    flex: 1;
   }
 }
 
