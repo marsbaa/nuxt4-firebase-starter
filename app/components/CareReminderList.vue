@@ -9,6 +9,9 @@
  * @param {CareReminder[]} reminders - Array of care reminders (readonly from composable)
  * @param {boolean} loading - Loading state indicator
  *
+ * **Emits:**
+ * @emits update - When a reminder is updated, emits (reminderId, text, dueDate)
+ *
  * **Display Rules:**
  * - Show only active (non-expired) reminders
  * - Maximum 3 reminders displayed
@@ -34,8 +37,21 @@ const props = defineProps<{
   loading: boolean;
 }>();
 
+const emit = defineEmits<{
+  update: [reminderId: string, text: string, dueDate: Date | null];
+}>();
+
 // Computed to check if reminders list is empty
 const isEmpty = computed(() => !props.loading && props.reminders.length === 0);
+
+// Handle update from child component
+const handleUpdate = (
+  reminderId: string,
+  text: string,
+  dueDate: Date | null,
+) => {
+  emit("update", reminderId, text, dueDate);
+};
 </script>
 
 <template>
@@ -87,6 +103,7 @@ const isEmpty = computed(() => !props.loading && props.reminders.length === 0);
         v-for="reminder in reminders"
         :key="reminder.id"
         :reminder="reminder"
+        @update="handleUpdate"
       />
     </div>
   </div>

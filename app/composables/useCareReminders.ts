@@ -6,6 +6,8 @@ import {
   limit,
   onSnapshot,
   addDoc,
+  updateDoc,
+  doc,
   serverTimestamp,
   Timestamp,
   type Unsubscribe,
@@ -230,6 +232,49 @@ export function useCareReminders(memberId: Ref<string> | string) {
   };
 
   /**
+   * Update an existing care reminder
+   * Updates a care reminder document in Firestore
+   *
+   * @param reminderId - The ID of the reminder to update
+   * @param text - The updated reminder text
+   * @param dueDate - Optional updated due date (Date or null)
+   * @returns Promise that resolves when the reminder is updated
+   */
+  const updateReminder = async (
+    reminderId: string,
+    text: string,
+    dueDate: Date | null = null,
+  ): Promise<void> => {
+    if (!db) {
+      throw new Error("Firestore is not initialized");
+    }
+
+    if (!user.value) {
+      throw new Error("User must be authenticated to update care reminders");
+    }
+
+    if (!text.trim()) {
+      toast.error("Please share what you'd like to hold in mind");
+      throw new Error("Text cannot be empty");
+    }
+
+    try {
+      const reminderRef = doc(db, "careReminders", reminderId);
+
+      await updateDoc(reminderRef, {
+        text: text.trim(),
+        dueDate: dueDate ? Timestamp.fromDate(dueDate) : null,
+      });
+
+      toast.success("Care reminder updated");
+    } catch (err) {
+      console.error("Error updating care reminder:", err);
+      toast.error("Unable to update care reminder. Please try again.");
+      throw err;
+    }
+  };
+
+  /**
    * Cleanup function to unsubscribe from the snapshot listener
    */
   const cleanup = () => {
@@ -259,5 +304,6 @@ export function useCareReminders(memberId: Ref<string> | string) {
     loading: readonly(loading),
     error: readonly(error),
     addReminder,
+    updateReminder,
   };
 }

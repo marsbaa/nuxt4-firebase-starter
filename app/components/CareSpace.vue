@@ -49,7 +49,11 @@ const {
   reminders,
   loading: remindersLoading,
   addReminder,
+  updateReminder,
 } = useCareReminders(props.memberId);
+
+// Control visibility of reminder input form
+const showReminderInput = ref(false);
 
 /**
  * Handle adding a new care note
@@ -85,9 +89,35 @@ const handleNoteUpdated = async (noteId: string, content: string) => {
 const handleReminderAdded = async (text: string, dueDate: Date | null) => {
   try {
     await addReminder(text, dueDate);
+    // Hide the form after successful submission
+    showReminderInput.value = false;
   } catch (error) {
     console.error("Error adding care reminder:", error);
   }
+};
+
+/**
+ * Handle updating an existing care reminder
+ * Delegates to useCareReminders updateReminder function
+ * Errors are handled by the composable with toast notifications
+ */
+const handleReminderUpdated = async (
+  reminderId: string,
+  text: string,
+  dueDate: Date | null,
+) => {
+  try {
+    await updateReminder(reminderId, text, dueDate);
+  } catch (error) {
+    console.error("Error updating care reminder:", error);
+  }
+};
+
+/**
+ * Toggle the reminder input form visibility
+ */
+const toggleReminderInput = () => {
+  showReminderInput.value = !showReminderInput.value;
 };
 </script>
 
@@ -109,20 +139,40 @@ const handleReminderAdded = async (text: string, dueDate: Date | null) => {
     <!-- Care Reminders Section -->
     <div class="care-space-reminders">
       <div class="reminders-header">
-        <h3 class="reminders-title">Care Reminders</h3>
+        <div class="reminders-header-content">
+          <h3 class="reminders-title">Care Reminders</h3>
+          <p class="reminders-subtitle">Gentle follow-ups held in mind</p>
+        </div>
+        <!-- Care Reminder Button (always visible in header) -->
+        <AppButton
+          variant="ghost"
+          size="sm"
+          :disabled="remindersLoading"
+          @click="toggleReminderInput"
+          class="add-reminder-button"
+        >
+          <AppIcon name="heroicons:plus" class="button-icon" />
+          Add a care reminder
+        </AppButton>
       </div>
 
-      <!-- Care Reminder Input -->
-      <div class="reminders-input">
+      <!-- Care Reminder Input Form (shown when visible) -->
+      <div v-if="showReminderInput" class="reminders-input">
         <CareReminderInput
           :loading="remindersLoading"
+          :is-visible="true"
           @reminder-added="handleReminderAdded"
+          @toggle="toggleReminderInput"
         />
       </div>
 
       <!-- Care Reminder List -->
       <div class="reminders-list">
-        <CareReminderList :reminders="reminders" :loading="remindersLoading" />
+        <CareReminderList
+          :reminders="reminders"
+          :loading="remindersLoading"
+          @update="handleReminderUpdated"
+        />
       </div>
     </div>
 
@@ -176,12 +226,16 @@ const handleReminderAdded = async (text: string, dueDate: Date | null) => {
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
-  padding-top: 2rem;
-  margin-top: 2rem;
-  border-top: 1px solid #f5f1e8;
 }
 
 .reminders-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.reminders-header-content {
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
@@ -194,6 +248,29 @@ const handleReminderAdded = async (text: string, dueDate: Date | null) => {
   margin: 0;
   letter-spacing: -0.02em;
   line-height: 1.3;
+}
+
+.reminders-subtitle {
+  font-size: 0.6875rem;
+  color: #a8a29e;
+  margin: 0;
+  line-height: 1.4;
+  font-style: italic;
+}
+
+.add-reminder-button {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-size: 0.8125rem;
+  color: #78716c;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.button-icon {
+  width: 1rem;
+  height: 1rem;
 }
 
 .reminders-input {
@@ -224,8 +301,17 @@ const handleReminderAdded = async (text: string, dueDate: Date | null) => {
     margin-top: 1.5rem;
   }
 
+  .reminders-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
   .reminders-title {
     font-size: 1rem;
+  }
+
+  .reminders-subtitle {
+    font-size: 0.625rem;
   }
 }
 
