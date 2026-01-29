@@ -1,4 +1,9 @@
 <script setup lang="ts">
+import type { CalendarEvent } from "~/types/calendarEvents";
+
+// Use calendar events composable
+const { allEvents, loading } = useCalendarEvents();
+
 // View state: 'month' or 'agenda'
 const currentView = ref<"month" | "agenda">("month");
 
@@ -10,6 +15,14 @@ const switchView = (view: "month" | "agenda") => {
 // Check if a view is active
 const isActiveView = (view: "month" | "agenda") => {
   return currentView.value === view;
+};
+
+// Handle event click from agenda view
+const handleEventClick = (event: CalendarEvent) => {
+  // Navigate to member detail page if memberId exists
+  if (event.memberId) {
+    navigateTo(`/members/view/${event.memberId}`);
+  }
 };
 </script>
 
@@ -71,10 +84,11 @@ const isActiveView = (view: "month" | "agenda") => {
 
         <!-- Agenda View -->
         <div v-else-if="currentView === 'agenda'" class="calendar-view">
-          <div class="empty-state">
-            <Icon name="mdi:format-list-bulleted" class="empty-icon" />
-            <p class="empty-message">Agenda view will be displayed here</p>
-          </div>
+          <CalendarAgendaView
+            :events="allEvents"
+            :loading="loading"
+            @event-click="handleEventClick"
+          />
         </div>
       </div>
     </div>
@@ -249,32 +263,6 @@ const isActiveView = (view: "month" | "agenda") => {
 
 .calendar-view {
   height: 100%;
-}
-
-/* Empty State (for agenda view) */
-.empty-state {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 1rem;
-  padding: 3rem 2rem;
-  text-align: center;
-  height: 100%;
-}
-
-.empty-icon {
-  width: 3rem;
-  height: 3rem;
-  color: #d9bc9b;
-  opacity: 0.5;
-}
-
-.empty-message {
-  font-family: "Work Sans", sans-serif;
-  font-size: 0.938rem;
-  color: #9c8b7a;
-  margin: 0;
 }
 
 /* Responsive - Tablet */
