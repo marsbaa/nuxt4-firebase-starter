@@ -2,15 +2,15 @@
 
 ## 1. Data Structure & Composable (Firestore)
 
-- [ ] 1.1 Document Care Notes schema in project documentation (Firestore structure)
-- [ ] 1.2 Create TypeScript interface for CareNote type (with history field)
-- [ ] 1.3 Set up Firestore collection `/careNotes` structure
-- [ ] 1.4 Implement Firestore Security Rules for authenticated-user access (v1 simplified)
-- [ ] 1.5 Implement `useCareNotes()` composable with Firestore snapshot listener
-- [ ] 1.6 Add CRUD operations (addNote, updateNote with history preservation)
-- [ ] 1.7 Implement error handling and loading states
-- [ ] 1.8 Test composable with Firestore (create test care notes manually)
-- [ ] 1.9 Test permissions enforcement (verify unauthenticated access rejected)
+- [x] 1.1 Document Care Notes schema in project documentation (Firestore structure)
+- [x] 1.2 Create TypeScript interface for CareNote type (with history field)
+- [x] 1.3 Set up Firestore collection `/careNotes` structure
+- [x] 1.4 Implement Firestore Security Rules for authenticated-user access (v1 simplified)
+- [x] 1.5 Implement `useCareNotes()` composable with Firestore snapshot listener
+- [x] 1.6 Add CRUD operations (addNote, updateNote with history preservation)
+- [x] 1.7 Implement error handling and loading states
+- [x] 1.8 Test composable with Firestore (create test care notes manually)
+- [x] 1.9 Test permissions enforcement (verify unauthenticated access rejected)
 
 ## 2. New Components
 
