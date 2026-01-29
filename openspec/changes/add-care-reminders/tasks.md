@@ -41,9 +41,9 @@
 
 ## 6. Loading and Empty States
 
-- [ ] 6.1 Implement skeleton loading state for Care Reminders
-- [ ] 6.2 Implement empty state with pastoral language (e.g., "No care reminders yet")
-- [ ] 6.3 Ensure loading states use subtle pulse animation
+- [x] 6.1 Implement skeleton loading state for Care Reminders
+- [x] 6.2 Implement empty state with pastoral language (e.g., "No care reminders yet")
+- [x] 6.3 Ensure loading states use subtle pulse animation
 
 ## 7. Styling and Visual Design
 
