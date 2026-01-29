@@ -14,14 +14,14 @@
 
 ## 2. New Components
 
-- [ ] 2.1 Create `CareNote.vue` component (individual note display with inline edit)
-- [ ] 2.2 Add edit mode toggle to `CareNote.vue` (textarea, Save/Cancel buttons)
-- [ ] 2.3 Create `CareNoteList.vue` component (timeline with loading/empty states)
-- [ ] 2.4 Create `CareNoteInput.vue` component (gentle input with auto-expand textarea)
-- [ ] 2.5 Create `CareSpace.vue` component (orchestrates notes list and input)
-- [ ] 2.6 Create `PersonalContext.vue` component (refactored left column)
-- [ ] 2.7 Test each component in isolation with mock data
-- [ ] 2.8 Test edit functionality in `CareNote.vue` (edit mode, save, cancel)
+- [x] 2.1 Create `CareNote.vue` component (individual note display with inline edit)
+- [x] 2.2 Add edit mode toggle to `CareNote.vue` (textarea, Save/Cancel buttons)
+- [x] 2.3 Create `CareNoteList.vue` component (timeline with loading/empty states)
+- [x] 2.4 Create `CareNoteInput.vue` component (gentle input with auto-expand textarea)
+- [x] 2.5 Create `CareSpace.vue` component (orchestrates notes list and input)
+- [x] 2.6 Create `PersonalContext.vue` component (refactored left column)
+- [x] 2.7 Test each component in isolation with mock data
+- [x] 2.8 Test edit functionality in `CareNote.vue` (edit mode, save, cancel)
 
 ## 3. Page Refactoring
 
