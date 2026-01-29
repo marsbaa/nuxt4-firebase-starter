@@ -37,14 +37,14 @@
 
 ## 4. Language & Copy Updates
 
-- [ ] 4.1 Replace "Pastoral Notes" with "Care Space"
-- [ ] 4.2 Replace "Member Information" with "Personal Journey" (in left context)
-- [ ] 4.3 Update "+ Add Note" to "Share a care note"
-- [ ] 4.4 Update "By [Author]" to "[Author] shared" or "With [Author]"
-- [ ] 4.5 Update "ACTIVE MEMBER" badge to "Member since [date]" or similar
-- [ ] 4.6 Review and update all button labels, placeholders, and tooltips
-- [ ] 4.7 Update aria-labels for accessibility
-- [ ] 4.8 Update toast messages (e.g., "Care note added" not "Note logged successfully")
+- [x] 4.1 Replace "Pastoral Notes" with "Care Space"
+- [x] 4.2 Replace "Member Information" with "Personal Journey" (in left context)
+- [x] 4.3 Update "+ Add Note" to "Share a care note"
+- [x] 4.4 Update "By [Author]" to "[Author] shared" or "With [Author]"
+- [x] 4.5 Update "ACTIVE MEMBER" badge to "Member since [date]" or similar
+- [x] 4.6 Review and update all button labels, placeholders, and tooltips
+- [x] 4.7 Update aria-labels for accessibility
+- [x] 4.8 Update toast messages (e.g., "Care note added" not "Note logged successfully")
 
 ## 5. Styling & Visual Hierarchy
 
