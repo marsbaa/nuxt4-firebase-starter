@@ -15,6 +15,8 @@ Pastoral care work involves sensitive conversations, confidential information, a
 
 - 🔐 **Secure Authentication** - Firebase-powered email/password authentication with privacy-focused design
 - 👤 **Profile Management** - Personal profile system with Firestore integration
+- 📝 **Care Space** - Real-time pastoral care notes with edit history preservation
+- 👥 **Member Management** - Compassionate member directory and profiles
 - 🎨 **Pastoral Design System** - Warm earth tones, generous spacing, and calming visual language
 - 🔔 **Gentle Notifications** - Supportive feedback system with respectful messaging
 - 🛡️ **Protected Routes** - Secure access to sensitive information
@@ -44,12 +46,25 @@ care-covenant-app/
 │   │   ├── AppCard.vue      # Card container with warm styling
 │   │   ├── AppIcon.vue      # Icon wrapper with rounded styling
 │   │   ├── AppInput.vue     # Form input with supportive design
+│   │   ├── CareNote.vue     # Individual care note with edit & history
+│   │   ├── CareNoteInput.vue # Gentle care note input interface
+│   │   ├── CareNoteList.vue # Timeline view for care notes
+│   │   ├── CareSpace.vue    # Main Care Space orchestrator
+│   │   ├── MemberAvatar.vue # Member avatar display
+│   │   ├── MemberTable.vue  # Member directory table
+│   │   ├── MemberTableRow.vue # Individual member row
+│   │   ├── Pagination.vue   # Pagination controls
+│   │   ├── PersonalContext.vue # Member profile context card
 │   │   └── ToastContainer.vue # Toast notification system
 │   ├── composables/         # Vue composables for logic
 │   │   ├── useAuth.ts       # Authentication management
+│   │   ├── useCareNotes.ts  # Care notes management (Firestore)
 │   │   ├── useFirebase.ts   # Firebase client initialization
+│   │   ├── useMembers.ts    # Member data management
 │   │   ├── useProfile.ts    # Profile data management
 │   │   └── useToast.ts      # Notification system
+│   ├── types/               # TypeScript type definitions
+│   │   └── careNotes.ts     # Care note types and interfaces
 │   ├── layouts/
 │   │   └── dashboard.vue    # Main dashboard layout with navigation
 │   ├── middleware/
@@ -61,7 +76,12 @@ care-covenant-app/
 │   │   ├── dashboard.vue    # Main dashboard home
 │   │   ├── profile.vue      # User profile management
 │   │   ├── settings.vue     # Account settings
-│   │   └── change-password.vue # Password management
+│   │   ├── change-password.vue # Password management
+│   │   └── members/         # Member management pages
+│   │       ├── index.vue    # Member directory
+│   │       ├── add.vue      # Add new member
+│   │       └── view/
+│   │           └── [id].vue # Member profile with Care Space
 │   ├── plugins/
 │   │   └── firebase.client.ts # Firebase client plugin
 │   └── app.vue              # Root application component
@@ -183,6 +203,84 @@ You can now:
 - Create an account at [`/register`](http://localhost:3000/register)
 - Sign in at [`/login`](http://localhost:3000/login)
 - Access the dashboard at [`/dashboard`](http://localhost:3000/dashboard)
+
+## Care Space Concept
+
+**Care Space** is the heart of pastoral care in this application—a calm, focused environment for documenting and reflecting on care interactions with members.
+
+### Design Philosophy
+
+The Care Space is designed to feel like **"a journal for caring for someone"**, not a database or ticketing system. It prioritizes:
+
+- **Narrative over metrics** - Open-ended notes, not checkboxes or categories
+- **Memory over logging** - Preserving the story of care, including edit history
+- **Reflection over reporting** - Space for thoughtful documentation
+- **Relationships over transactions** - Language that honors human connection
+
+### Features
+
+#### Real-Time Care Notes
+
+- **Live synchronization** - Notes appear instantly across all open sessions via Firestore snapshot listeners
+- **Timeline view** - Chronological display with newest notes first, visual timeline indicators
+- **Inline editing** - Authors can edit their notes directly with a gentle edit interface
+- **Edit history** - All previous versions are preserved automatically with timestamps and author information
+
+#### Pastoral Language
+
+- "Share a care note" (not "Add log" or "Create entry")
+- "Shared by [Name]" (not "Posted by" or "Created by")
+- "Care Space" (not "Notes" or "Activity Log")
+- Soft, warm visual design with earth tones and generous spacing
+
+#### Author Permissions
+
+- **View**: All authenticated pastoral team members can read all care notes
+- **Edit**: Only the original author can edit their notes (preserves authorship integrity)
+- **History**: Edit history is preserved to maintain memory and transparency
+
+### Technical Implementation
+
+The Care Space uses several specialized components:
+
+- **`CareSpace.vue`** - Main orchestrator for the care space (combines input and list)
+- **`CareNoteInput.vue`** - Gentle input interface with auto-expanding textarea
+- **`CareNoteList.vue`** - Timeline view with loading and empty states
+- **`CareNote.vue`** - Individual note display with inline edit and history viewer
+- **`useCareNotes()`** - Composable for real-time note management and CRUD operations
+
+### Usage Example
+
+```vue
+<template>
+  <CareSpace :member-id="memberId" />
+</template>
+
+<script setup>
+// The Care Space automatically handles:
+// - Real-time note loading via Firestore snapshot listener
+// - Adding new notes with proper metadata
+// - Inline editing with history preservation
+// - Error handling and loading states
+// - Responsive layout for mobile, tablet, and desktop
+
+const memberId = "member-123";
+</script>
+```
+
+### Data Flow
+
+1. **Real-time listening** - `useCareNotes()` establishes a Firestore snapshot listener on mount
+2. **Automatic updates** - When any note is added/edited/deleted, all connected clients receive updates instantly
+3. **Edit preservation** - On edit, previous content is stored in the `history` array before updating
+4. **Optimistic UI** - Operations appear instant with Firebase handling the sync
+
+### Accessibility
+
+- Keyboard navigation with proper focus management
+- Screen reader support with ARIA labels and roles
+- Touch-friendly targets (44x44px minimum) on mobile
+- Color contrast meeting WCAG AA standards
 
 ## Development
 
@@ -319,6 +417,58 @@ This project uses [Iconify](https://iconify.design/) with [Heroicons](https://he
 
 Browse icons at [icon-sets.iconify.design](https://icon-sets.iconify.design/). Prefer rounded, outline-style icon families for consistency with the pastoral design language.
 
+## Data Structure
+
+### Care Notes Collection
+
+Care Notes are stored in Firestore to provide a flexible, queryable structure for pastoral care records. Each note represents a care interaction or observation about a member.
+
+**Collection**: `/careNotes/{noteId}`
+
+**Schema**:
+
+```typescript
+{
+  memberId: string; // Reference to member (indexed for queries)
+  content: string; // The care note narrative text
+  authorId: string; // User ID of the note author
+  authorName: string; // Display name of the author
+  createdAt: Timestamp; // Original creation timestamp (never changes)
+  updatedAt: Timestamp; // Last update timestamp
+  history: Array<{
+    // Edit history for integrity and memory
+    content: string; // Previous content before edit
+    editedAt: Timestamp; // When the edit occurred
+    editedBy: string; // User ID who made the edit
+    editedByName: string; // Display name of the editor
+  }>;
+}
+```
+
+**Query Pattern**:
+
+```typescript
+// Fetch care notes for a specific member, most recent first
+collection("careNotes")
+  .where("memberId", "==", memberId)
+  .orderBy("createdAt", "desc")
+  .limit(50);
+```
+
+**Why Firestore (not RTDB)**:
+
+- Better ordering and pagination with `.orderBy()` and `.limit()`
+- Supports future filtering with `.where()` clauses
+- Built-in offline caching
+- More efficient queries for structured data
+
+**Edit History Approach**:
+
+- When a note is edited, the previous content is preserved in the `history` array
+- The original `createdAt` timestamp never changes (maintains chronological integrity)
+- The `updatedAt` timestamp reflects the most recent edit
+- History is preserved for memory and integrity but not surfaced in v1 UI
+
 ## Firestore Security Rules
 
 For production, implement proper security rules:
@@ -330,6 +480,12 @@ service cloud.firestore {
     // Users can only access their own profile
     match /users/{userId} {
       allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+
+    // Care Notes: Pastoral team-only access (v1 - authenticated users)
+    // Future: Add role-based checks (e.g., request.auth.token.role == 'pastor')
+    match /careNotes/{noteId} {
+      allow read, write: if request.auth != null;
     }
   }
 }

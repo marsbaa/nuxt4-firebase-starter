@@ -177,8 +177,6 @@ export const useMembers = () => {
    * Fetch members list from server API
    */
   const fetchMembers = async (): Promise<void> => {
-    console.log("[useMembers] fetchMembers called");
-
     try {
       isLoading.value = true;
       error.value = null;
@@ -188,7 +186,6 @@ export const useMembers = () => {
         throw new Error("Not authenticated");
       }
 
-      console.log("[useMembers] Fetching from /api/members");
       const data = await $fetch<Member[]>("/api/members", {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -196,7 +193,6 @@ export const useMembers = () => {
       });
 
       members.value = data || [];
-      console.log("[useMembers] Members loaded:", members.value.length);
     } catch (err: any) {
       console.error("[useMembers] Error fetching members:", err);
       const errorMessage =
@@ -212,8 +208,6 @@ export const useMembers = () => {
    * Start polling for member updates
    */
   const startPolling = (): (() => void) => {
-    console.log("[useMembers] Starting polling");
-
     // Initial fetch
     fetchMembers();
 
@@ -224,7 +218,6 @@ export const useMembers = () => {
 
     // Return cleanup function
     return () => {
-      console.log("[useMembers] Stopping polling");
       if (pollTimer) {
         clearInterval(pollTimer);
         pollTimer = null;

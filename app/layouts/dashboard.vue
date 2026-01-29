@@ -103,7 +103,10 @@ const pageTitle = computed(() => {
           class="menu-icon"
         />
       </button>
-      <h1 class="mobile-title">{{ pageTitle }}</h1>
+      <div class="mobile-logo">
+        <Icon name="heroicons:heart" class="mobile-logo-icon" />
+        <h1 class="mobile-title">Pastoral Care</h1>
+      </div>
       <div class="mobile-avatar">
         <div class="avatar-circle">{{ userInitials }}</div>
       </div>
@@ -224,12 +227,28 @@ const pageTitle = computed(() => {
   height: 1.5rem;
 }
 
+.mobile-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex: 1;
+  justify-content: center;
+}
+
+.mobile-logo-icon {
+  width: 1.5rem;
+  height: 1.5rem;
+  color: #d9bc9b;
+  flex-shrink: 0;
+}
+
 .mobile-title {
   font-family: "Crimson Pro", serif;
   font-size: 1.25rem;
   font-weight: 600;
   color: #2d2a26;
   margin: 0;
+  letter-spacing: -0.02em;
 }
 
 .mobile-avatar {
@@ -449,10 +468,11 @@ const pageTitle = computed(() => {
 .main-content {
   flex: 1;
   margin-left: 280px;
-  padding: 3rem;
+  padding: 2rem;
   animation: slideIn 0.6s cubic-bezier(0.16, 1, 0.3, 1);
   position: relative;
   z-index: 1;
+  background-color: white;
 }
 
 @keyframes slideIn {
