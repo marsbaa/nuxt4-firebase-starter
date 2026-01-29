@@ -100,25 +100,27 @@ const isEmpty = computed(() => !props.loading && props.reminders.length === 0);
 
 /* Loading State */
 .loading-state {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1rem;
+  width: 100%;
 }
 
 .skeleton-reminder {
   display: flex;
-  gap: 0.875rem;
+  flex-direction: column;
   padding: 1rem 1.125rem;
   background: linear-gradient(to bottom, #fefcf9, #fdf9f3);
   border: 1px solid #f5f1e8;
   border-radius: 0.5rem;
+  min-height: 120px;
 }
 
 .skeleton-icon {
-  flex-shrink: 0;
+  align-self: flex-end;
   width: 1rem;
   height: 1rem;
-  margin-top: 0.125rem;
+  margin-bottom: 0.5rem;
   background: linear-gradient(90deg, #f5f1e8 0%, #ebe5d8 50%, #f5f1e8 100%);
   background-size: 200% 100%;
   border-radius: 0.25rem;
@@ -127,7 +129,6 @@ const isEmpty = computed(() => !props.loading && props.reminders.length === 0);
 
 .skeleton-content-area {
   flex: 1;
-  min-width: 0;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
@@ -144,10 +145,11 @@ const isEmpty = computed(() => !props.loading && props.reminders.length === 0);
 .skeleton-footer {
   display: flex;
   gap: 0.625rem;
+  margin-top: auto;
 }
 
 .skeleton-date {
-  height: 0.75rem;
+  height: 0.625rem;
   width: 3rem;
   background: linear-gradient(90deg, #f5f1e8 0%, #ebe5d8 50%, #f5f1e8 100%);
   background-size: 200% 100%;
@@ -156,7 +158,7 @@ const isEmpty = computed(() => !props.loading && props.reminders.length === 0);
 }
 
 .skeleton-author {
-  height: 0.75rem;
+  height: 0.625rem;
   width: 6rem;
   background: linear-gradient(90deg, #f5f1e8 0%, #ebe5d8 50%, #f5f1e8 100%);
   background-size: 200% 100%;
@@ -211,9 +213,10 @@ const isEmpty = computed(() => !props.loading && props.reminders.length === 0);
 
 /* Reminders Collection */
 .reminders-collection {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1rem;
+  width: 100%;
 }
 
 /* Responsive adjustments */
@@ -235,9 +238,14 @@ const isEmpty = computed(() => !props.loading && props.reminders.length === 0);
     font-size: 0.6875rem;
   }
 
-  .skeleton-reminder {
+  .loading-state {
+    grid-template-columns: 1fr;
     gap: 0.75rem;
+  }
+
+  .skeleton-reminder {
     padding: 0.875rem 1rem;
+    min-height: 100px;
   }
 
   .skeleton-icon {
@@ -246,7 +254,8 @@ const isEmpty = computed(() => !props.loading && props.reminders.length === 0);
   }
 
   .reminders-collection {
-    gap: 0.625rem;
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
   }
 }
 </style>

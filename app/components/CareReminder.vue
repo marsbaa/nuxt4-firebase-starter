@@ -30,31 +30,33 @@ const props = defineProps<{
 }>();
 
 /**
- * Format due date for display
- * Shows as "Jan 15" or "January 15" depending on screen size
+ * Format due date for display in card header
+ * Shows as "OCT 20" or "PENDING" if no date
  */
 const formatDueDate = (timestamp: any) => {
-  if (!timestamp) return null;
+  if (!timestamp) return "PENDING";
 
   // Handle Firestore Timestamp
   const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
 
-  // Format as "Jan 15"
-  return date.toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-  });
+  // Format as "OCT 20"
+  return date
+    .toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+    })
+    .toUpperCase()
+    .replace(",", "");
 };
 
-const formattedDueDate = computed(() =>
-  props.reminder.dueDate ? formatDueDate(props.reminder.dueDate) : null,
-);
+const formattedDueDate = computed(() => formatDueDate(props.reminder.dueDate));
 </script>
 
 <template>
   <div class="care-reminder" role="listitem">
-    <!-- Icon -->
-    <div class="reminder-icon-container">
+    <!-- Card Header with Date and Icon -->
+    <div class="reminder-header">
+      <span class="reminder-date">{{ formattedDueDate }}</span>
       <AppIcon
         name="heroicons:bookmark"
         class="reminder-icon"
@@ -62,54 +64,57 @@ const formattedDueDate = computed(() =>
       />
     </div>
 
-    <!-- Content -->
+    <!-- Reminder Text Content -->
     <div class="reminder-content">
-      <div class="reminder-text">{{ reminder.text }}</div>
-
-      <!-- Footer: Due date and author -->
-      <div class="reminder-footer">
-        <span v-if="formattedDueDate" class="reminder-due-date">{{
-          formattedDueDate
-        }}</span>
-        <span class="reminder-author">Held by {{ reminder.authorName }}</span>
-      </div>
+      <p class="reminder-text">{{ reminder.text }}</p>
     </div>
   </div>
 </template>
 
 <style scoped>
-/* Care Reminder Container */
+/* Care Reminder Card Container */
 .care-reminder {
   display: flex;
-  gap: 0.875rem;
+  flex-direction: column;
   padding: 1rem 1.125rem;
   background: linear-gradient(to bottom, #fefcf9, #fdf9f3);
   border: 1px solid #f5f1e8;
   border-radius: 0.5rem;
   transition: all 0.2s ease;
-  box-shadow: inset 0 1px 2px 0 rgba(252, 248, 243, 0.3);
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03);
+  min-height: 120px;
 }
 
-/* Icon Container */
-.reminder-icon-container {
-  flex-shrink: 0;
-  padding-top: 0.125rem;
+/* Card Header - Date and Icon */
+.reminder-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid rgba(245, 241, 232, 0.6);
+}
+
+.reminder-date {
+  font-size: 0.625rem;
+  font-weight: 600;
+  color: #a8a29e;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
 }
 
 .reminder-icon {
   width: 1rem;
   height: 1rem;
   color: #c2a47a;
-  opacity: 0.4;
+  opacity: 0.35;
 }
 
 /* Content Area */
 .reminder-content {
   flex: 1;
-  min-width: 0;
   display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
+  align-items: flex-start;
 }
 
 /* Reminder Text */
@@ -118,37 +123,23 @@ const formattedDueDate = computed(() =>
   font-size: 0.875rem;
   line-height: 1.5;
   word-break: break-word;
-}
-
-/* Footer */
-.reminder-footer {
-  display: flex;
-  align-items: center;
-  gap: 0.625rem;
-  flex-wrap: wrap;
-}
-
-.reminder-due-date {
-  font-size: 0.6875rem;
-  font-weight: 500;
-  color: #c2a47a;
-  letter-spacing: 0.02em;
-  padding: 0.125rem 0.5rem;
-  background-color: rgba(194, 164, 122, 0.08);
-  border-radius: 0.25rem;
-}
-
-.reminder-author {
-  font-size: 0.6875rem;
-  color: #a8a29e;
+  margin: 0;
   font-style: italic;
 }
 
 /* Responsive adjustments */
 @media (max-width: 640px) {
   .care-reminder {
-    gap: 0.75rem;
     padding: 0.875rem 1rem;
+    min-height: 100px;
+  }
+
+  .reminder-header {
+    margin-bottom: 0.625rem;
+  }
+
+  .reminder-date {
+    font-size: 0.5625rem;
   }
 
   .reminder-icon {
@@ -159,11 +150,6 @@ const formattedDueDate = computed(() =>
   .reminder-text {
     font-size: 0.8125rem;
   }
-
-  .reminder-due-date,
-  .reminder-author {
-    font-size: 0.625rem;
-  }
 }
 
 /* Subtle hover state (non-urgent) */
@@ -171,6 +157,7 @@ const formattedDueDate = computed(() =>
   .care-reminder:hover {
     background: linear-gradient(to bottom, #fefcf9, #fcf6ed);
     border-color: #ebe5d8;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.05);
   }
 }
 
