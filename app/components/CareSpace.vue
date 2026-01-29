@@ -160,9 +160,8 @@ const toggleReminderInput = () => {
       <div v-if="showReminderInput" class="reminders-input">
         <CareReminderInput
           :loading="remindersLoading"
-          :is-visible="true"
           @reminder-added="handleReminderAdded"
-          @toggle="toggleReminderInput"
+          @cancel="showReminderInput = false"
         />
       </div>
 
