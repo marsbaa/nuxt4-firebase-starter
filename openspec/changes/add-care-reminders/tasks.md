@@ -1,0 +1,85 @@
+# Implementation Tasks: Add Care Reminders to Care Space
+
+## 1. Data Layer
+
+- [ ] 1.1 Create Firestore collection structure for `/careReminders`
+- [ ] 1.2 Create `useCareReminders()` composable for Firestore operations
+- [ ] 1.3 Implement `addCareReminder()` method with Firestore write
+- [ ] 1.4 Implement `getCareReminders()` query with filtering and ordering
+- [ ] 1.5 Update Firestore Security Rules for authenticated-user access to Care Reminders
+
+## 2. UI Components
+
+- [ ] 2.1 Create `CareReminder.vue` component for individual reminder display
+- [ ] 2.2 Create `CareReminderList.vue` component for reminder collection (max 3)
+- [ ] 2.3 Create `CareReminderInput.vue` component for adding new reminders
+- [ ] 2.4 Design visual treatment (warm background, subtle outline, low-contrast icon)
+
+## 3. Care Space Integration
+
+- [ ] 3.1 Update `CareSpace.vue` to include Care Reminders section
+- [ ] 3.2 Position Care Reminders between input and timeline
+- [ ] 3.3 Add section heading "Care Reminders" with pastoral typography
+- [ ] 3.4 Implement gentle section divider and spacing
+
+## 4. Care Reminder Input
+
+- [ ] 4.1 Implement text input with pastoral placeholder
+- [ ] 4.2 Add optional date picker for due date
+- [ ] 4.3 Implement "Add care reminder" button with pastoral styling
+- [ ] 4.4 Handle empty input prevention with gentle feedback
+- [ ] 4.5 Clear input after successful submission
+
+## 5. Care Reminder Display
+
+- [ ] 5.1 Implement display of reminder text
+- [ ] 5.2 Display optional due date with calm formatting (e.g., "Jan 15")
+- [ ] 5.3 Display author name subtly (e.g., "Held by [Name]")
+- [ ] 5.4 Show only active (non-expired) reminders
+- [ ] 5.5 Limit display to 3 reminders maximum
+- [ ] 5.6 Order by: soonest due date first, undated last
+
+## 6. Loading and Empty States
+
+- [ ] 6.1 Implement skeleton loading state for Care Reminders
+- [ ] 6.2 Implement empty state with pastoral language (e.g., "No care reminders yet")
+- [ ] 6.3 Ensure loading states use subtle pulse animation
+
+## 7. Styling and Visual Design
+
+- [ ] 7.1 Apply warm, subtle background tint (lightest amber/beige)
+- [ ] 7.2 Add gentle inset or outline border
+- [ ] 7.3 Include small, low-contrast "remembering" icon
+- [ ] 7.4 Ensure no urgency colors (red, orange)
+- [ ] 7.5 Ensure no task indicators (checkboxes, progress bars)
+- [ ] 7.6 Maintain generous spacing consistent with Care Space
+
+## 8. Accessibility
+
+- [ ] 8.1 Ensure keyboard navigation works for reminder input and display
+- [ ] 8.2 Add ARIA labels for screen readers
+- [ ] 8.3 Verify color contrast meets WCAG 2.1 Level AA standards
+- [ ] 8.4 Ensure focus indicators are visible on interactive elements
+
+## 9. Responsive Design
+
+- [ ] 9.1 Ensure Care Reminders display properly on mobile viewports
+- [ ] 9.2 Verify touch target sizes meet 44x44px minimum
+- [ ] 9.3 Maintain layout order: input → reminders → timeline on mobile
+
+## 10. Testing and Validation
+
+- [ ] 10.1 Test adding Care Reminders with and without due dates
+- [ ] 10.2 Test display ordering (soonest first, undated last)
+- [ ] 10.3 Test max 3 reminders display limit
+- [ ] 10.4 Test expiry logic (past dates not displayed)
+- [ ] 10.5 Test real-time updates when reminders are added
+- [ ] 10.6 Test accessibility with keyboard and screen reader
+- [ ] 10.7 Test responsive behavior across viewports
+- [ ] 10.8 Verify pastoral language throughout
+
+## 11. Documentation
+
+- [ ] 11.1 Update spec delta with ADDED requirements
+- [ ] 11.2 Document Firestore structure in code comments
+- [ ] 11.3 Update any relevant user documentation (if applicable)
