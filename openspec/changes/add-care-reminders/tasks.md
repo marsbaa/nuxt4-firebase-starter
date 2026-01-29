@@ -17,10 +17,10 @@
 
 ## 3. Care Space Integration
 
-- [ ] 3.1 Update `CareSpace.vue` to include Care Reminders section
-- [ ] 3.2 Position Care Reminders between input and timeline
-- [ ] 3.3 Add section heading "Care Reminders" with pastoral typography
-- [ ] 3.4 Implement gentle section divider and spacing
+- [x] 3.1 Update `CareSpace.vue` to include Care Reminders section
+- [x] 3.2 Position Care Reminders between input and timeline
+- [x] 3.3 Add section heading "Care Reminders" with pastoral typography
+- [x] 3.4 Implement gentle section divider and spacing
 
 ## 4. Care Reminder Input
 
