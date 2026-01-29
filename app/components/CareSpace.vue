@@ -32,7 +32,7 @@ const handleNoteUpdated = async (noteId: string, content: string) => {
     <div class="care-space-header">
       <h2 class="care-space-title">Care Space</h2>
       <p class="care-space-subtitle">
-        A shared space for {{ memberName }}'s care journey
+        Holding the narrative of our shared journey.
       </p>
     </div>
 
@@ -69,7 +69,7 @@ const handleNoteUpdated = async (noteId: string, content: string) => {
 }
 
 .care-space-title {
-  font-size: 2rem;
+  font-size: 1.8rem;
   font-weight: 700;
   color: #2d2a26;
   margin: 0;
@@ -78,20 +78,11 @@ const handleNoteUpdated = async (noteId: string, content: string) => {
 }
 
 .care-space-subtitle {
-  font-size: 0.9375rem;
+  font-size: 0.7rem;
   color: #78716c;
   margin: 0;
   line-height: 1.5;
-}
-
-/* Input Section */
-.care-space-input {
-  /* Input component has its own styling */
-}
-
-/* Timeline Section */
-.care-space-timeline {
-  /* Timeline component has its own styling */
+  font-style: italic;
 }
 
 /* Responsive adjustments */

@@ -69,7 +69,7 @@ onMounted(() => {
         ref="textareaRef"
         v-model="content"
         class="input-textarea"
-        placeholder="Share a care note…"
+        placeholder="Share an update..."
         rows="3"
         aria-label="Share a care note for this person"
         :disabled="loading || isSubmitting"
@@ -85,7 +85,7 @@ onMounted(() => {
           :loading="isSubmitting"
           @click="handleSubmit"
         >
-          Share
+          Add Care Note
         </AppButton>
       </div>
     </div>
@@ -106,17 +106,17 @@ onMounted(() => {
 
 .input-container {
   background-color: #fafaf9;
-  border: 1.5px solid #e7e5e4;
-  border-radius: 0.75rem;
-  padding: 1.25rem;
+  border: 1px solid #f5f5f4;
+  border-radius: 0.5rem;
+  padding: 1.5rem;
   transition: all 0.2s ease;
-  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.02);
+  box-shadow: none;
 }
 
 .input-container:focus-within {
   background-color: #ffffff;
-  border-color: #c2a47a;
-  box-shadow: 0 0 0 4px rgba(194, 164, 122, 0.1);
+  border-color: #e7e5e4;
+  box-shadow: 0 0 0 3px rgba(194, 164, 122, 0.05);
 }
 
 /* Textarea */
@@ -152,7 +152,7 @@ onMounted(() => {
   justify-content: flex-end;
   margin-top: 1rem;
   padding-top: 1rem;
-  border-top: 1px solid #e7e5e4;
+  border-top: 1px solid #f5f5f4;
 }
 
 /* Keyboard Hint */

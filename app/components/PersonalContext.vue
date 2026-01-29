@@ -61,17 +61,16 @@ const formattedJoiningDate = computed(() => {
 
       <!-- Member Since -->
       <p v-if="formattedJoiningDate" class="member-since">
-        Member since {{ formattedJoiningDate }}
+        Covenanting with us <br />
+        since {{ formattedJoiningDate }}
       </p>
     </div>
 
     <!-- Divider -->
     <div class="context-divider"></div>
 
-    <!-- Contact Details Section -->
+    <!-- Contact Details Section (no heading per design) -->
     <div class="context-section">
-      <h3 class="section-heading">Contact</h3>
-
       <div class="context-items">
         <div class="context-item">
           <AppIcon name="heroicons:envelope" class="item-icon" />
@@ -93,6 +92,26 @@ const formattedJoiningDate = computed(() => {
     <!-- Divider -->
     <div class="context-divider"></div>
 
+    <!-- Care Intentions Section -->
+    <div class="context-section">
+      <h3 class="section-heading">Care Intentions</h3>
+
+      <div class="action-buttons">
+        <button class="care-action-button" @click="emit('edit-profile')">
+          <AppIcon name="heroicons:pencil" class="action-icon" />
+          <span>Update her story</span>
+        </button>
+
+        <button class="care-action-button" @click="emit('send-message')">
+          <AppIcon name="heroicons:chat-bubble-left" class="action-icon" />
+          <span>Reach out with a word</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Divider -->
+    <div class="context-divider"></div>
+
     <!-- Personal Journey Section -->
     <div class="context-section">
       <h3 class="section-heading">Personal Journey</h3>
@@ -100,67 +119,37 @@ const formattedJoiningDate = computed(() => {
       <div class="context-items">
         <!-- Date of Birth & Age -->
         <div v-if="formattedBirthday" class="journey-item">
-          <div class="journey-label">Date of Birth</div>
+          <div class="journey-label">Day of Birth</div>
           <div class="journey-value">
             <AppIcon name="heroicons:cake" class="value-icon" />
             <span>{{ formattedBirthday }}</span>
-            <span v-if="age" class="age-badge">{{ age }} years</span>
+            <span v-if="age" class="age-badge">({{ age }} years)</span>
           </div>
         </div>
 
-        <!-- Marital Status (placeholder - not in Member type yet) -->
+        <!-- Season of Life (placeholder - not in Member type yet) -->
         <div class="journey-item">
-          <div class="journey-label">Marital Status</div>
+          <div class="journey-label">Season of Life</div>
           <div class="journey-value">
             <span class="placeholder-text">Not specified</span>
           </div>
         </div>
 
-        <!-- Small Group / Fellowship (placeholder - not in Member type yet) -->
+        <!-- Circle of Fellowship (placeholder - not in Member type yet) -->
         <div class="journey-item">
-          <div class="journey-label">Small Group</div>
+          <div class="journey-label">Circle of Fellowship</div>
           <div class="journey-value">
             <span class="placeholder-text">Not specified</span>
           </div>
         </div>
 
-        <!-- Emergency Contact (placeholder - not in Member type yet) -->
+        <!-- In Case of Need (placeholder - not in Member type yet) -->
         <div class="journey-item">
-          <div class="journey-label">Emergency Contact</div>
+          <div class="journey-label">In Case of Need</div>
           <div class="journey-value">
             <span class="placeholder-text">Not specified</span>
           </div>
         </div>
-      </div>
-    </div>
-
-    <!-- Divider -->
-    <div class="context-divider"></div>
-
-    <!-- Quick Actions Section -->
-    <div class="context-section">
-      <h3 class="section-heading">Quick Actions</h3>
-
-      <div class="action-buttons">
-        <AppButton
-          variant="secondary"
-          size="sm"
-          full-width
-          @click="emit('edit-profile')"
-        >
-          <AppIcon name="heroicons:pencil" class="button-icon" />
-          Edit Profile
-        </AppButton>
-
-        <AppButton
-          variant="ghost"
-          size="sm"
-          full-width
-          @click="emit('send-message')"
-        >
-          <AppIcon name="heroicons:chat-bubble-left" class="button-icon" />
-          Send Message
-        </AppButton>
       </div>
     </div>
   </div>
@@ -201,9 +190,10 @@ const formattedJoiningDate = computed(() => {
 }
 
 .member-since {
-  font-size: 0.875rem;
-  color: #78716c;
+  font-size: 0.7rem;
+  color: #877e78;
   margin: 0;
+  font-style: italic;
 }
 
 /* Context Divider */
@@ -240,9 +230,7 @@ const formattedJoiningDate = computed(() => {
   display: flex;
   align-items: center;
   gap: 0.625rem;
-  padding: 0.625rem;
-  background-color: #fafaf9;
-  border-radius: 0.375rem;
+  padding: 0.375rem 0;
 }
 
 .item-icon {
@@ -306,12 +294,36 @@ const formattedJoiningDate = computed(() => {
 .action-buttons {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.75rem;
 }
 
-.button-icon {
-  width: 1rem;
-  height: 1rem;
+.care-action-button {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  padding: 0.5rem 0;
+  background: #ffffff;
+  border: none;
+  font-size: 0.875rem;
+  color: #57534e;
+  cursor: pointer;
+  text-align: left;
+  transition: color 0.15s ease;
+  padding: 1rem;
+  border-radius: 1rem;
+  border: 1px solid #fcfcfc;
+  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.03);
+}
+
+.care-action-button:hover {
+  color: #292524;
+}
+
+.action-icon {
+  width: 1.125rem;
+  height: 1.125rem;
+  color: #a8a29e;
+  flex-shrink: 0;
 }
 
 /* Responsive adjustments */

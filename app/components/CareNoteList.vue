@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import type { CareNote } from "~/types/careNotes";
-
 const props = defineProps<{
   notes: any; // Accept readonly from composable
   loading: boolean;
@@ -24,8 +22,19 @@ const isEmpty = computed(() => !props.loading && props.notes.length === 0);
       aria-label="Loading care notes"
     >
       <div class="skeleton-note" v-for="i in 3" :key="i">
-        <div class="skeleton-content"></div>
-        <div class="skeleton-meta"></div>
+        <!-- Timeline Dot -->
+        <div class="skeleton-timeline">
+          <div class="skeleton-dot"></div>
+          <div class="skeleton-line" v-if="i < 3"></div>
+        </div>
+        <!-- Content Area -->
+        <div class="skeleton-content-area">
+          <div class="skeleton-header">
+            <div class="skeleton-date"></div>
+            <div class="skeleton-author"></div>
+          </div>
+          <div class="skeleton-content"></div>
+        </div>
       </div>
     </div>
 
@@ -74,30 +83,82 @@ const isEmpty = computed(() => !props.loading && props.notes.length === 0);
 .loading-state {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 0;
 }
 
 .skeleton-note {
-  padding: 1.25rem;
-  background-color: white;
-  border: 1px solid #e5e7eb;
-  border-radius: 0.5rem;
+  display: flex;
+  gap: 1rem;
+  padding: 0;
+  margin-bottom: 2rem;
+  position: relative;
+}
+
+.skeleton-note:last-child {
+  margin-bottom: 0;
+}
+
+.skeleton-timeline {
+  position: relative;
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  align-items: center;
+  flex-shrink: 0;
+  width: 1.25rem;
+  padding-top: 0.125rem;
+}
+
+.skeleton-dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background-color: #e7e5e4;
+  border: 2px solid #f5f5f4;
+  z-index: 1;
+}
+
+.skeleton-line {
+  position: absolute;
+  top: 0.75rem;
+  bottom: -2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 1px;
+  background-color: #e7e5e4;
+}
+
+.skeleton-content-area {
+  flex: 1;
+  min-width: 0;
+}
+
+.skeleton-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.skeleton-date {
+  height: 0.75rem;
+  width: 8rem;
+  background: linear-gradient(90deg, #f3f4f6 0%, #e5e7eb 50%, #f3f4f6 100%);
+  background-size: 200% 100%;
+  border-radius: 0.25rem;
+  animation: shimmer 1.5s ease-in-out infinite;
+}
+
+.skeleton-author {
+  height: 0.75rem;
+  width: 9rem;
+  background: linear-gradient(90deg, #f3f4f6 0%, #e5e7eb 50%, #f3f4f6 100%);
+  background-size: 200% 100%;
+  border-radius: 0.25rem;
+  animation: shimmer 1.5s ease-in-out infinite;
 }
 
 .skeleton-content {
   height: 4rem;
-  background: linear-gradient(90deg, #f3f4f6 0%, #e5e7eb 50%, #f3f4f6 100%);
-  background-size: 200% 100%;
-  border-radius: 0.375rem;
-  animation: shimmer 1.5s ease-in-out infinite;
-}
-
-.skeleton-meta {
-  height: 1rem;
-  width: 60%;
   background: linear-gradient(90deg, #f3f4f6 0%, #e5e7eb 50%, #f3f4f6 100%);
   background-size: 200% 100%;
   border-radius: 0.375rem;
@@ -119,11 +180,11 @@ const isEmpty = computed(() => !props.loading && props.notes.length === 0);
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 3rem 1.5rem;
+  padding: 4rem 1.5rem;
   text-align: center;
-  background-color: #fafaf9;
-  border: 1px dashed #d6d3d1;
-  border-radius: 0.5rem;
+  background-color: transparent;
+  border: none;
+  border-radius: 0;
 }
 
 .empty-icon {
@@ -151,7 +212,7 @@ const isEmpty = computed(() => !props.loading && props.notes.length === 0);
 .notes-timeline {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 0;
 }
 
 /* Responsive adjustments */
@@ -174,7 +235,31 @@ const isEmpty = computed(() => !props.loading && props.notes.length === 0);
   }
 
   .skeleton-note {
-    padding: 1rem;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .skeleton-timeline {
+    width: 1rem;
+  }
+
+  .skeleton-line {
+    bottom: -1.5rem;
+  }
+
+  .skeleton-dot {
+    width: 0.375rem;
+    height: 0.375rem;
+  }
+
+  .skeleton-date {
+    width: 6rem;
+    height: 0.625rem;
+  }
+
+  .skeleton-author {
+    width: 7rem;
+    height: 0.625rem;
   }
 }
 </style>
