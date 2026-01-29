@@ -12,12 +12,22 @@ const emit = defineEmits<{
 const content = ref("");
 const textareaRef = ref<HTMLTextAreaElement | null>(null);
 const isSubmitting = ref(false);
+const isExpanded = ref(false);
+
+// Handle expand
+const handleExpand = () => {
+  isExpanded.value = true;
+  nextTick(() => {
+    textareaRef.value?.focus();
+    adjustHeight();
+  });
+};
 
 // Handle cancel
 const handleCancel = () => {
   if (!content.value.trim() || confirm("Discard your note?")) {
     content.value = "";
-    emit("cancel");
+    isExpanded.value = false;
   }
 };
 
@@ -44,7 +54,8 @@ const handleSubmit = async () => {
   try {
     emit("note-added", content.value.trim());
     content.value = "";
-    // Reset textarea height
+    // Collapse and reset textarea height
+    isExpanded.value = false;
     nextTick(() => {
       if (textareaRef.value) {
         textareaRef.value.style.height = "auto";
@@ -62,9 +73,10 @@ const handleKeydown = (event: KeyboardEvent) => {
     event.preventDefault();
     handleSubmit();
   }
-  // Escape to cancel
+  // Escape to collapse
   if (event.key === "Escape" && !content.value.trim()) {
-    emit("cancel");
+    isExpanded.value = false;
+    textareaRef.value?.blur();
   }
 };
 
@@ -76,7 +88,23 @@ onMounted(() => {
 
 <template>
   <div class="care-note-input">
-    <div class="input-container">
+    <!-- Collapsed State -->
+    <div
+      v-if="!isExpanded"
+      class="collapsed-input"
+      @click="handleExpand"
+      role="button"
+      tabindex="0"
+      @keydown.enter="handleExpand"
+      @keydown.space.prevent="handleExpand"
+    >
+      <span class="collapsed-placeholder"
+        >Share an update...After a visit or conversation</span
+      >
+    </div>
+
+    <!-- Expanded State -->
+    <div v-else class="input-container">
       <!-- Textarea -->
       <textarea
         ref="textareaRef"
@@ -128,6 +156,38 @@ onMounted(() => {
   width: 100%;
 }
 
+/* Collapsed State */
+.collapsed-input {
+  background-color: #fafaf9;
+  border: 1px solid #f5f5f4;
+  border-radius: 0.5rem;
+  padding: 1rem 1.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+}
+
+.collapsed-input:hover {
+  background-color: #ffffff;
+  border-color: #e7e5e4;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.collapsed-input:focus {
+  outline: none;
+  background-color: #ffffff;
+  border-color: #e7e5e4;
+  box-shadow: 0 0 0 3px rgba(194, 164, 122, 0.05);
+}
+
+.collapsed-placeholder {
+  font-size: 0.9375rem;
+  color: #a8a29e;
+  font-style: italic;
+}
+
+/* Expanded State */
 .input-container {
   background-color: #fafaf9;
   border: 1px solid #f5f5f4;
@@ -214,6 +274,10 @@ kbd {
 
 /* Responsive adjustments */
 @media (max-width: 640px) {
+  .collapsed-input {
+    padding: 0.875rem 1rem;
+  }
+
   .input-container {
     padding: 0.875rem;
   }
