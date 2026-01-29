@@ -66,10 +66,7 @@ const isActiveView = (view: "month" | "agenda") => {
       <div class="calendar-main">
         <!-- Month View -->
         <div v-if="currentView === 'month'" class="calendar-view">
-          <div class="empty-state">
-            <Icon name="mdi:calendar-outline" class="empty-icon" />
-            <p class="empty-message">Month view will be displayed here</p>
-          </div>
+          <CalendarMonthView />
         </div>
 
         <!-- Agenda View -->
@@ -252,12 +249,9 @@ const isActiveView = (view: "month" | "agenda") => {
 
 .calendar-view {
   height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
-/* Empty State */
+/* Empty State (for agenda view) */
 .empty-state {
   display: flex;
   flex-direction: column;
@@ -266,6 +260,7 @@ const isActiveView = (view: "month" | "agenda") => {
   gap: 1rem;
   padding: 3rem 2rem;
   text-align: center;
+  height: 100%;
 }
 
 .empty-icon {
