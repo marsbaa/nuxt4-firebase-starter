@@ -33,16 +33,12 @@ const handleClick = () => {
 </script>
 
 <template>
-  <div
-    :class="eventClass"
-    :title="title"
-    @click="handleClick"
-    role="button"
-    tabindex="0"
-  >
-    <Icon :name="icon" class="event-icon" aria-hidden="true" />
-    <span class="event-title">{{ title }}</span>
-  </div>
+  <EventTooltip :text="title">
+    <div :class="eventClass" @click="handleClick" role="button" tabindex="0">
+      <Icon :name="icon" class="event-icon" aria-hidden="true" />
+      <span class="event-title">{{ title }}</span>
+    </div>
+  </EventTooltip>
 </template>
 
 <style scoped>
