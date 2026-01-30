@@ -122,7 +122,8 @@ onMounted(() => {
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .dashboard-section:last-child {
-    padding-bottom: 2rem;
+    /* Reduced bottom padding since layout now has bottom nav spacing */
+    padding-bottom: 1rem;
   }
 }
 </style>

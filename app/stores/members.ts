@@ -2,17 +2,11 @@ import { defineStore } from "pinia";
 import type { Member } from "~/composables/useMembers";
 import { parseMemberName, sortMembersByName } from "~/composables/useMembers";
 
-interface FirebaseError {
-  code: string;
-  message: string;
-}
-
 export const useMembersStore = defineStore("members", {
   state: () => ({
     members: [] as Member[],
     isLoading: false,
     error: null as string | null,
-    pollTimer: null as NodeJS.Timeout | null,
   }),
 
   getters: {
@@ -108,32 +102,6 @@ export const useMembersStore = defineStore("members", {
         toast.error(errorMessage);
       } finally {
         this.isLoading = false;
-      }
-    },
-
-    /**
-     * Start polling for member updates
-     */
-    startPolling(): void {
-      // Stop existing polling if any
-      this.stopPolling();
-
-      // Initial fetch
-      this.fetchMembers();
-
-      // Set up polling - poll every 5 seconds
-      this.pollTimer = setInterval(() => {
-        this.fetchMembers();
-      }, 5000);
-    },
-
-    /**
-     * Stop polling for member updates
-     */
-    stopPolling(): void {
-      if (this.pollTimer) {
-        clearInterval(this.pollTimer);
-        this.pollTimer = null;
       }
     },
 
