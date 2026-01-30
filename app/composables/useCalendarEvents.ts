@@ -68,7 +68,7 @@ export function useCalendarEvents(
       "community-gathering": true,
       "member-milestone": true,
       "care-reminder": true,
-      "care-update": true,
+      "care-update": false, // Disabled - not used in calendar
       "liturgical-event": true,
     },
     showCompletedReminders: false,

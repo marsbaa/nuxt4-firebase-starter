@@ -80,12 +80,6 @@ const categories = [
     icon: "mdi:bell",
     description: "Upcoming care intentions",
   },
-  {
-    key: "care-update" as const,
-    label: "Care Updates",
-    icon: "mdi:heart-pulse",
-    description: "Recent care activity",
-  },
 ];
 
 // Toggle category visibility
