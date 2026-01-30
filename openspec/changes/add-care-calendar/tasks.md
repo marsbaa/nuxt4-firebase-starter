@@ -37,11 +37,11 @@
 
 ## 6. Focus Panel
 
-- [ ] 6.1 Create `CalendarFocusPanel.vue` sidebar component
-- [ ] 6.2 Implement member search filter
-- [ ] 6.3 Add category visibility toggles
-- [ ] 6.4 Add informational note about Care Notes/Reminders
-- [ ] 6.5 Implement filter state management
+- [x] 6.1 Create `CalendarFocusPanel.vue` sidebar component
+- [x] 6.2 Implement member search filter
+- [x] 6.3 Add category visibility toggles
+- [x] 6.4 Add informational note about Care Notes/Reminders
+- [x] 6.5 Implement filter state management
 
 ## 7. Event Creation
 
