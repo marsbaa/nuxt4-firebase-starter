@@ -18,6 +18,9 @@ const currentView = ref<"month" | "agenda">("month");
 const showEventForm = ref(false);
 const isCreatingEvent = ref(false);
 
+// Search query state
+const searchQuery = ref("");
+
 // Switch between month and agenda view
 const switchView = (view: "month" | "agenda") => {
   currentView.value = view;
@@ -64,6 +67,17 @@ const handleEventClick = (event: CalendarEvent) => {
 const handleFilterUpdate = (updates: Partial<CalendarFilters>) => {
   updateFilters(updates);
 };
+
+// Handle search query change
+const handleSearchChange = () => {
+  updateFilters({ searchQuery: searchQuery.value });
+};
+
+// Clear search
+const clearSearch = () => {
+  searchQuery.value = "";
+  updateFilters({ searchQuery: "" });
+};
 </script>
 
 <template>
@@ -92,6 +106,26 @@ const handleFilterUpdate = (updates: Partial<CalendarFilters>) => {
       </div>
 
       <div class="calendar-actions">
+        <div class="search-field">
+          <Icon name="mdi:magnify" class="search-icon" />
+          <input
+            v-model="searchQuery"
+            @input="handleSearchChange"
+            type="text"
+            class="search-input"
+            placeholder="Search communal events..."
+            autocomplete="off"
+          />
+          <button
+            v-if="searchQuery"
+            @click="clearSearch"
+            class="search-clear-btn"
+            aria-label="Clear search"
+          >
+            <Icon name="mdi:close" class="clear-icon" />
+          </button>
+        </div>
+
         <button
           class="new-event-btn"
           aria-label="Create new event"
@@ -235,7 +269,79 @@ const handleFilterUpdate = (updates: Partial<CalendarFilters>) => {
 /* Calendar Actions */
 .calendar-actions {
   display: flex;
+  align-items: center;
   gap: 0.75rem;
+  flex: 1;
+  justify-content: flex-end;
+}
+
+/* Search Field */
+.search-field {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-width: 280px;
+  max-width: 400px;
+}
+
+.search-icon {
+  position: absolute;
+  left: 0.875rem;
+  width: 1.125rem;
+  height: 1.125rem;
+  color: #9c8b7a;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.search-input {
+  width: 100%;
+  padding: 0.625rem 2.75rem 0.625rem 2.5rem;
+  font-family: "Work Sans", sans-serif;
+  font-size: 0.875rem;
+  color: #2d2a26;
+  background: #ffffff;
+  border: 1px solid #e8e8e5;
+  border-radius: 10px;
+  transition: all 0.2s ease;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #7a9b76;
+  box-shadow: 0 0 0 3px rgba(122, 155, 118, 0.1);
+}
+
+.search-input::placeholder {
+  color: #9c8b7a;
+}
+
+.search-clear-btn {
+  position: absolute;
+  right: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  padding: 0;
+  background: transparent;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  color: #706c64;
+  transition: all 0.2s ease;
+  z-index: 1;
+}
+
+.search-clear-btn:hover {
+  background: rgba(112, 108, 100, 0.1);
+  color: #2d2a26;
+}
+
+.clear-icon {
+  width: 1rem;
+  height: 1rem;
 }
 
 .new-event-btn {
@@ -309,6 +415,7 @@ const handleFilterUpdate = (updates: Partial<CalendarFilters>) => {
   .calendar-controls {
     flex-direction: column;
     align-items: stretch;
+    gap: 1rem;
   }
 
   .view-toggle {
@@ -322,6 +429,13 @@ const handleFilterUpdate = (updates: Partial<CalendarFilters>) => {
 
   .calendar-actions {
     width: 100%;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .search-field {
+    min-width: 100%;
+    max-width: 100%;
   }
 
   .new-event-btn {

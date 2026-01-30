@@ -28,9 +28,6 @@ interface Emits {
 // Panel collapse state (collapsed by default)
 const isCollapsed = ref(true);
 
-// General search query state (for searching event titles/descriptions)
-const generalSearchQuery = ref("");
-
 const toggleCollapse = () => {
   isCollapsed.value = !isCollapsed.value;
 };
@@ -122,17 +119,6 @@ const clearMemberFilter = () => {
   memberSearchQuery.value = "";
 };
 
-// Handle general search query changes
-const handleSearchQuery = () => {
-  emit("update:filters", { searchQuery: generalSearchQuery.value });
-};
-
-// Clear general search
-const clearGeneralSearch = () => {
-  generalSearchQuery.value = "";
-  emit("update:filters", { searchQuery: "" });
-};
-
 // Toggle search dropdown
 const toggleSearch = () => {
   isSearchOpen.value = !isSearchOpen.value;
@@ -197,35 +183,6 @@ onMounted(() => {
     </div>
 
     <div v-show="!isCollapsed" class="panel-content">
-      <!-- General Search Section -->
-      <section class="filter-section">
-        <h3 class="section-label">Search Events</h3>
-
-        <div class="search-input-container">
-          <div class="search-field">
-            <Icon name="mdi:magnify" class="search-field-icon" />
-            <input
-              v-model="generalSearchQuery"
-              @input="handleSearchQuery"
-              type="text"
-              class="search-field-input"
-              placeholder="Search by title or description..."
-              autocomplete="off"
-            />
-            <button
-              v-if="generalSearchQuery"
-              @click="clearGeneralSearch"
-              class="search-clear-btn"
-              aria-label="Clear search"
-            >
-              <Icon name="mdi:close" class="clear-icon" />
-            </button>
-          </div>
-        </div>
-
-        <p class="filter-hint">Find events by their title or description</p>
-      </section>
-
       <!-- Member Filter Section -->
       <section class="filter-section">
         <h3 class="section-label">Filter by Member</h3>
@@ -688,74 +645,6 @@ onMounted(() => {
   color: #9c8b7a;
   margin: 0;
   line-height: 1.4;
-}
-
-/* General Search Input */
-.search-input-container {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.search-field {
-  position: relative;
-  display: flex;
-  align-items: center;
-}
-
-.search-field-icon {
-  position: absolute;
-  left: 0.875rem;
-  width: 1.125rem;
-  height: 1.125rem;
-  color: #9c8b7a;
-  pointer-events: none;
-  z-index: 1;
-}
-
-.search-field-input {
-  width: 100%;
-  padding: 0.625rem 2.75rem 0.625rem 2.5rem;
-  font-family: "Work Sans", sans-serif;
-  font-size: 0.875rem;
-  color: #2d2a26;
-  background: #ffffff;
-  border: 1px solid #e8e8e5;
-  border-radius: 8px;
-  transition: all 0.2s ease;
-}
-
-.search-field-input:focus {
-  outline: none;
-  border-color: #7a9b76;
-  box-shadow: 0 0 0 3px rgba(122, 155, 118, 0.1);
-}
-
-.search-field-input::placeholder {
-  color: #9c8b7a;
-}
-
-.search-clear-btn {
-  position: absolute;
-  right: 0.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 1.5rem;
-  height: 1.5rem;
-  padding: 0;
-  background: transparent;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  color: #706c64;
-  transition: all 0.2s ease;
-  z-index: 1;
-}
-
-.search-clear-btn:hover {
-  background: rgba(112, 108, 100, 0.1);
-  color: #2d2a26;
 }
 
 /* Category Toggles */
