@@ -13,6 +13,7 @@ import type { CalendarFilters } from "~/types/calendarEvents";
  * - Show completed reminders toggle
  * - Informational note about mental model separation
  * - Pastoral design language
+ * - Collapsible panel (collapsed by default)
  */
 
 interface Props {
@@ -23,6 +24,16 @@ interface Props {
 interface Emits {
   (e: "update:filters", filters: Partial<CalendarFilters>): void;
 }
+
+// Panel collapse state (collapsed by default)
+const isCollapsed = ref(true);
+
+// General search query state (for searching event titles/descriptions)
+const generalSearchQuery = ref("");
+
+const toggleCollapse = () => {
+  isCollapsed.value = !isCollapsed.value;
+};
 
 const props = defineProps<Props>();
 const emit = defineEmits<Emits>();
@@ -111,6 +122,17 @@ const clearMemberFilter = () => {
   memberSearchQuery.value = "";
 };
 
+// Handle general search query changes
+const handleSearchQuery = () => {
+  emit("update:filters", { searchQuery: generalSearchQuery.value });
+};
+
+// Clear general search
+const clearGeneralSearch = () => {
+  generalSearchQuery.value = "";
+  emit("update:filters", { searchQuery: "" });
+};
+
 // Toggle search dropdown
 const toggleSearch = () => {
   isSearchOpen.value = !isSearchOpen.value;
@@ -158,10 +180,52 @@ onMounted(() => {
 </script>
 
 <template>
-  <aside class="focus-panel">
-    <h2 class="panel-heading">Focus your attention</h2>
+  <aside class="focus-panel" :class="{ 'is-collapsed': isCollapsed }">
+    <div class="panel-header">
+      <h2 class="panel-heading">Focus your attention</h2>
+      <button
+        @click="toggleCollapse"
+        class="collapse-btn"
+        :aria-label="isCollapsed ? 'Expand panel' : 'Collapse panel'"
+        :aria-expanded="!isCollapsed"
+      >
+        <Icon
+          :name="isCollapsed ? 'mdi:chevron-left' : 'mdi:chevron-right'"
+          class="collapse-icon"
+        />
+      </button>
+    </div>
 
-    <div class="panel-content">
+    <div v-show="!isCollapsed" class="panel-content">
+      <!-- General Search Section -->
+      <section class="filter-section">
+        <h3 class="section-label">Search Events</h3>
+
+        <div class="search-input-container">
+          <div class="search-field">
+            <Icon name="mdi:magnify" class="search-field-icon" />
+            <input
+              v-model="generalSearchQuery"
+              @input="handleSearchQuery"
+              type="text"
+              class="search-field-input"
+              placeholder="Search by title or description..."
+              autocomplete="off"
+            />
+            <button
+              v-if="generalSearchQuery"
+              @click="clearGeneralSearch"
+              class="search-clear-btn"
+              aria-label="Clear search"
+            >
+              <Icon name="mdi:close" class="clear-icon" />
+            </button>
+          </div>
+        </div>
+
+        <p class="filter-hint">Find events by their title or description</p>
+      </section>
+
       <!-- Member Filter Section -->
       <section class="filter-section">
         <h3 class="section-label">Filter by Member</h3>
@@ -309,6 +373,27 @@ onMounted(() => {
   height: fit-content;
   position: sticky;
   top: 1rem;
+  transition: all 0.3s ease;
+  width: 280px;
+}
+
+.focus-panel.is-collapsed {
+  width: 48px;
+  padding: 1rem 0.75rem;
+}
+
+.panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.focus-panel.is-collapsed .panel-header {
+  margin-bottom: 0;
+  flex-direction: column;
+  align-items: center;
 }
 
 .panel-heading {
@@ -316,8 +401,47 @@ onMounted(() => {
   font-size: 1rem;
   font-weight: 600;
   color: #2d2a26;
-  margin: 0 0 1.5rem;
+  margin: 0;
   line-height: 1.3;
+  transition: opacity 0.2s ease;
+}
+
+.focus-panel.is-collapsed .panel-heading {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  font-size: 0.875rem;
+  white-space: nowrap;
+}
+
+.collapse-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  background: #ffffff;
+  border: 1px solid #e8e8e5;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.collapse-btn:hover {
+  background: #f7f6f4;
+  border-color: #d9bc9b;
+}
+
+.collapse-icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  color: #706c64;
+  transition: color 0.2s ease;
+}
+
+.collapse-btn:hover .collapse-icon {
+  color: #2d2a26;
 }
 
 .panel-content {
@@ -566,6 +690,74 @@ onMounted(() => {
   line-height: 1.4;
 }
 
+/* General Search Input */
+.search-input-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.search-field {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.search-field-icon {
+  position: absolute;
+  left: 0.875rem;
+  width: 1.125rem;
+  height: 1.125rem;
+  color: #9c8b7a;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.search-field-input {
+  width: 100%;
+  padding: 0.625rem 2.75rem 0.625rem 2.5rem;
+  font-family: "Work Sans", sans-serif;
+  font-size: 0.875rem;
+  color: #2d2a26;
+  background: #ffffff;
+  border: 1px solid #e8e8e5;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.search-field-input:focus {
+  outline: none;
+  border-color: #7a9b76;
+  box-shadow: 0 0 0 3px rgba(122, 155, 118, 0.1);
+}
+
+.search-field-input::placeholder {
+  color: #9c8b7a;
+}
+
+.search-clear-btn {
+  position: absolute;
+  right: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  padding: 0;
+  background: transparent;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  color: #706c64;
+  transition: all 0.2s ease;
+  z-index: 1;
+}
+
+.search-clear-btn:hover {
+  background: rgba(112, 108, 100, 0.1);
+  color: #2d2a26;
+}
+
 /* Category Toggles */
 .category-toggles {
   display: flex;
@@ -730,6 +922,22 @@ onMounted(() => {
 @media (max-width: 768px) {
   .focus-panel {
     position: static;
+    width: 100%;
+  }
+
+  .focus-panel.is-collapsed {
+    width: 100%;
+    padding: 1rem;
+  }
+
+  .focus-panel.is-collapsed .panel-header {
+    flex-direction: row;
+  }
+
+  .focus-panel.is-collapsed .panel-heading {
+    writing-mode: horizontal-tb;
+    text-orientation: initial;
+    font-size: 1rem;
   }
 }
 </style>

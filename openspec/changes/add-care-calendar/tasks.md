@@ -65,15 +65,15 @@
 
 ## 10. Care Updates Integration
 
-- [ ] 10.1 Determine Care Update signal logic (based on Care Notes)
-- [ ] 10.2 Display Care Updates as read-only calendar signals
-- [ ] 10.3 Implement Care Update click navigation to member pages
+- [x] 10.1 Determine Care Update signal logic (based on Care Notes)
+- [x] 10.2 Display Care Updates as read-only calendar signals
+- [x] 10.3 Implement Care Update click navigation to member pages
 
 ## 11. Search and Navigation
 
-- [ ] 11.1 Implement calendar event search functionality
-- [ ] 11.2 Add event click handlers for navigation
-- [ ] 11.3 Implement member milestone click-to-detail navigation
+- [x] 11.1 Implement calendar event search functionality
+- [x] 11.2 Add event click handlers for navigation
+- [x] 11.3 Implement member milestone click-to-detail navigation
 
 ## 12. Visual Polish
 
