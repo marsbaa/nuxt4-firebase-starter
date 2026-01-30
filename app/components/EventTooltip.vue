@@ -1,50 +1,73 @@
 <script setup lang="ts">
-import { ref, computed } from "vue";
+import { ref, computed, watch, nextTick } from "vue";
 
 const props = defineProps<{
   text: string;
 }>();
 
 const showTooltip = ref(false);
-const tooltipRef = ref<HTMLElement | null>(null);
+const wrapperRef = ref<HTMLElement | null>(null);
+const tooltipStyle = ref({
+  top: "0px",
+  left: "0px",
+});
 
 const handleMouseEnter = () => {
   showTooltip.value = true;
+  updateTooltipPosition();
 };
 
 const handleMouseLeave = () => {
   showTooltip.value = false;
 };
+
+const updateTooltipPosition = () => {
+  nextTick(() => {
+    if (wrapperRef.value) {
+      const rect = wrapperRef.value.getBoundingClientRect();
+      tooltipStyle.value = {
+        top: `${rect.top - 8}px`,
+        left: `${rect.left + rect.width / 2}px`,
+      };
+    }
+  });
+};
 </script>
 
 <template>
   <div
+    ref="wrapperRef"
     class="tooltip-wrapper"
     @mouseenter="handleMouseEnter"
     @mouseleave="handleMouseLeave"
   >
     <slot />
+  </div>
+
+  <Teleport to="body">
     <Transition name="tooltip-fade">
-      <div v-if="showTooltip" ref="tooltipRef" class="tooltip" role="tooltip">
+      <div
+        v-if="showTooltip"
+        class="tooltip"
+        role="tooltip"
+        :style="tooltipStyle"
+      >
         {{ text }}
       </div>
     </Transition>
-  </div>
+  </Teleport>
 </template>
 
 <style scoped>
 .tooltip-wrapper {
-  position: relative;
   display: inline-block;
   width: 100%;
 }
 
 .tooltip {
-  position: absolute;
-  bottom: 100%;
-  left: 50%;
-  transform: translateX(-50%) translateY(-4px);
-  z-index: 1000;
+  position: fixed;
+  transform: translate(-50%, -100%);
+  z-index: 9999;
   padding: 0.5rem 0.75rem;
   background: #2d2a26;
   color: #ffffff;
