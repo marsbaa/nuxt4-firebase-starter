@@ -2,8 +2,8 @@
  * Client-side plugin to initialize Pinia stores on app load
  *
  * This plugin handles:
- * - Initializing members store data
- * - Starting/stopping polling based on authentication state
+ * - Initializing members store data on authentication
+ * - Fetching members once when user signs in
  * - Ensuring stores are ready when components mount
  */
 
@@ -16,31 +16,15 @@ export default defineNuxtPlugin(() => {
     user,
     (newUser, oldUser) => {
       if (newUser && !oldUser) {
-        // User signed in - start polling
-        console.log(
-          "[init-stores] User authenticated, starting members polling",
-        );
-        membersStore.startPolling();
+        // User signed in - fetch members once
+        console.log("[init-stores] User authenticated, fetching members");
+        membersStore.fetchMembers();
       } else if (!newUser && oldUser) {
-        // User signed out - stop polling
-        console.log("[init-stores] User signed out, stopping members polling");
-        membersStore.stopPolling();
+        // User signed out - clear members data
+        console.log("[init-stores] User signed out, clearing members data");
+        membersStore.members = [];
       }
     },
     { immediate: true },
   );
-
-  // Initialize stores on app load if user is already authenticated
-  if (user.value) {
-    console.log(
-      "[init-stores] App loaded with authenticated user, starting members polling",
-    );
-    membersStore.startPolling();
-  }
-
-  // Cleanup on app unmount (though this is rarely called in SPA mode)
-  onUnmounted(() => {
-    console.log("[init-stores] App unmounting, stopping members polling");
-    membersStore.stopPolling();
-  });
 });

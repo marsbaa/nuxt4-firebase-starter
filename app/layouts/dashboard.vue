@@ -56,6 +56,25 @@ const navItems = [
   },
 ];
 
+// Bottom navigation items for mobile (People, Calendar, More)
+const bottomNavItems = [
+  {
+    name: "Members",
+    path: "/members",
+    icon: "mdi:account-group",
+  },
+  {
+    name: "Calendar",
+    path: "/calendar",
+    icon: "mdi:calendar",
+  },
+  {
+    name: "More",
+    path: null, // Opens mobile menu instead of navigating
+    icon: "mdi:dots-horizontal",
+  },
+];
+
 // Check if a nav item is active
 const isActiveRoute = (path: string) => {
   return route.path === path;
@@ -176,6 +195,33 @@ const pageTitle = computed(() => {
     <main class="main-content">
       <slot />
     </main>
+
+    <!-- Bottom navigation for mobile only -->
+    <nav class="bottom-nav">
+      <template v-for="item in bottomNavItems" :key="item.name">
+        <!-- Regular navigation link -->
+        <NuxtLink
+          v-if="item.path"
+          :to="item.path"
+          class="bottom-nav-item"
+          :class="{ 'is-active': isActiveRoute(item.path) }"
+        >
+          <Icon :name="item.icon" class="bottom-nav-icon" />
+          <span class="bottom-nav-label">{{ item.name }}</span>
+        </NuxtLink>
+        <!-- More button opens mobile menu -->
+        <button
+          v-else
+          @click="toggleMobileMenu"
+          class="bottom-nav-item"
+          type="button"
+          aria-label="Open menu"
+        >
+          <Icon :name="item.icon" class="bottom-nav-icon" />
+          <span class="bottom-nav-label">{{ item.name }}</span>
+        </button>
+      </template>
+    </nav>
   </div>
 </template>
 
@@ -521,6 +567,8 @@ const pageTitle = computed(() => {
     margin-left: 0;
     margin-top: 60px;
     padding: 0;
+    /* Add bottom padding to prevent content from being hidden behind bottom nav */
+    padding-bottom: 80px;
   }
 }
 
@@ -528,6 +576,70 @@ const pageTitle = computed(() => {
 @media (max-width: 480px) {
   .main-content {
     padding: 0;
+    padding-bottom: 80px;
+  }
+}
+
+/* Bottom Navigation - Mobile Only */
+.bottom-nav {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .bottom-nav {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #faf9f7;
+    border-top: 1px solid #e8e6e1;
+    padding: 0.5rem 0 calc(0.5rem + env(safe-area-inset-bottom));
+    z-index: 50;
+    justify-content: space-around;
+    align-items: center;
+    box-shadow: 0 -2px 8px rgba(44, 44, 42, 0.04);
+  }
+
+  .bottom-nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.25rem;
+    padding: 0.5rem 1rem;
+    color: #9c8b7a;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    flex: 1;
+    max-width: 120px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+  }
+
+  .bottom-nav-item:hover {
+    color: #706c64;
+  }
+
+  .bottom-nav-item.is-active {
+    color: #706c64;
+  }
+
+  .bottom-nav-icon {
+    font-size: 1.5rem;
+    transition: transform 0.2s ease;
+  }
+
+  .bottom-nav-item.is-active .bottom-nav-icon {
+    transform: scale(1.1);
+  }
+
+  .bottom-nav-label {
+    font-family: "Work Sans", sans-serif;
+    font-size: 0.75rem;
+    font-weight: 400;
+    letter-spacing: 0.01em;
   }
 }
 </style>
