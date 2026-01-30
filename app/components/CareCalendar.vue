@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import type { CalendarEvent } from "~/types/calendarEvents";
+import type { CalendarEvent, CalendarFilters } from "~/types/calendarEvents";
 
 // Use calendar events composable
-const { allEvents, loading } = useCalendarEvents();
+const { allEvents, loading, filters, updateFilters } = useCalendarEvents();
 
 // View state: 'month' or 'agenda'
 const currentView = ref<"month" | "agenda">("month");
@@ -23,6 +23,11 @@ const handleEventClick = (event: CalendarEvent) => {
   if (event.memberId) {
     navigateTo(`/members/view/${event.memberId}`);
   }
+};
+
+// Handle filter updates from focus panel
+const handleFilterUpdate = (updates: Partial<CalendarFilters>) => {
+  updateFilters(updates);
 };
 </script>
 
@@ -62,18 +67,11 @@ const handleEventClick = (event: CalendarEvent) => {
     <!-- Calendar Content -->
     <div class="calendar-content">
       <!-- Focus Panel (left sidebar) -->
-      <aside class="focus-panel">
-        <h2 class="panel-heading">Focus your attention</h2>
-        <div class="panel-content">
-          <p class="panel-note">
-            Category filters and member search will appear here
-          </p>
-          <p class="panel-info">
-            Care notes and individual reminders are managed through Member
-            Detail pages.
-          </p>
-        </div>
-      </aside>
+      <CalendarFocusPanel
+        :filters="filters"
+        :loading="loading"
+        @update:filters="handleFilterUpdate"
+      />
 
       <!-- Main Calendar View -->
       <div class="calendar-main">
@@ -210,49 +208,6 @@ const handleEventClick = (event: CalendarEvent) => {
   grid-template-columns: 280px 1fr;
   gap: 2rem;
   flex: 1;
-}
-
-/* Focus Panel */
-.focus-panel {
-  background: #fafaf8;
-  border: 1px solid #e8e8e5;
-  border-radius: 12px;
-  padding: 1.5rem;
-  height: fit-content;
-}
-
-.panel-heading {
-  font-family: "Work Sans", sans-serif;
-  font-size: 1rem;
-  font-weight: 600;
-  color: #2d2a26;
-  margin: 0 0 1rem;
-}
-
-.panel-content {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.panel-note {
-  font-family: "Work Sans", sans-serif;
-  font-size: 0.875rem;
-  color: #706c64;
-  margin: 0;
-  line-height: 1.5;
-}
-
-.panel-info {
-  font-family: "Work Sans", sans-serif;
-  font-size: 0.813rem;
-  color: #9c8b7a;
-  margin: 0;
-  padding: 0.875rem;
-  background: rgba(217, 188, 155, 0.08);
-  border-left: 2px solid #d9bc9b;
-  border-radius: 6px;
-  line-height: 1.5;
 }
 
 /* Calendar Main View */
