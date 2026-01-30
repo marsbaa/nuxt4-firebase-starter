@@ -36,36 +36,30 @@ const props = defineProps<Props>();
 const emit = defineEmits<Emits>();
 
 // Get members for search
-const { members, isLoading: membersLoading } = useMembers();
+const { members, isLoading: membersLoading, fetchMembers } = useMembers();
 
-// Local search query state
-const memberSearchQuery = ref("");
-const isSearchOpen = ref(false);
+// Debug logging
+watch(
+  members,
+  (newMembers) => {
+    console.log("[CalendarFocusPanel] members updated:", newMembers);
+    console.log("[CalendarFocusPanel] members.length:", newMembers.length);
+  },
+  { immediate: true },
+);
 
-// Filtered members based on search
-const filteredMembers = computed(() => {
-  if (!memberSearchQuery.value.trim()) {
-    return members.value;
-  }
+watch(
+  membersLoading,
+  (loading) => {
+    console.log("[CalendarFocusPanel] membersLoading:", loading);
+  },
+  { immediate: true },
+);
 
-  const query = memberSearchQuery.value.toLowerCase();
-  return members.value.filter((member) => {
-    const { fullName } = parseMemberName(member.name);
-    return (
-      fullName.toLowerCase().includes(query) ||
-      member.name.toLowerCase().includes(query)
-    );
-  });
-});
-
-// Selected member name for display
-const selectedMemberName = computed(() => {
-  if (!props.filters.selectedMemberId) return null;
-  const member = members.value.find(
-    (m) => m.id === props.filters.selectedMemberId,
-  );
-  if (!member) return null;
-  return parseMemberName(member.name).fullName;
+// Fetch members on mount
+onMounted(() => {
+  console.log("[CalendarFocusPanel] Fetching members...");
+  fetchMembers();
 });
 
 // Category labels and their pastoral meanings
@@ -106,63 +100,15 @@ const toggleCompletedReminders = () => {
   });
 };
 
-// Select a member filter
-const selectMember = (memberId: string) => {
+// Handle member selection
+const handleMemberSelect = (memberId: string) => {
   emit("update:filters", { selectedMemberId: memberId });
-  memberSearchQuery.value = "";
-  isSearchOpen.value = false;
 };
 
-// Clear member filter
-const clearMemberFilter = () => {
+// Handle member clear
+const handleMemberClear = () => {
   emit("update:filters", { selectedMemberId: null });
-  memberSearchQuery.value = "";
 };
-
-// Toggle search dropdown
-const toggleSearch = () => {
-  isSearchOpen.value = !isSearchOpen.value;
-  if (isSearchOpen.value) {
-    nextTick(() => {
-      const input = document.getElementById("member-search-input");
-      input?.focus();
-    });
-  }
-};
-
-// Close search dropdown
-const closeSearch = () => {
-  isSearchOpen.value = false;
-  memberSearchQuery.value = "";
-};
-
-// Handle click outside
-const searchContainer = ref<HTMLElement | null>(null);
-
-const handleClickOutside = (event: MouseEvent) => {
-  if (
-    searchContainer.value &&
-    !searchContainer.value.contains(event.target as Node)
-  ) {
-    closeSearch();
-  }
-};
-
-// Load members and setup click handler when component mounts
-onMounted(() => {
-  // Load members
-  const { startPolling } = useMembers();
-  const cleanupPolling = startPolling();
-
-  // Click outside handler
-  document.addEventListener("click", handleClickOutside);
-
-  // Cleanup both on unmount
-  onUnmounted(() => {
-    cleanupPolling();
-    document.removeEventListener("click", handleClickOutside);
-  });
-});
 </script>
 
 <template>
@@ -187,77 +133,15 @@ onMounted(() => {
       <section class="filter-section">
         <h3 class="section-label">Filter by Member</h3>
 
-        <div class="member-filter" ref="searchContainer">
-          <!-- Selected Member Display -->
-          <div v-if="selectedMemberName" class="selected-member">
-            <div class="selected-member-info">
-              <Icon name="mdi:account" class="member-icon" />
-              <span class="member-name">{{ selectedMemberName }}</span>
-            </div>
-            <button
-              @click="clearMemberFilter"
-              class="clear-btn"
-              aria-label="Clear member filter"
-            >
-              <Icon name="mdi:close" class="clear-icon" />
-            </button>
-          </div>
-
-          <!-- Search Input -->
-          <div v-else class="search-wrapper">
-            <button
-              @click="toggleSearch"
-              class="search-trigger"
-              :aria-expanded="isSearchOpen"
-              aria-label="Search for a member"
-            >
-              <Icon name="mdi:magnify" class="search-icon" />
-              <span class="search-text">Search members...</span>
-            </button>
-
-            <!-- Search Dropdown -->
-            <div v-if="isSearchOpen" class="search-dropdown">
-              <div class="search-input-wrapper">
-                <Icon name="mdi:magnify" class="input-icon" />
-                <input
-                  id="member-search-input"
-                  v-model="memberSearchQuery"
-                  type="text"
-                  class="search-input"
-                  placeholder="Type a name..."
-                  autocomplete="off"
-                />
-              </div>
-
-              <div class="search-results">
-                <div v-if="membersLoading" class="search-state">
-                  <p class="state-text">Loading members...</p>
-                </div>
-
-                <div
-                  v-else-if="filteredMembers.length === 0"
-                  class="search-state"
-                >
-                  <p class="state-text">No members found</p>
-                </div>
-
-                <div v-else class="member-list">
-                  <button
-                    v-for="member in filteredMembers.slice(0, 8)"
-                    :key="member.id"
-                    @click="selectMember(member.id!)"
-                    class="member-item"
-                  >
-                    <Icon name="mdi:account-circle" class="member-avatar" />
-                    <span class="member-item-name">
-                      {{ parseMemberName(member.name).fullName }}
-                    </span>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        <MemberSearchInput
+          :selected-member-id="filters.selectedMemberId"
+          :loading="loading"
+          :members="members"
+          :members-loading="membersLoading"
+          placeholder="Search members..."
+          @select="handleMemberSelect"
+          @clear="handleMemberClear"
+        />
 
         <p class="filter-hint">View events related to a specific person</p>
       </section>
@@ -422,221 +306,6 @@ onMounted(() => {
   text-transform: uppercase;
   letter-spacing: 0.05em;
   margin: 0;
-}
-
-/* Member Filter */
-.member-filter {
-  position: relative;
-}
-
-.selected-member {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0.625rem 0.875rem;
-  background: #ffffff;
-  border: 1px solid #d9bc9b;
-  border-radius: 8px;
-  gap: 0.5rem;
-}
-
-.selected-member-info {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  flex: 1;
-  min-width: 0;
-}
-
-.member-icon {
-  width: 1.125rem;
-  height: 1.125rem;
-  color: #9c8b7a;
-  flex-shrink: 0;
-}
-
-.member-name {
-  font-family: "Work Sans", sans-serif;
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: #2d2a26;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.clear-btn {
-  padding: 0.25rem;
-  background: transparent;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  color: #706c64;
-  transition: all 0.2s ease;
-  flex-shrink: 0;
-}
-
-.clear-btn:hover {
-  background: rgba(112, 108, 100, 0.1);
-  color: #2d2a26;
-}
-
-.clear-icon {
-  width: 1rem;
-  height: 1rem;
-  display: block;
-}
-
-/* Search */
-.search-wrapper {
-  position: relative;
-}
-
-.search-trigger {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.625rem 0.875rem;
-  font-family: "Work Sans", sans-serif;
-  font-size: 0.875rem;
-  color: #9c8b7a;
-  background: #ffffff;
-  border: 1px solid #e8e8e5;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  text-align: left;
-}
-
-.search-trigger:hover {
-  border-color: #d9bc9b;
-  color: #706c64;
-}
-
-.search-trigger:focus {
-  outline: none;
-  border-color: #7a9b76;
-  box-shadow: 0 0 0 3px rgba(122, 155, 118, 0.1);
-}
-
-.search-icon {
-  width: 1.125rem;
-  height: 1.125rem;
-  flex-shrink: 0;
-}
-
-.search-text {
-  flex: 1;
-}
-
-.search-dropdown {
-  position: absolute;
-  top: calc(100% + 0.5rem);
-  left: 0;
-  right: 0;
-  background: #ffffff;
-  border: 1px solid #e8e8e5;
-  border-radius: 8px;
-  box-shadow:
-    0 4px 6px -1px rgba(44, 44, 42, 0.1),
-    0 2px 4px -1px rgba(44, 44, 42, 0.06);
-  z-index: 10;
-  overflow: hidden;
-}
-
-.search-input-wrapper {
-  position: relative;
-  padding: 0.75rem;
-  border-bottom: 1px solid #f0f0ed;
-}
-
-.input-icon {
-  position: absolute;
-  left: 1.25rem;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 1rem;
-  height: 1rem;
-  color: #9c8b7a;
-  pointer-events: none;
-}
-
-.search-input {
-  width: 100%;
-  padding: 0.5rem 0.75rem 0.5rem 2.25rem;
-  font-family: "Work Sans", sans-serif;
-  font-size: 0.875rem;
-  color: #2d2a26;
-  background: #f7f6f4;
-  border: 1px solid transparent;
-  border-radius: 6px;
-  transition: all 0.2s ease;
-}
-
-.search-input:focus {
-  outline: none;
-  background: #ffffff;
-  border-color: #7a9b76;
-}
-
-.search-input::placeholder {
-  color: #9c8b7a;
-}
-
-.search-results {
-  max-height: 240px;
-  overflow-y: auto;
-}
-
-.search-state {
-  padding: 2rem 1rem;
-  text-align: center;
-}
-
-.state-text {
-  font-family: "Work Sans", sans-serif;
-  font-size: 0.875rem;
-  color: #9c8b7a;
-  margin: 0;
-}
-
-.member-list {
-  display: flex;
-  flex-direction: column;
-}
-
-.member-item {
-  display: flex;
-  align-items: center;
-  gap: 0.625rem;
-  padding: 0.75rem 1rem;
-  font-family: "Work Sans", sans-serif;
-  font-size: 0.875rem;
-  color: #2d2a26;
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  transition: background 0.2s ease;
-  text-align: left;
-}
-
-.member-item:hover {
-  background: #f7f6f4;
-}
-
-.member-avatar {
-  width: 1.5rem;
-  height: 1.5rem;
-  color: #9c8b7a;
-  flex-shrink: 0;
-}
-
-.member-item-name {
-  flex: 1;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
 .filter-hint {
