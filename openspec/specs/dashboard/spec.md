@@ -41,6 +41,11 @@ The system SHALL provide navigation within the dashboard with calm, clear stylin
 - **WHEN** the dashboard is viewed on mobile
 - **THEN** the navigation can be toggled open and closed with smooth animations and a gentle overlay
 
+#### Scenario: Mobile bottom navigation bar
+
+- **WHEN** the dashboard is viewed on mobile
+- **THEN** a fixed bottom navigation bar is displayed with destinations for People, Calendar, and More, using visually quiet styling that does not compete with main content
+
 #### Scenario: Rounded navigation icons
 
 - **WHEN** navigation items are displayed
