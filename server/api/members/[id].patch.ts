@@ -20,7 +20,7 @@ export default defineEventHandler(async (event) => {
     }
 
     const body = await readBody(event);
-    const { adminRtdb } = useFirebaseAdmin();
+    const { adminDb } = useFirebaseAdmin();
 
     const now = new Date().toISOString();
     const updates = {
@@ -29,7 +29,8 @@ export default defineEventHandler(async (event) => {
       updatedBy: user.uid,
     };
 
-    await adminRtdb.ref(`members/${memberId}`).update(updates);
+    // Update document in Firestore
+    await adminDb.collection("members").doc(memberId).update(updates);
 
     console.log(`[API] Member updated: ${memberId}`);
     return { success: true };

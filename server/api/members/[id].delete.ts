@@ -19,8 +19,10 @@ export default defineEventHandler(async (event) => {
       });
     }
 
-    const { adminRtdb } = useFirebaseAdmin();
-    await adminRtdb.ref(`members/${memberId}`).remove();
+    const { adminDb } = useFirebaseAdmin();
+
+    // Delete document from Firestore
+    await adminDb.collection("members").doc(memberId).delete();
 
     console.log(`[API] Member deleted: ${memberId}`);
     return { success: true };
