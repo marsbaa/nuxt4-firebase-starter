@@ -77,30 +77,30 @@
 
 ## 12. Visual Polish
 
-- [ ] 12.1 Apply pastoral design aesthetic (whitespace, soft hierarchy)
-- [ ] 12.2 Implement calm color palette for event types
-- [ ] 12.3 Create gentle empty states
-- [ ] 12.4 Add "Grace in every shared moment" tagline
-- [ ] 12.5 Ensure restrained CTA styling
+- [x] 12.1 Apply pastoral design aesthetic (whitespace, soft hierarchy)
+- [x] 12.2 Implement calm color palette for event types
+- [x] 12.3 Create gentle empty states
+- [x] 12.4 Add "Grace in every shared moment" tagline
+- [x] 12.5 Ensure restrained CTA styling
 
 ## 13. Responsive Design
 
-- [ ] 13.1 Implement mobile-responsive month view
-- [ ] 13.2 Implement mobile-responsive agenda view
-- [ ] 13.3 Implement collapsible focus panel for mobile
-- [ ] 13.4 Test on various viewport sizes
+- [x] 13.1 Implement mobile-responsive month view
+- [x] 13.2 Implement mobile-responsive agenda view
+- [x] 13.3 Implement collapsible focus panel for mobile
+- [x] 13.4 Test on various viewport sizes
 
 ## 14. Accessibility
 
-- [ ] 14.1 Add proper ARIA labels and roles
-- [ ] 14.2 Ensure keyboard navigation
-- [ ] 14.3 Verify color contrast ratios
-- [ ] 14.4 Test with screen readers
+- [x] 14.1 Add proper ARIA labels and roles
+- [x] 14.2 Ensure keyboard navigation
+- [x] 14.3 Verify color contrast ratios
+- [x] 14.4 Test with screen readers
 
 ## 15. Testing and Validation
 
-- [ ] 15.1 Write unit tests for calendar composable
-- [ ] 15.2 Write component tests for calendar views
-- [ ] 15.3 Test event creation flow
-- [ ] 15.4 Test filter functionality
-- [ ] 15.5 Verify pastoral language throughout
+- [x] 15.1 Write unit tests for calendar composable
+- [x] 15.2 Write component tests for calendar views
+- [x] 15.3 Test event creation flow
+- [x] 15.4 Test filter functionality
+- [x] 15.5 Verify pastoral language throughout
