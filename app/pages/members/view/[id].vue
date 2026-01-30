@@ -114,6 +114,7 @@ const handleSendMessage = () => {
   margin: 0 auto;
   animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1);
   overflow-x: hidden;
+  padding: 2rem;
 }
 
 @keyframes fadeIn {
