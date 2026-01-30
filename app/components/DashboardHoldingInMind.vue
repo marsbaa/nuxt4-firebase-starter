@@ -12,7 +12,7 @@ import type { CareReminder } from "~/types/careReminders";
 import type { Member } from "~/composables/useMembers";
 
 const { db } = useFirebase();
-const { members } = useMembers();
+const { members, fetchMembers } = useMembers();
 const router = useRouter();
 
 // State
@@ -41,42 +41,6 @@ const isReminderExpired = (dueDate: Timestamp | null): boolean => {
  */
 const getMemberForReminder = (memberId: string): Member | undefined => {
   return members.value.find((m) => m.id === memberId);
-};
-
-/**
- * Format due date for display
- */
-const formatDueDate = (dueDate: Timestamp | null): string => {
-  if (!dueDate) return "";
-
-  const date = dueDate.toDate();
-  const now = new Date();
-  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-  const tomorrow = new Date(today);
-  tomorrow.setDate(tomorrow.getDate() + 1);
-
-  const dueDay = new Date(date.getFullYear(), date.getMonth(), date.getDate());
-
-  // Check if today
-  if (dueDay.getTime() === today.getTime()) {
-    return "Today";
-  }
-
-  // Check if tomorrow
-  if (dueDay.getTime() === tomorrow.getTime()) {
-    return "Tomorrow";
-  }
-
-  // Within a week - show day name
-  const diffDays = Math.ceil(
-    (dueDay.getTime() - today.getTime()) / (1000 * 60 * 60 * 24),
-  );
-  if (diffDays >= 0 && diffDays <= 7) {
-    return date.toLocaleDateString("en-US", { weekday: "long" });
-  }
-
-  // Further out - show date
-  return date.toLocaleDateString("en-US", { month: "short", day: "numeric" });
 };
 
 /**
@@ -153,7 +117,10 @@ const cleanup = () => {
   }
 };
 
-onMounted(() => {
+onMounted(async () => {
+  // Fetch members list first
+  await fetchMembers();
+  // Then subscribe to reminders
   subscribe();
 });
 
@@ -163,181 +130,152 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="dashboard-holding-in-mind">
-    <!-- Section header -->
+  <!-- Only show if there are reminders -->
+  <div
+    v-if="!loading && !error && reminders.length > 0"
+    class="dashboard-holding-in-mind"
+  >
+    <!-- Section header - very minimal -->
     <div class="section-header">
       <h2 class="section-title">Holding in mind</h2>
-      <p class="section-description">People you've intended to care for soon</p>
     </div>
 
-    <!-- Loading state -->
-    <div v-if="loading" class="empty-state">
-      <p class="empty-text">Loading care reminders...</p>
-    </div>
-
-    <!-- Error state -->
-    <div v-else-if="error" class="empty-state">
-      <p class="empty-text">Unable to load reminders</p>
-    </div>
-
-    <!-- Empty state -->
-    <div v-else-if="reminders.length === 0" class="empty-state">
-      <p class="empty-text">This space is ready when you are</p>
-      <p class="empty-hint">
-        Care reminders you create will appear here as gentle prompts
-      </p>
-    </div>
-
-    <!-- Reminders list -->
-    <div v-else class="reminders-list">
+    <!-- Reminders grid -->
+    <div class="reminders-grid">
       <button
         v-for="reminder in reminders"
         :key="reminder.id"
         @click="goToMemberCareSpace(reminder.memberId)"
-        class="reminder-item"
+        class="reminder-card"
         type="button"
       >
-        <div class="reminder-content">
-          <div class="reminder-header">
-            <span class="member-name">
-              {{
-                getMemberForReminder(reminder.memberId)?.name
-                  ? parseMemberName(
-                      getMemberForReminder(reminder.memberId)!.name,
-                    ).fullName
-                  : "Unknown"
-              }}
-            </span>
-            <span v-if="reminder.dueDate" class="reminder-date">
-              {{ formatDueDate(reminder.dueDate) }}
-            </span>
-          </div>
-          <p class="reminder-text">{{ reminder.text }}</p>
-        </div>
+        <h3 class="member-name">
+          {{
+            getMemberForReminder(reminder.memberId)?.name
+              ? parseMemberName(getMemberForReminder(reminder.memberId)!.name)
+                  .fullName
+              : "Unknown"
+          }}
+        </h3>
+        <p class="reminder-text">{{ reminder.text }}</p>
       </button>
     </div>
   </div>
 </template>
 
 <style scoped>
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Inter:wght@400;500;600&display=swap");
+
 .dashboard-holding-in-mind {
   width: 100%;
-  padding: 3rem 1.5rem;
+  max-width: 64rem;
+  margin: 0 auto;
+  padding: 3rem 1.5rem 4rem;
+  background: transparent;
 }
 
 .section-header {
   text-align: center;
-  margin-bottom: 2.5rem;
+  margin-bottom: 3rem;
 }
 
 .section-title {
-  font-size: 1.5rem;
-  font-weight: 500;
-  color: #2d2a26;
-  letter-spacing: 0.01em;
-  margin-bottom: 0.75rem;
+  font-family: "Cormorant Garamond", serif;
+  font-size: 1.375rem;
+  font-weight: 400;
+  color: #706c64;
+  letter-spacing: 0.02em;
 }
 
 @media (min-width: 640px) {
   .section-title {
-    font-size: 1.75rem;
+    font-size: 1.5rem;
   }
 }
 
-.section-description {
-  font-size: 0.9375rem;
-  color: #706c64;
-  line-height: 1.625;
+/* Reminders grid - auto-fit columns, always centered */
+.reminders-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  max-width: 56rem;
+  margin: 0 auto;
+  justify-content: center;
 }
 
 @media (min-width: 640px) {
-  .section-description {
-    font-size: 1rem;
+  .reminders-grid {
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 2.5rem;
   }
 }
 
-/* Empty state */
-.empty-state {
-  text-align: center;
-  padding: 3rem 1.5rem;
-  color: #9c8b7a;
+@media (min-width: 1024px) {
+  .reminders-grid {
+    grid-template-columns: repeat(auto-fit, minmax(260px, 280px));
+    gap: 3rem;
+  }
 }
 
-.empty-text {
-  font-size: 0.9375rem;
-  font-weight: 500;
-  color: #706c64;
-  margin-bottom: 0.5rem;
-}
-
-.empty-hint {
-  font-size: 0.875rem;
-  color: #9c8b7a;
-  line-height: 1.625;
-}
-
-/* Reminders list */
-.reminders-list {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  max-width: 48rem;
-  margin: 0 auto;
-}
-
-.reminder-item {
-  width: 100%;
-  padding: 1.25rem 1.5rem;
-  background: #ffffff;
-  border: 1px solid #e8e8e5;
-  border-radius: 0.75rem;
+.reminder-card {
+  background: transparent;
+  border: 1px solid #e8e6e1;
+  border-radius: 8px;
+  padding: 1.5rem;
   text-align: left;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
-.reminder-item:hover {
-  border-color: #c2a47a;
-  box-shadow: 0 2px 8px rgba(44, 44, 42, 0.08);
-  transform: translateY(-1px);
+.reminder-card:hover {
+  border-color: #d9bc9b;
 }
 
-.reminder-item:focus {
-  outline: none;
-  border-color: #7a9b76;
-  box-shadow: 0 0 0 3px rgba(122, 155, 118, 0.1);
-}
-
-.reminder-content {
-  display: flex;
-  flex-direction: column;
-  gap: 0.625rem;
-}
-
-.reminder-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-}
-
-.member-name {
-  font-size: 0.9375rem;
-  font-weight: 500;
+.reminder-card:hover .member-name {
   color: #2d2a26;
 }
 
-.reminder-date {
-  font-size: 0.8125rem;
-  color: #9c8b7a;
-  white-space: nowrap;
-  flex-shrink: 0;
+.reminder-card:focus {
+  outline: none;
+  border-color: #c2a47a;
+}
+
+.reminder-card:focus .member-name {
+  text-decoration: underline;
+  text-decoration-color: #c2a47a;
+  text-underline-offset: 4px;
+}
+
+.member-name {
+  font-family: "Inter", sans-serif;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: #3d3a34;
+  margin: 0 0 0.5rem 0;
+  line-height: 1.4;
+  transition: color 0.2s ease;
 }
 
 .reminder-text {
-  font-size: 0.875rem;
+  font-family: "Cormorant Garamond", serif;
+  font-size: 0.9375rem;
+  font-style: italic;
   color: #706c64;
-  line-height: 1.625;
+  line-height: 1.6;
   margin: 0;
+}
+
+@media (min-width: 640px) {
+  .dashboard-holding-in-mind {
+    padding: 4rem 2rem 5rem;
+  }
+
+  .member-name {
+    font-size: 1rem;
+  }
+
+  .reminder-text {
+    font-size: 1rem;
+  }
 }
 </style>

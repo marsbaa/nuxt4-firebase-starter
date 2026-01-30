@@ -12,7 +12,6 @@ import {
 import type { CalendarEvent } from "~/types/calendarEvents";
 
 const { db } = useFirebase();
-const router = useRouter();
 
 // State
 const upcomingEvents = ref<CalendarEvent[]>([]);
@@ -65,31 +64,6 @@ const formatEventDate = (date: Timestamp): string => {
     day: "numeric",
     year: eventDate.getFullYear() !== now.getFullYear() ? "numeric" : undefined,
   });
-};
-
-/**
- * Get event type label for display
- */
-const getEventTypeLabel = (event: CalendarEvent): string => {
-  switch (event.type) {
-    case "community-gathering":
-      return "Gathering";
-    case "member-milestone":
-      return "Milestone";
-    case "care-reminder":
-      return "Care Reminder";
-    case "liturgical-event":
-      return "Observance";
-    default:
-      return "";
-  }
-};
-
-/**
- * Navigate to Care Calendar page
- */
-const goToCalendar = () => {
-  router.push("/calendar");
 };
 
 /**
@@ -176,203 +150,138 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="dashboard-shared-rhythms">
-    <!-- Section header -->
+  <!-- Only show if there are events -->
+  <div
+    v-if="!loading && !error && upcomingEvents.length > 0"
+    class="dashboard-shared-rhythms"
+  >
+    <!-- Section header - minimal -->
     <div class="section-header">
-      <h2 class="section-title">Coming together</h2>
-      <p class="section-description">
-        Shared moments in the life of our community
-      </p>
-    </div>
-
-    <!-- Loading state -->
-    <div v-if="loading" class="empty-state">
-      <p class="empty-text">Loading upcoming events...</p>
-    </div>
-
-    <!-- Error state -->
-    <div v-else-if="error" class="empty-state">
-      <p class="empty-text">Unable to load events</p>
-    </div>
-
-    <!-- Empty state -->
-    <div v-else-if="upcomingEvents.length === 0" class="empty-state">
-      <p class="empty-text">No upcoming events in the next week</p>
-      <p class="empty-hint">
-        Community gatherings and milestones will appear here
-      </p>
+      <h2 class="section-title">Shared Rhythms</h2>
     </div>
 
     <!-- Events list -->
-    <div v-else class="events-container">
+    <div class="events-container">
       <div class="events-list">
         <div v-for="event in upcomingEvents" :key="event.id" class="event-item">
-          <div class="event-content">
-            <div class="event-header">
-              <span class="event-title">{{ event.title }}</span>
-              <span class="event-type">{{ getEventTypeLabel(event) }}</span>
-            </div>
-            <p v-if="event.description" class="event-description">
+          <div class="event-main">
+            <h3 class="event-title">{{ event.title }}</h3>
+            <p v-if="event.description" class="event-subtitle">
               {{ event.description }}
             </p>
-            <span class="event-date">{{ formatEventDate(event.date) }}</span>
           </div>
+          <div class="event-date">{{ formatEventDate(event.date) }}</div>
         </div>
-      </div>
-
-      <!-- Link to full calendar -->
-      <div class="calendar-link">
-        <button @click="goToCalendar" class="view-calendar-btn" type="button">
-          View full calendar
-        </button>
       </div>
     </div>
   </div>
 </template>
 
 <style scoped>
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Inter:wght@400;500;600&display=swap");
+
 .dashboard-shared-rhythms {
   width: 100%;
-  padding: 3rem 1.5rem;
+  max-width: 64rem;
+  margin: 0 auto;
+  padding: 3rem 1.5rem 4rem;
+  background: transparent;
 }
 
 .section-header {
   text-align: center;
-  margin-bottom: 2.5rem;
+  margin-bottom: 3rem;
 }
 
 .section-title {
-  font-size: 1.5rem;
-  font-weight: 500;
-  color: #2d2a26;
-  letter-spacing: 0.01em;
-  margin-bottom: 0.75rem;
+  font-family: "Cormorant Garamond", serif;
+  font-size: 1.375rem;
+  font-weight: 400;
+  color: #706c64;
+  letter-spacing: 0.02em;
 }
 
 @media (min-width: 640px) {
   .section-title {
-    font-size: 1.75rem;
+    font-size: 1.5rem;
   }
-}
-
-.section-description {
-  font-size: 0.9375rem;
-  color: #706c64;
-  line-height: 1.625;
-}
-
-@media (min-width: 640px) {
-  .section-description {
-    font-size: 1rem;
-  }
-}
-
-/* Empty state */
-.empty-state {
-  text-align: center;
-  padding: 3rem 1.5rem;
-  color: #9c8b7a;
-}
-
-.empty-text {
-  font-size: 0.9375rem;
-  font-weight: 500;
-  color: #706c64;
-  margin-bottom: 0.5rem;
-}
-
-.empty-hint {
-  font-size: 0.875rem;
-  color: #9c8b7a;
-  line-height: 1.625;
 }
 
 /* Events container */
 .events-container {
-  max-width: 48rem;
+  max-width: 42rem;
   margin: 0 auto;
 }
 
 .events-list {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-  margin-bottom: 2rem;
+  gap: 2rem;
 }
 
 .event-item {
-  padding: 1.25rem 1.5rem;
-  background: #ffffff;
-  border: 1px solid #e8e8e5;
-  border-radius: 0.75rem;
-}
-
-.event-content {
   display: flex;
-  flex-direction: column;
-  gap: 0.625rem;
-}
-
-.event-header {
-  display: flex;
-  align-items: center;
   justify-content: space-between;
-  gap: 1rem;
+  align-items: flex-start;
+  gap: 2rem;
+  padding: 0;
+  background: transparent;
+  border: none;
+}
+
+.event-main {
+  flex: 1;
 }
 
 .event-title {
+  font-family: "Inter", sans-serif;
   font-size: 0.9375rem;
-  font-weight: 500;
-  color: #2d2a26;
+  font-weight: 600;
+  color: #3d3a34;
+  margin: 0 0 0.25rem 0;
+  line-height: 1.4;
 }
 
-.event-type {
-  font-size: 0.75rem;
+.event-subtitle {
+  font-family: "Inter", sans-serif;
+  font-size: 0.8125rem;
+  font-weight: 400;
   color: #9c8b7a;
+  margin: 0;
+  line-height: 1.5;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  white-space: nowrap;
-  flex-shrink: 0;
-}
-
-.event-description {
-  font-size: 0.875rem;
-  color: #706c64;
-  line-height: 1.625;
-  margin: 0;
 }
 
 .event-date {
-  font-size: 0.8125rem;
-  color: #9c8b7a;
-}
-
-/* Calendar link */
-.calendar-link {
-  text-align: center;
-}
-
-.view-calendar-btn {
-  padding: 0.75rem 1.5rem;
-  font-size: 0.875rem;
-  font-weight: 500;
+  font-family: "Cormorant Garamond", serif;
+  font-size: 0.9375rem;
+  font-style: italic;
   color: #706c64;
-  background: transparent;
-  border: 1px solid #e8e8e5;
-  border-radius: 0.5rem;
-  cursor: pointer;
-  transition: all 0.2s ease;
+  white-space: nowrap;
+  flex-shrink: 0;
+  line-height: 1.4;
 }
 
-.view-calendar-btn:hover {
-  border-color: #c2a47a;
-  color: #2d2a26;
-  background: #fafaf8;
-}
+@media (min-width: 640px) {
+  .dashboard-shared-rhythms {
+    padding: 4rem 2rem 5rem;
+  }
 
-.view-calendar-btn:focus {
-  outline: none;
-  border-color: #7a9b76;
-  box-shadow: 0 0 0 3px rgba(122, 155, 118, 0.1);
+  .events-list {
+    gap: 2.5rem;
+  }
+
+  .event-title {
+    font-size: 1rem;
+  }
+
+  .event-subtitle {
+    font-size: 0.875rem;
+  }
+
+  .event-date {
+    font-size: 1rem;
+  }
 }
 </style>

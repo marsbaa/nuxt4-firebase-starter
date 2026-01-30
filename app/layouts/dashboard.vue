@@ -473,11 +473,11 @@ const pageTitle = computed(() => {
 .main-content {
   flex: 1;
   margin-left: 280px;
-  padding: 2rem;
+  padding: 0;
   animation: slideIn 0.6s cubic-bezier(0.16, 1, 0.3, 1);
   position: relative;
   z-index: 1;
-  background-color: white;
+  background-color: #f5f4f0;
 }
 
 @keyframes slideIn {
@@ -494,7 +494,7 @@ const pageTitle = computed(() => {
 /* Responsive - Tablet */
 @media (max-width: 1024px) {
   .main-content {
-    padding: 2.5rem 2rem;
+    padding: 0;
   }
 }
 
@@ -520,14 +520,14 @@ const pageTitle = computed(() => {
   .main-content {
     margin-left: 0;
     margin-top: 60px;
-    padding: 2rem 1.5rem;
+    padding: 0;
   }
 }
 
 /* Small mobile */
 @media (max-width: 480px) {
   .main-content {
-    padding: 1.5rem 1rem;
+    padding: 0;
   }
 }
 </style>

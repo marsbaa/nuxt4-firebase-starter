@@ -28,14 +28,9 @@ onMounted(() => {
 
     <!-- Dashboard content -->
     <div v-else class="dashboard-container">
-      <!-- Opening Moment: Contextual greeting and reflective prompt -->
+      <!-- Opening Moment: Greeting, prompt, and search -->
       <section class="dashboard-section opening-moment-section">
         <DashboardOpeningMoment />
-      </section>
-
-      <!-- Person Search: Primary entry point for care -->
-      <section class="dashboard-section search-section">
-        <DashboardPersonSearch />
       </section>
 
       <!-- Holding in Mind: Upcoming Care Reminders -->
@@ -85,19 +80,19 @@ onMounted(() => {
 
 /* Dashboard Container: Single-column, vertically-stacked layout */
 .dashboard-container {
-  max-width: 56rem; /* max-w-3xl to max-w-4xl */
   margin: 0 auto;
-  padding: 2rem 1.5rem;
+  background: #f5f4f0;
+  min-height: 100vh;
 }
 
-/* Dashboard Sections: Generous spacing between sections */
+/* Dashboard Sections: Minimal spacing between sections */
 .dashboard-section {
-  margin-bottom: 4rem; /* Generous 4rem spacing as per spec */
+  margin-bottom: 0;
 }
 
-/* Last section has less bottom margin */
+/* Last section has padding at bottom */
 .dashboard-section:last-child {
-  margin-bottom: 2rem;
+  padding-bottom: 4rem;
 }
 
 /* Specific section adjustments */
@@ -105,16 +100,12 @@ onMounted(() => {
   animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both;
 }
 
-.search-section {
+.reminders-section {
   animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both;
 }
 
-.reminders-section {
-  animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both;
-}
-
 .events-section {
-  animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.4s both;
+  animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both;
 }
 
 @keyframes fadeInUp {
@@ -128,40 +119,10 @@ onMounted(() => {
   }
 }
 
-/* Responsive - Tablet */
-@media (max-width: 1024px) {
-  .dashboard-container {
-    padding: 1.75rem 1.25rem;
-  }
-
-  .dashboard-section {
-    margin-bottom: 3.5rem;
-  }
-}
-
-/* Responsive - Mobile */
+/* Responsive adjustments */
 @media (max-width: 768px) {
-  .dashboard-container {
-    padding: 1.5rem 1rem;
-  }
-
-  .dashboard-section {
-    margin-bottom: 3rem;
-  }
-}
-
-/* Small mobile */
-@media (max-width: 480px) {
-  .dashboard-container {
-    padding: 1.25rem 0.875rem;
-  }
-
-  .dashboard-section {
-    margin-bottom: 2.5rem;
-  }
-
   .dashboard-section:last-child {
-    margin-bottom: 1.5rem;
+    padding-bottom: 2rem;
   }
 }
 </style>
