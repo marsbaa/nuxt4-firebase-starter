@@ -10,12 +10,12 @@
 
 ## 2. Person Search Integration
 
-- [ ] 2.1 Create `DashboardPersonSearch.vue` component or integrate `MemberSearchInput.vue`
-- [ ] 2.2 Position search prominently in center of dashboard
-- [ ] 2.3 Wire up navigation to Care Space on person selection
-- [ ] 2.4 Ensure search functionality works with existing member data
-- [ ] 2.5 Add pastoral language and placeholder text
-- [ ] 2.6 Style with minimal, calm aesthetic
+- [x] 2.1 Create `DashboardPersonSearch.vue` component or integrate `MemberSearchInput.vue`
+- [x] 2.2 Position search prominently in center of dashboard
+- [x] 2.3 Wire up navigation to Care Space on person selection
+- [x] 2.4 Ensure search functionality works with existing member data
+- [x] 2.5 Add pastoral language and placeholder text
+- [x] 2.6 Style with minimal, calm aesthetic
 
 ## 3. Holding in Mind (Care Reminders Surface)
 
