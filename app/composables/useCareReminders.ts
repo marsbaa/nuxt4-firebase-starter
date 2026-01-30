@@ -7,6 +7,7 @@ import {
   onSnapshot,
   addDoc,
   updateDoc,
+  deleteDoc,
   doc,
   serverTimestamp,
   Timestamp,
@@ -287,6 +288,34 @@ export function useCareReminders(memberId: Ref<string> | string) {
   };
 
   /**
+   * Delete a care reminder
+   * Removes a care reminder document from Firestore
+   *
+   * @param reminderId - The ID of the reminder to delete
+   * @returns Promise that resolves when the reminder is deleted
+   */
+  const deleteReminder = async (reminderId: string): Promise<void> => {
+    if (!db) {
+      throw new Error("Firestore is not initialized");
+    }
+
+    if (!user.value) {
+      throw new Error("User must be authenticated to delete care reminders");
+    }
+
+    try {
+      const reminderRef = doc(db, "careReminders", reminderId);
+      await deleteDoc(reminderRef);
+
+      toast.success("Care reminder deleted");
+    } catch (err) {
+      console.error("Error deleting care reminder:", err);
+      toast.error("Unable to delete care reminder. Please try again.");
+      throw err;
+    }
+  };
+
+  /**
    * Cleanup function to unsubscribe from the snapshot listener
    */
   const cleanup = () => {
@@ -317,5 +346,6 @@ export function useCareReminders(memberId: Ref<string> | string) {
     error: readonly(error),
     addReminder,
     updateReminder,
+    deleteReminder,
   };
 }

@@ -20,7 +20,8 @@ const isLoading = ref(true);
 
 // Form state
 const formData = ref({
-  name: "",
+  firstName: "",
+  lastName: "",
   email: "",
   contact: "",
   birthday: "",
@@ -60,7 +61,8 @@ onMounted(async () => {
     : "";
 
   formData.value = {
-    name: parsed.fullName,
+    firstName: parsed.firstName,
+    lastName: parsed.lastName,
     email: foundMember.email,
     contact: foundMember.contact,
     birthday: birthdayDate || "", // Handle both "YYYY-MM-DD" and ISO timestamp
@@ -80,9 +82,14 @@ const handleBack = () => {
 const validateForm = (): boolean => {
   errors.value = {};
 
-  // Full name is required
-  if (!formData.value.name.trim()) {
-    errors.value.name = "Full name is required";
+  // First name is required
+  if (!formData.value.firstName.trim()) {
+    errors.value.firstName = "First name is required";
+  }
+
+  // Last name is required
+  if (!formData.value.lastName.trim()) {
+    errors.value.lastName = "Last name is required";
   }
 
   // Birthday is required
@@ -98,18 +105,8 @@ const validateForm = (): boolean => {
   return Object.keys(errors.value).length === 0;
 };
 
-const formatNameForDatabase = (fullName: string): string => {
-  // Convert "Sandra Auterson" or "sandra auterson" to "AUTERSON, SANDRA"
-  const parts = fullName.trim().split(/\s+/);
-  if (parts.length < 2) {
-    // If only one name provided, use it as is
-    return fullName.toUpperCase();
-  }
-
-  // Last name is the last part, first name is everything else
-  const lastName = parts[parts.length - 1] || "";
-  const firstName = parts.slice(0, -1).join(" ");
-
+const formatNameForDatabase = (firstName: string, lastName: string): string => {
+  // Convert to "LASTNAME, FIRSTNAME" format (all caps)
   return `${lastName.toUpperCase()}, ${firstName.toUpperCase()}`;
 };
 
@@ -123,7 +120,10 @@ const handleSubmit = async () => {
   try {
     const memberData: Partial<Omit<Member, "id" | "createdAt" | "createdBy">> =
       {
-        name: formatNameForDatabase(formData.value.name),
+        name: formatNameForDatabase(
+          formData.value.firstName,
+          formData.value.lastName,
+        ),
         email: formData.value.email.trim(),
         contact: formData.value.contact.trim(),
         birthday: formData.value.birthday,
@@ -180,8 +180,9 @@ const removePhoto = () => {
       <div class="page-header">
         <h1 class="page-title">Edit Member</h1>
         <p class="page-subtitle">
-          Update the details for {{ formData.name }} in your pastoral care
-          community.
+          Update the details for {{ formData.firstName }}
+          {{ formData.lastName }}
+          in your pastoral care community.
         </p>
       </div>
 
@@ -224,18 +225,36 @@ const removePhoto = () => {
           </div>
         </div>
 
-        <!-- Full Name -->
-        <div class="form-group">
-          <label for="name" class="form-label">Full Name</label>
-          <input
-            id="name"
-            v-model="formData.name"
-            type="text"
-            placeholder="e.g. Sandra Auterson"
-            class="form-input"
-            :class="{ 'input-error': errors.name }"
-          />
-          <p v-if="errors.name" class="error-message">{{ errors.name }}</p>
+        <!-- First Name and Last Name -->
+        <div class="form-row">
+          <div class="form-group">
+            <label for="firstName" class="form-label">First Name</label>
+            <input
+              id="firstName"
+              v-model="formData.firstName"
+              type="text"
+              placeholder="e.g. Sandra"
+              class="form-input"
+              :class="{ 'input-error': errors.firstName }"
+            />
+            <p v-if="errors.firstName" class="error-message">
+              {{ errors.firstName }}
+            </p>
+          </div>
+          <div class="form-group">
+            <label for="lastName" class="form-label">Last Name</label>
+            <input
+              id="lastName"
+              v-model="formData.lastName"
+              type="text"
+              placeholder="e.g. Auterson"
+              class="form-input"
+              :class="{ 'input-error': errors.lastName }"
+            />
+            <p v-if="errors.lastName" class="error-message">
+              {{ errors.lastName }}
+            </p>
+          </div>
         </div>
 
         <!-- Email and Phone -->
@@ -327,6 +346,7 @@ const removePhoto = () => {
   max-width: 90rem;
   margin: 0 auto;
   animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  padding: 2rem;
 }
 
 @keyframes fadeIn {

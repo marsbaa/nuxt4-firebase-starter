@@ -1,21 +1,31 @@
 // Server API based member management (uses Firebase Admin SDK)
 
 /**
- * Member data interface matching Firebase RTDB structure
+ * Member data interface for the application layer
+ *
+ * Note: This interface represents the app's view of member data.
+ * The actual Firestore schema uses different field names:
+ * - name → firstName, lastName, displayName
+ * - suburb → city
+ * - contact → phone
+ * - memberSince → notes
+ * - birthday, email, createdAt, updatedAt, createdBy → stored as Firestore Timestamps
+ *
+ * The server API handles the mapping between these formats.
  */
 export interface Member {
   id?: string;
-  name: string;
-  birthday: string;
-  contact: string;
+  name: string; // Mapped from displayName or "LASTNAME, FIRSTNAME" format
+  birthday: string; // ISO string, mapped from Firestore Timestamp
+  contact: string; // Mapped from phone field
   email: string;
-  suburb: string;
-  memberSince: string;
-  createdAt: string;
+  suburb: string; // Mapped from city field
+  memberSince: string; // Mapped from notes field
+  createdAt: string; // ISO string, mapped from Firestore Timestamp
   createdBy: string;
-  updatedAt: string;
+  updatedAt: string; // ISO string, mapped from Firestore Timestamp
   updatedBy?: string;
-  importedAt?: string;
+  importedAt?: string; // Legacy field from RTDB migration
 }
 
 /**

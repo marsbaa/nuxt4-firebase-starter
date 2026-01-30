@@ -34,11 +34,13 @@
 <script setup lang="ts">
 const props = defineProps<{
   loading?: boolean;
+  isEditing?: boolean;
 }>();
 
 const emit = defineEmits<{
   "reminder-added": [text: string, dueDate: Date | null];
   cancel: [];
+  delete: [];
 }>();
 
 // Input state
@@ -53,6 +55,13 @@ const handleCancel = () => {
     text.value = "";
     dueDate.value = "";
     emit("cancel");
+  }
+};
+
+// Handle delete
+const handleDelete = () => {
+  if (confirm("Delete this reminder?")) {
+    emit("delete");
   }
 };
 
@@ -166,23 +175,35 @@ const minDate = computed(() => {
 
         <!-- Buttons -->
         <div class="action-buttons">
-          <AppButton
-            variant="secondary"
-            size="sm"
+          <button
+            v-if="isEditing"
+            type="button"
+            class="delete-icon-button"
             :disabled="loading || isSubmitting"
-            @click="handleCancel"
+            @click="handleDelete"
+            aria-label="Delete reminder"
           >
-            Cancel
-          </AppButton>
-          <AppButton
-            variant="primary"
-            size="sm"
-            :disabled="!text.trim() || loading || isSubmitting"
-            :loading="isSubmitting"
-            @click="handleSubmit"
-          >
-            Add Care Reminder
-          </AppButton>
+            <AppIcon name="heroicons:trash" class="delete-icon" />
+          </button>
+          <div class="right-buttons">
+            <AppButton
+              variant="secondary"
+              size="sm"
+              :disabled="loading || isSubmitting"
+              @click="handleCancel"
+            >
+              Cancel
+            </AppButton>
+            <AppButton
+              variant="primary"
+              size="sm"
+              :disabled="!text.trim() || loading || isSubmitting"
+              :loading="isSubmitting"
+              @click="handleSubmit"
+            >
+              Add Care Reminder
+            </AppButton>
+          </div>
         </div>
       </div>
     </div>
@@ -317,7 +338,52 @@ const minDate = computed(() => {
 
 .action-buttons {
   display: flex;
+  align-items: center;
+  width: 100%;
+  gap: 0.75rem;
+}
+
+.keyboard-hint {
+  margin-right: auto;
+}
+
+.right-buttons {
+  display: flex;
   gap: 0.5rem;
+  margin-left: auto;
+}
+
+.delete-icon-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem;
+  background-color: transparent;
+  border: 1px solid #f5f1e8;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  color: #a8a29e;
+}
+
+.delete-icon-button:hover:not(:disabled) {
+  background-color: #fef2f2;
+  border-color: #fecaca;
+  color: #dc2626;
+}
+
+.delete-icon-button:active:not(:disabled) {
+  transform: scale(0.95);
+}
+
+.delete-icon-button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.delete-icon {
+  width: 1rem;
+  height: 1rem;
 }
 
 /* Keyboard Hint */
@@ -325,7 +391,6 @@ const minDate = computed(() => {
   display: flex;
   align-items: center;
   gap: 0.375rem;
-  margin: 0;
   font-size: 0.75rem;
   color: #a8a29e;
 }
@@ -375,9 +440,19 @@ kbd {
 
   .action-buttons {
     width: 100%;
+    flex-wrap: wrap;
   }
 
-  .action-buttons button {
+  .delete-icon-button {
+    order: -1;
+    width: 100%;
+  }
+
+  .right-buttons {
+    width: 100%;
+  }
+
+  .right-buttons button {
     flex: 1;
   }
 }

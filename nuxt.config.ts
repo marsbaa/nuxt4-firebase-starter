@@ -12,19 +12,13 @@ export default defineNuxtConfig({
     "@nuxtjs/tailwindcss",
   ],
   icon: {
-    // Icon configuration for @nuxt/icon
-    // Use local server bundle mode for better performance
-    serverBundle: "local",
-    // Set preferred icon collections
-    collections: ["heroicons", "mdi", "material-symbols"],
-    // Customize default size
-    size: "24px",
-    // Optimize icons in production
+    // Icon configuration for @nuxt/icon (client-side only)
+    serverBundle: false,
     clientBundle: {
-      // Only include icons that are used
+      // Scan components for used icons
       scan: true,
-      // Size limit for client bundle
-      sizeLimitKb: 256,
+      // Include all icon collections
+      icons: [],
     },
   },
   runtimeConfig: {

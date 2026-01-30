@@ -1,7 +1,7 @@
 <template>
   <div
     :class="[
-      'flex items-center justify-center rounded-full font-bold text-xs',
+      'flex items-center justify-center rounded-full font-bold',
       sizeClasses,
       bgClass,
     ]"
@@ -39,12 +39,12 @@ const props = withDefaults(defineProps<Props>(), {
 const sizeClasses = computed(() => {
   switch (props.size) {
     case "sm":
-      return "w-8 h-8";
+      return "w-8 h-8 text-xs";
     case "lg":
-      return "w-12 h-12";
+      return "w-14 h-14 text-base";
     case "md":
     default:
-      return "w-10 h-10";
+      return "w-10 h-10 text-xs";
   }
 });
 

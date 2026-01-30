@@ -1,4 +1,5 @@
 import { useFirebaseAdmin } from "../../utils/firebase-admin";
+import { Timestamp } from "firebase-admin/firestore";
 
 export default defineEventHandler(async (event) => {
   try {
@@ -14,10 +15,37 @@ export default defineEventHandler(async (event) => {
     const body = await readBody(event);
     const { adminDb } = useFirebaseAdmin();
 
-    const now = new Date().toISOString();
+    // Parse the name from "LASTNAME, FIRSTNAME" format
+    const nameParts = body.name
+      ? body.name.split(",").map((s: string) => s.trim())
+      : ["", ""];
+    const lastName = nameParts[0] || "";
+    const firstName = nameParts[1] || "";
 
+    // Convert birthday string to Firestore Timestamp
+    let birthdayTimestamp = null;
+    if (body.birthday) {
+      try {
+        birthdayTimestamp = Timestamp.fromDate(new Date(body.birthday));
+      } catch (e) {
+        console.error("Error parsing birthday:", e);
+      }
+    }
+
+    const now = Timestamp.now();
+
+    // Map app fields to Firestore schema
+    // App sends: name, suburb, contact, birthday, email, memberSince
+    // Firestore expects: firstName, lastName, displayName, city, phone, birthday, notes
     const newMember = {
-      ...body,
+      firstName: firstName,
+      lastName: lastName,
+      displayName: body.name || "",
+      city: body.suburb || "",
+      phone: body.contact || "",
+      birthday: birthdayTimestamp,
+      email: body.email || "",
+      notes: body.memberSince || "", // Store memberSince in notes field
       createdAt: now,
       createdBy: user.uid,
       updatedAt: now,

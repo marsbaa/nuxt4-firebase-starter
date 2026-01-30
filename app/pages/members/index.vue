@@ -1,10 +1,5 @@
 <script setup lang="ts">
 import type { Member } from "~/composables/useMembers";
-import {
-  parseMemberName,
-  formatBirthday,
-  formatContact,
-} from "~/composables/useMembers";
 
 definePageMeta({
   middleware: "auth",
@@ -13,7 +8,6 @@ definePageMeta({
 
 // Composables
 const {
-  members,
   isLoading,
   error,
   fetchMembers,
@@ -144,7 +138,7 @@ const handlePageChange = (page: number) => {
     <div class="page-header">
       <div>
         <h1 class="page-title">Members</h1>
-        <p class="page-subtitle">Manage and care for your community members</p>
+        <p class="page-subtitle">Holding space for those in our care</p>
       </div>
       <AppButton
         @click="handleNewMember"
@@ -152,11 +146,11 @@ const handlePageChange = (page: number) => {
         class="new-member-btn"
       >
         <Icon name="mdi:plus" class="btn-icon" />
-        <span>New Member</span>
+        <span>Welcome Someone</span>
       </AppButton>
     </div>
 
-    <!-- Search and count -->
+    <!-- Search -->
     <div class="search-section">
       <div class="search-wrapper">
         <Icon name="mdi:magnify" class="search-icon" />
@@ -167,12 +161,6 @@ const handlePageChange = (page: number) => {
           placeholder="Search by name, email or location..."
           class="search-input"
         />
-      </div>
-      <div class="member-count">
-        <span class="count-number">{{ totalMembers }}</span>
-        <span class="count-label"
-          >{{ totalMembers === 1 ? "member" : "members" }} total</span
-        >
       </div>
     </div>
 
@@ -214,128 +202,30 @@ const handlePageChange = (page: number) => {
     </div>
 
     <!-- Members table -->
-    <div v-else>
-      <!-- Desktop table view -->
-      <div class="table-container desktop-view">
-        <MemberTable
-          :members="paginatedMembers"
-          :start-index="(currentPage - 1) * itemsPerPage"
-          @view="handleView"
-          @edit="handleEdit"
-          @delete="handleDeleteClick"
-        >
-          <template #footer>
-            <div class="pagination-wrapper">
-              <div class="pagination-info">
-                Showing {{ displayRange.start }} to {{ displayRange.end }} of
-                {{ totalMembers }} members
-              </div>
-              <Pagination
-                :current-page="currentPage"
-                :total-pages="totalPages"
-                :total-items="totalMembers"
-                :items-per-page="itemsPerPage"
-                @page-change="handlePageChange"
-              />
+    <div v-else class="table-container">
+      <MemberTable
+        :members="paginatedMembers"
+        :start-index="(currentPage - 1) * itemsPerPage"
+        @view="handleView"
+        @edit="handleEdit"
+        @delete="handleDeleteClick"
+      >
+        <template #footer>
+          <div class="pagination-wrapper">
+            <div class="pagination-info">
+              Showing {{ displayRange.start }} to {{ displayRange.end }} of
+              {{ totalMembers }} members
             </div>
-          </template>
-        </MemberTable>
-      </div>
-
-      <!-- Mobile card view -->
-      <div class="mobile-view">
-        <div class="member-cards">
-          <div
-            v-for="(member, index) in paginatedMembers"
-            :key="member.id"
-            class="member-card"
-          >
-            <div class="member-card-header">
-              <div class="member-info">
-                <MemberAvatar :name="parseMemberName(member.name).fullName" />
-                <div class="member-details">
-                  <h3 class="member-name">
-                    {{ parseMemberName(member.name).fullName }}
-                  </h3>
-                  <div class="member-meta">
-                    <Icon name="mdi:cake-variant" class="meta-icon" />
-                    <span class="meta-text">{{
-                      formatBirthday(member.birthday)
-                    }}</span>
-                  </div>
-                </div>
-              </div>
-              <span class="member-number"
-                >#{{ (currentPage - 1) * itemsPerPage + index + 1 }}</span
-              >
-            </div>
-
-            <div class="member-card-body">
-              <div v-if="member.contact" class="card-info-row">
-                <Icon name="mdi:phone" class="info-icon" />
-                <span class="info-text">{{
-                  formatContact(member.contact)
-                }}</span>
-              </div>
-              <div v-else class="card-info-row">
-                <Icon name="mdi:phone" class="info-icon" />
-                <span class="info-text empty">No contact info</span>
-              </div>
-
-              <div v-if="member.suburb" class="card-info-row">
-                <Icon name="mdi:map-marker" class="info-icon" />
-                <span class="info-text">{{ member.suburb }}</span>
-              </div>
-              <div v-else class="card-info-row">
-                <Icon name="mdi:map-marker" class="info-icon" />
-                <span class="info-text empty">No location</span>
-              </div>
-            </div>
-
-            <div class="member-card-actions">
-              <button
-                @click="handleView(member)"
-                class="card-action-btn view"
-                aria-label="View member"
-              >
-                <Icon name="mdi:eye" class="action-icon" />
-                <span>View</span>
-              </button>
-              <button
-                @click="handleEdit(member)"
-                class="card-action-btn edit"
-                aria-label="Edit member"
-              >
-                <Icon name="mdi:pencil" class="action-icon" />
-                <span>Edit</span>
-              </button>
-              <button
-                @click="handleDeleteClick(member)"
-                class="card-action-btn delete"
-                aria-label="Delete member"
-              >
-                <Icon name="mdi:delete" class="action-icon" />
-                <span>Delete</span>
-              </button>
-            </div>
+            <Pagination
+              :current-page="currentPage"
+              :total-pages="totalPages"
+              :total-items="totalMembers"
+              :items-per-page="itemsPerPage"
+              @page-change="handlePageChange"
+            />
           </div>
-        </div>
-
-        <!-- Mobile pagination -->
-        <div class="mobile-pagination">
-          <div class="pagination-info">
-            Showing {{ displayRange.start }}-{{ displayRange.end }} of
-            {{ totalMembers }}
-          </div>
-          <Pagination
-            :current-page="currentPage"
-            :total-pages="totalPages"
-            :total-items="totalMembers"
-            :items-per-page="itemsPerPage"
-            @page-change="handlePageChange"
-          />
-        </div>
-      </div>
+        </template>
+      </MemberTable>
     </div>
 
     <!-- Delete confirmation modal -->
@@ -377,6 +267,7 @@ const handlePageChange = (page: number) => {
   max-width: 90rem;
   margin: 0 auto;
   animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  padding: 2rem;
 }
 
 @keyframes fadeIn {
@@ -472,26 +363,6 @@ const handlePageChange = (page: number) => {
   box-shadow: 0 0 0 3px rgba(194, 164, 122, 0.1);
 }
 
-.member-count {
-  display: flex;
-  align-items: baseline;
-  gap: 0.375rem;
-}
-
-.count-number {
-  font-family: "Inter", sans-serif;
-  font-size: 1.125rem;
-  font-weight: 600;
-  color: #2d2a26;
-}
-
-.count-label {
-  font-family: "Inter", sans-serif;
-  font-size: 0.938rem;
-  color: #9a9690;
-  font-weight: 400;
-}
-
 /* Table container */
 .table-container {
   background: #ffffff;
@@ -507,7 +378,7 @@ const handlePageChange = (page: number) => {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0;
+  padding: 1.5rem 1.5rem 1rem 1.5rem;
 }
 
 .pagination-info {
@@ -704,198 +575,6 @@ const handlePageChange = (page: number) => {
   justify-content: flex-end;
 }
 
-/* Desktop/Mobile view toggle */
-.desktop-view {
-  display: block;
-}
-
-.mobile-view {
-  display: none;
-}
-
-/* Mobile card styles */
-.member-cards {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.member-card {
-  background: #ffffff;
-  border: 1px solid #e8e8e5;
-  border-radius: 1rem;
-  overflow: hidden;
-  box-shadow: 0 1px 3px 0 rgba(44, 44, 42, 0.05);
-  transition: all 0.2s ease;
-}
-
-.member-card:active {
-  transform: scale(0.98);
-}
-
-.member-card-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 1.25rem;
-  border-bottom: 1px solid #e8e8e5;
-  gap: 1rem;
-}
-
-.member-info {
-  display: flex;
-  align-items: center;
-  gap: 0.875rem;
-  flex: 1;
-  min-width: 0;
-}
-
-.member-details {
-  flex: 1;
-  min-width: 0;
-}
-
-.member-name {
-  font-family: "Inter", sans-serif;
-  font-size: 1rem;
-  font-weight: 600;
-  color: #2d2a26;
-  margin: 0 0 0.25rem 0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.member-meta {
-  display: flex;
-  align-items: center;
-  gap: 0.375rem;
-}
-
-.meta-icon {
-  width: 0.875rem;
-  height: 0.875rem;
-  color: #9a9690;
-  flex-shrink: 0;
-}
-
-.meta-text {
-  font-family: "Inter", sans-serif;
-  font-size: 0.813rem;
-  color: #706c64;
-}
-
-.member-number {
-  font-family: "Inter", sans-serif;
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: #9a9690;
-  flex-shrink: 0;
-}
-
-.member-card-body {
-  padding: 1.25rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.875rem;
-}
-
-.card-info-row {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
-
-.info-icon {
-  width: 1.125rem;
-  height: 1.125rem;
-  color: #c2a47a;
-  flex-shrink: 0;
-}
-
-.info-text {
-  font-family: "Inter", sans-serif;
-  font-size: 0.938rem;
-  color: #2d2a26;
-}
-
-.info-text.empty {
-  color: #9a9690;
-  font-style: italic;
-}
-
-.member-card-actions {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  border-top: 1px solid #e8e8e5;
-}
-
-.card-action-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  padding: 0.875rem;
-  font-family: "Inter", sans-serif;
-  font-size: 0.875rem;
-  font-weight: 500;
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.card-action-btn:not(:last-child) {
-  border-right: 1px solid #e8e8e5;
-}
-
-.card-action-btn.view {
-  color: #c2a47a;
-}
-
-.card-action-btn.view:hover,
-.card-action-btn.view:active {
-  background: rgba(194, 164, 122, 0.05);
-}
-
-.card-action-btn.edit {
-  color: #706c64;
-}
-
-.card-action-btn.edit:hover,
-.card-action-btn.edit:active {
-  background: rgba(112, 108, 100, 0.05);
-}
-
-.card-action-btn.delete {
-  color: #dc2626;
-}
-
-.card-action-btn.delete:hover,
-.card-action-btn.delete:active {
-  background: rgba(220, 38, 38, 0.05);
-}
-
-.action-icon {
-  width: 1.125rem;
-  height: 1.125rem;
-}
-
-.mobile-pagination {
-  margin-top: 1.5rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  align-items: center;
-}
-
-.mobile-pagination .pagination-info {
-  font-family: "Inter", sans-serif;
-  font-size: 0.875rem;
-  color: #706c64;
-  text-align: center;
-}
-
 /* Responsive - Tablet */
 @media (max-width: 1024px) {
   .page-header {
@@ -915,23 +594,10 @@ const handlePageChange = (page: number) => {
   .search-wrapper {
     max-width: none;
   }
-
-  .member-count {
-    align-self: flex-start;
-  }
 }
 
 /* Responsive - Mobile */
 @media (max-width: 768px) {
-  /* Show mobile view, hide desktop */
-  .desktop-view {
-    display: none;
-  }
-
-  .mobile-view {
-    display: block;
-  }
-
   .page-title {
     font-size: 1.75rem;
   }
@@ -943,7 +609,7 @@ const handlePageChange = (page: number) => {
   .pagination-wrapper {
     flex-direction: column;
     gap: 1rem;
-    align-items: stretch;
+    align-items: center;
   }
 
   .pagination-info {
@@ -976,33 +642,6 @@ const handlePageChange = (page: number) => {
 
   .modal-content {
     padding: 1.5rem;
-  }
-
-  .member-card-header {
-    padding: 1rem;
-  }
-
-  .member-card-body {
-    padding: 1rem;
-  }
-
-  .member-name {
-    font-size: 0.938rem;
-  }
-
-  .card-action-btn {
-    padding: 0.75rem 0.5rem;
-    font-size: 0.813rem;
-    gap: 0.375rem;
-  }
-
-  .card-action-btn span {
-    display: none;
-  }
-
-  .action-icon {
-    width: 1.25rem;
-    height: 1.25rem;
   }
 }
 </style>

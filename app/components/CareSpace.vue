@@ -49,6 +49,7 @@ const {
   reminders,
   loading: remindersLoading,
   addReminder,
+  deleteReminder,
   updateReminder,
 } = useCareReminders(props.memberId);
 
@@ -119,6 +120,19 @@ const handleReminderUpdated = async (
 const toggleReminderInput = () => {
   showReminderInput.value = !showReminderInput.value;
 };
+
+/**
+ * Handle deleting a care reminder
+ * Delegates to useCareReminders deleteReminder function
+ * Errors are handled by the composable with toast notifications
+ */
+const handleReminderDeleted = async (reminderId: string) => {
+  try {
+    await deleteReminder(reminderId);
+  } catch (error) {
+    console.error("Error deleting care reminder:", error);
+  }
+};
 </script>
 
 <template>
@@ -171,6 +185,7 @@ const toggleReminderInput = () => {
           :reminders="reminders"
           :loading="remindersLoading"
           @update="handleReminderUpdated"
+          @delete="handleReminderDeleted"
         />
       </div>
     </div>

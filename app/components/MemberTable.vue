@@ -1,78 +1,82 @@
 <template>
-  <div class="bg-white dark:bg-sidebar-dark">
-    <table class="w-full text-left border-collapse">
-      <thead>
-        <tr class="border-b border-slate-200">
-          <th
-            class="px-6 py-3 text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400"
-          >
-            #
-          </th>
-          <th
-            class="px-6 py-3 text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400"
-          >
-            Member
-          </th>
-          <th
-            class="px-6 py-3 text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400"
-          >
-            Contact Info
-          </th>
-          <th
-            class="px-6 py-3 text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400"
-          >
-            Location
-          </th>
-          <th
-            class="px-6 py-3 text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 text-right"
-          >
-            Actions
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        <MemberTableRow
-          v-for="(member, index) in members"
-          :key="member.id"
-          :member="member"
-          :row-number="startIndex + index + 1"
-          @view="$emit('view', member)"
-          @edit="$emit('edit', member)"
-          @delete="$emit('delete', member)"
-        />
+  <div class="md:bg-white">
+    <!-- Desktop Card List View -->
+    <div class="hidden md:block space-y-3">
+      <MemberTableRow
+        v-for="(member, index) in members"
+        :key="member.id"
+        :member="member"
+        :row-number="startIndex + index + 1"
+        @view="$emit('view', member)"
+        @edit="$emit('edit', member)"
+        @delete="$emit('delete', member)"
+      />
 
-        <!-- Empty state -->
-        <tr v-if="members.length === 0">
-          <td colspan="5" class="px-6 py-12 text-center">
-            <div class="flex flex-col items-center space-y-3">
-              <AppIcon
-                name="material-symbols:group"
-                :size="48"
-                class-name="text-slate-300 dark:text-slate-600"
-                decorative
-              />
-              <div>
-                <p
-                  class="text-lg font-medium text-slate-600 dark:text-slate-400"
-                >
-                  {{ emptyMessage }}
-                </p>
-                <p class="text-sm text-slate-500 dark:text-slate-500 mt-1">
-                  {{ emptySubMessage }}
-                </p>
-              </div>
-            </div>
-          </td>
-        </tr>
-      </tbody>
-      <tfoot v-if="$slots.footer">
-        <tr>
-          <td colspan="5" class="px-6 py-4 border-t border-slate-200">
-            <slot name="footer" />
-          </td>
-        </tr>
-      </tfoot>
-    </table>
+      <!-- Empty state -->
+      <div
+        v-if="members.length === 0"
+        class="flex flex-col items-center py-12 space-y-3"
+      >
+        <AppIcon
+          name="material-symbols:group"
+          :size="48"
+          custom-class="text-slate-300"
+          decorative
+        />
+        <div class="text-center">
+          <p class="text-lg font-medium text-slate-600">
+            {{ emptyMessage }}
+          </p>
+          <p class="text-sm text-slate-500 mt-1">
+            {{ emptySubMessage }}
+          </p>
+        </div>
+      </div>
+
+      <!-- Footer slot for desktop -->
+      <div v-if="$slots.footer" class="pt-6 pb-4">
+        <slot name="footer" />
+      </div>
+    </div>
+
+    <!-- Mobile Card View -->
+    <div class="md:hidden space-y-3">
+      <MemberTableRow
+        v-for="(member, index) in members"
+        :key="member.id"
+        :member="member"
+        :row-number="startIndex + index + 1"
+        @view="$emit('view', member)"
+        @edit="$emit('edit', member)"
+        @delete="$emit('delete', member)"
+      />
+
+      <!-- Empty state -->
+      <div
+        v-if="members.length === 0"
+        class="flex flex-col items-center py-12 space-y-3"
+      >
+        <AppIcon
+          name="material-symbols:group"
+          :size="48"
+          custom-class="text-slate-300"
+          decorative
+        />
+        <div class="text-center">
+          <p class="text-lg font-medium text-slate-600">
+            {{ emptyMessage }}
+          </p>
+          <p class="text-sm text-slate-500 mt-1">
+            {{ emptySubMessage }}
+          </p>
+        </div>
+      </div>
+
+      <!-- Footer slot for mobile -->
+      <div v-if="$slots.footer" class="pt-4 border-t border-slate-200">
+        <slot name="footer" />
+      </div>
+    </div>
   </div>
 </template>
 
@@ -80,10 +84,10 @@
 import type { Member } from "~/composables/useMembers";
 
 /**
- * MemberTable - Displays members in a table layout
+ * MemberTable - Displays members in a responsive layout
  *
- * Shows member information in a structured table with columns for member details,
- * contact info, location, and action buttons. Includes empty state handling.
+ * Shows member information in a table layout on desktop and card layout on mobile.
+ * Includes empty state handling and emits events for member actions.
  */
 
 interface Props {

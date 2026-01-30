@@ -8,21 +8,22 @@ service cloud.firestore {
     match /members/{memberId} {
       // Any authenticated user can read member data
       allow read: if request.auth != null;
-      
+
       // Any authenticated user can create members
       // Creator ID must match authenticated user
+      // Firestore schema uses: firstName, lastName, displayName, city, phone, birthday, notes
       allow create: if request.auth != null
                     && request.resource.data.createdBy == request.auth.uid
-                    && request.resource.data.keys().hasAll(['name', 'birthday', 'createdBy', 'createdAt'])
-                    && request.resource.data.name is string
-                    && request.resource.data.name.size() > 0;
-      
+                    && request.resource.data.keys().hasAll(['displayName', 'birthday', 'createdBy', 'createdAt'])
+                    && request.resource.data.displayName is string
+                    && request.resource.data.displayName.size() > 0;
+
       // Any authenticated user can update members
       // Preserves original creator and creation timestamp
       allow update: if request.auth != null
                     && request.resource.data.createdBy == resource.data.createdBy
                     && request.resource.data.createdAt == resource.data.createdAt;
-      
+
       // Any authenticated user can delete members
       allow delete: if request.auth != null;
     }

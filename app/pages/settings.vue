@@ -33,6 +33,7 @@ definePageMeta({
 /* Page Structure */
 .page-container {
   width: 100%;
+  padding: 2rem;
 }
 
 .page-header {

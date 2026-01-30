@@ -320,17 +320,15 @@ onUnmounted(() => {
 
 /* Dropdown */
 .search-dropdown {
-  position: absolute;
-  top: calc(100% + 0.5rem);
-  left: 0;
-  right: 0;
+  position: relative;
+  margin-top: 0.5rem;
   background: #ffffff;
   border: 1px solid #e8e8e5;
   border-radius: 8px;
   box-shadow:
     0 4px 6px -1px rgba(44, 44, 42, 0.1),
     0 2px 4px -1px rgba(44, 44, 42, 0.06);
-  z-index: 10;
+  z-index: 100;
   overflow: hidden;
 }
 
