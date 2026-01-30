@@ -10,6 +10,7 @@ export default defineNuxtConfig({
     "@nuxt/icon",
     "@nuxt/test-utils",
     "@nuxtjs/tailwindcss",
+    "@pinia/nuxt",
   ],
   icon: {
     // Icon configuration for @nuxt/icon (client-side only)

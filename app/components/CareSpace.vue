@@ -16,7 +16,7 @@
  * @param {string} memberName - The display name of the member (required)
  *
  * **Features:**
- * - Real-time synchronization via useCareNotes and useCareReminders composables
+ * - Real-time synchronization via careNotes and careReminders stores
  * - Optimistic UI updates
  * - Automatic error handling with toast notifications
  * - Responsive layout for mobile, tablet, and desktop
@@ -41,29 +41,35 @@ const props = defineProps<{
   memberName: string;
 }>();
 
-// Use the care notes composable for real-time sync
-const { notes, loading, addNote, updateNote } = useCareNotes(props.memberId);
+// Use the care notes store for real-time sync
+const careNotesStore = useCareNotesStore();
 
-// Use the care reminders composable for real-time sync
-const {
-  reminders,
-  loading: remindersLoading,
-  addReminder,
-  deleteReminder,
-  updateReminder,
-} = useCareReminders(props.memberId);
+// Use the care reminders store for real-time sync
+const careRemindersStore = useCareRemindersStore();
+
+// Set member on mount and watch for changes
+onMounted(() => {
+  careNotesStore.setMember(props.memberId);
+  careRemindersStore.setMember(props.memberId);
+});
+
+// Unsubscribe on unmount
+onUnmounted(() => {
+  careNotesStore.unsubscribeFromCurrent();
+  careRemindersStore.unsubscribeFromCurrent();
+});
 
 // Control visibility of reminder input form
 const showReminderInput = ref(false);
 
 /**
  * Handle adding a new care note
- * Delegates to useCareNotes addNote function
- * Errors are handled by the composable with toast notifications
+ * Delegates to careNotesStore addNote function
+ * Errors are handled by the store with toast notifications
  */
 const handleNoteAdded = async (content: string) => {
   try {
-    await addNote(content);
+    await careNotesStore.addNote(content);
   } catch (error) {
     console.error("Error adding care note:", error);
   }
@@ -71,12 +77,12 @@ const handleNoteAdded = async (content: string) => {
 
 /**
  * Handle updating an existing care note
- * Preserves edit history automatically via useCareNotes
- * Errors are handled by the composable with toast notifications
+ * Preserves edit history automatically via careNotesStore
+ * Errors are handled by the store with toast notifications
  */
 const handleNoteUpdated = async (noteId: string, content: string) => {
   try {
-    await updateNote(noteId, content);
+    await careNotesStore.updateNote(noteId, content);
   } catch (error) {
     console.error("Error updating care note:", error);
   }
@@ -84,12 +90,12 @@ const handleNoteUpdated = async (noteId: string, content: string) => {
 
 /**
  * Handle adding a new care reminder
- * Delegates to useCareReminders addReminder function
- * Errors are handled by the composable with toast notifications
+ * Delegates to careRemindersStore addReminder function
+ * Errors are handled by the store with toast notifications
  */
 const handleReminderAdded = async (text: string, dueDate: Date | null) => {
   try {
-    await addReminder(text, dueDate);
+    await careRemindersStore.addReminder(text, dueDate);
     // Hide the form after successful submission
     showReminderInput.value = false;
   } catch (error) {
@@ -99,8 +105,8 @@ const handleReminderAdded = async (text: string, dueDate: Date | null) => {
 
 /**
  * Handle updating an existing care reminder
- * Delegates to useCareReminders updateReminder function
- * Errors are handled by the composable with toast notifications
+ * Delegates to careRemindersStore updateReminder function
+ * Errors are handled by the store with toast notifications
  */
 const handleReminderUpdated = async (
   reminderId: string,
@@ -108,7 +114,7 @@ const handleReminderUpdated = async (
   dueDate: Date | null,
 ) => {
   try {
-    await updateReminder(reminderId, text, dueDate);
+    await careRemindersStore.updateReminder(reminderId, text, dueDate);
   } catch (error) {
     console.error("Error updating care reminder:", error);
   }
@@ -123,12 +129,12 @@ const toggleReminderInput = () => {
 
 /**
  * Handle deleting a care reminder
- * Delegates to useCareReminders deleteReminder function
- * Errors are handled by the composable with toast notifications
+ * Delegates to careRemindersStore deleteReminder function
+ * Errors are handled by the store with toast notifications
  */
 const handleReminderDeleted = async (reminderId: string) => {
   try {
-    await deleteReminder(reminderId);
+    await careRemindersStore.deleteReminder(reminderId);
   } catch (error) {
     console.error("Error deleting care reminder:", error);
   }
@@ -147,7 +153,10 @@ const handleReminderDeleted = async (reminderId: string) => {
 
     <!-- Care Note Input -->
     <div class="care-space-input">
-      <CareNoteInput :loading="loading" @note-added="handleNoteAdded" />
+      <CareNoteInput
+        :loading="careNotesStore.loading"
+        @note-added="handleNoteAdded"
+      />
     </div>
 
     <!-- Care Reminders Section -->
@@ -161,7 +170,7 @@ const handleReminderDeleted = async (reminderId: string) => {
         <AppButton
           variant="ghost"
           size="sm"
-          :disabled="remindersLoading"
+          :disabled="careRemindersStore.loading"
           @click="toggleReminderInput"
           class="add-reminder-button"
         >
@@ -173,7 +182,7 @@ const handleReminderDeleted = async (reminderId: string) => {
       <!-- Care Reminder Input Form (shown when visible) -->
       <div v-if="showReminderInput" class="reminders-input">
         <CareReminderInput
-          :loading="remindersLoading"
+          :loading="careRemindersStore.loading"
           @reminder-added="handleReminderAdded"
           @cancel="showReminderInput = false"
         />
@@ -182,8 +191,8 @@ const handleReminderDeleted = async (reminderId: string) => {
       <!-- Care Reminder List -->
       <div class="reminders-list">
         <CareReminderList
-          :reminders="reminders"
-          :loading="remindersLoading"
+          :reminders="careRemindersStore.reminders"
+          :loading="careRemindersStore.loading"
           @update="handleReminderUpdated"
           @delete="handleReminderDeleted"
         />
@@ -193,8 +202,8 @@ const handleReminderDeleted = async (reminderId: string) => {
     <!-- Care Notes Timeline -->
     <div class="care-space-timeline">
       <CareNoteList
-        :notes="notes"
-        :loading="loading"
+        :notes="careNotesStore.notes"
+        :loading="careNotesStore.loading"
         @note-updated="handleNoteUpdated"
       />
     </div>

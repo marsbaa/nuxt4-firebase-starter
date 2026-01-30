@@ -1,5 +1,3 @@
-// Server API based member management (uses Firebase Admin SDK)
-
 /**
  * Member data interface for the application layer
  *
@@ -37,13 +35,10 @@ export interface ParsedName {
   fullName: string;
 }
 
-interface FirebaseError {
-  code: string;
-  message: string;
-}
-
 /**
  * Convert text to proper case (first letter uppercase, rest lowercase)
+ * @param text - The text to convert
+ * @returns The text in proper case
  */
 const toProperCase = (text: string): string => {
   if (!text) return "";
@@ -53,6 +48,15 @@ const toProperCase = (text: string): string => {
 /**
  * Parse "LASTNAME, FIRSTNAME" format into components
  * Handles all caps, mixed case, and special characters
+ *
+ * @param name - The name string to parse (e.g., "SMITH, JOHN")
+ * @returns Parsed name components with firstName, lastName, and fullName
+ *
+ * @example
+ * ```typescript
+ * parseMemberName("SMITH, JOHN") // { firstName: "John", lastName: "Smith", fullName: "John Smith" }
+ * parseMemberName("doe") // { firstName: "", lastName: "Doe", fullName: "Doe" }
+ * ```
  */
 export const parseMemberName = (name: string): ParsedName => {
   if (!name || !name.includes(",")) {
@@ -76,6 +80,14 @@ export const parseMemberName = (name: string): ParsedName => {
 /**
  * Calculate age from birthday string
  * Handles both "YYYY-MM-DD" and ISO timestamp formats
+ *
+ * @param birthday - The birthday string in ISO format
+ * @returns The calculated age in years
+ *
+ * @example
+ * ```typescript
+ * calculateAge("1990-01-01") // 34 (assuming current year is 2024)
+ * ```
  */
 export const calculateAge = (birthday: string): number => {
   if (!birthday) return 0;
@@ -98,6 +110,15 @@ export const calculateAge = (birthday: string): number => {
 /**
  * Format birthday for display with age
  * Example: "Jan 19, 1945 • Age 81"
+ *
+ * @param birthday - The birthday string in ISO format
+ * @returns Formatted birthday string with age
+ *
+ * @example
+ * ```typescript
+ * formatBirthday("1990-01-01") // "Jan 1, 1990 • Age 34"
+ * formatBirthday("") // "No birthday set"
+ * ```
  */
 export const formatBirthday = (birthday: string): string => {
   if (!birthday) return "No birthday set";
@@ -115,6 +136,15 @@ export const formatBirthday = (birthday: string): string => {
 
 /**
  * Format contact info with fallback
+ *
+ * @param contact - The contact information string
+ * @returns Formatted contact info or fallback message
+ *
+ * @example
+ * ```typescript
+ * formatContact("0412345678") // "0412345678"
+ * formatContact("") // "No contact info"
+ * ```
  */
 export const formatContact = (contact: string): string => {
   return contact.trim() === "" ? "No contact info" : contact;
@@ -123,6 +153,16 @@ export const formatContact = (contact: string): string => {
 /**
  * Get member initials for avatar
  * Uses parsed first and last name
+ *
+ * @param name - The member name string
+ * @returns Two-letter initials in uppercase
+ *
+ * @example
+ * ```typescript
+ * getMemberInitials("SMITH, JOHN") // "JS"
+ * getMemberInitials("DOE") // "DO"
+ * getMemberInitials("") // "??"
+ * ```
  */
 export const getMemberInitials = (name: string): string => {
   const { firstName, lastName } = parseMemberName(name);
@@ -139,261 +179,29 @@ export const getMemberInitials = (name: string): string => {
 };
 
 /**
- * Members composable for server API operations
+ * Sort members by name (last name first)
+ *
+ * @param membersList - Array of member objects to sort
+ * @returns New sorted array (original array is not modified)
+ *
+ * @example
+ * ```typescript
+ * const members = [
+ *   { name: "SMITH, JOHN" },
+ *   { name: "DOE, JANE" }
+ * ];
+ * sortMembersByName(members) // [{ name: "DOE, JANE" }, { name: "SMITH, JOHN" }]
+ * ```
  */
-export const useMembers = () => {
-  const { user } = useFirebase();
-  const toast = useToast();
+export const sortMembersByName = (membersList: Member[]): Member[] => {
+  return [...membersList].sort((a, b) => {
+    const nameA = parseMemberName(a.name);
+    const nameB = parseMemberName(b.name);
 
-  // State
-  const members = ref<Member[]>([]);
-  const isLoading = ref(false);
-  const error = ref<string | null>(null);
+    // Sort by last name, then first name
+    const lastNameCompare = nameA.lastName.localeCompare(nameB.lastName);
+    if (lastNameCompare !== 0) return lastNameCompare;
 
-  // Polling interval (in ms) - poll every 5 seconds for updates
-  const POLL_INTERVAL = 5000;
-  let pollTimer: ReturnType<typeof setInterval> | null = null;
-
-  /**
-   * Get error message for API errors
-   */
-  const getErrorMessage = (errorCode: string): string => {
-    const errorMessages: Record<string, string> = {
-      "permission-denied": "You don't have permission to access members data",
-      "not-found": "Members data not found",
-      unavailable: "The service is temporarily unavailable. Please try again",
-      cancelled: "The operation was cancelled",
-      "invalid-argument": "Please check the information provided",
-    };
-
-    return errorMessages[errorCode] || "Something went wrong. Please try again";
-  };
-
-  /**
-   * Get authentication token for API requests
-   */
-  const getAuthToken = async (): Promise<string | null> => {
-    try {
-      if (!user.value) return null;
-      // Get the current Firebase ID token
-      return await user.value.getIdToken();
-    } catch (err) {
-      console.error("[useMembers] Error getting auth token:", err);
-      return null;
-    }
-  };
-
-  /**
-   * Fetch members list from server API
-   */
-  const fetchMembers = async (): Promise<void> => {
-    try {
-      isLoading.value = true;
-      error.value = null;
-
-      const token = await getAuthToken();
-      if (!token) {
-        throw new Error("Not authenticated");
-      }
-
-      const data = await $fetch<Member[]>("/api/members", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      members.value = data || [];
-    } catch (err: any) {
-      console.error("[useMembers] Error fetching members:", err);
-      const errorMessage =
-        err.data?.message || err.message || "Failed to fetch members";
-      error.value = errorMessage;
-      toast.error(errorMessage);
-    } finally {
-      isLoading.value = false;
-    }
-  };
-
-  /**
-   * Start polling for member updates
-   */
-  const startPolling = (): (() => void) => {
-    // Initial fetch
-    fetchMembers();
-
-    // Set up polling
-    pollTimer = setInterval(() => {
-      fetchMembers();
-    }, POLL_INTERVAL);
-
-    // Return cleanup function
-    return () => {
-      if (pollTimer) {
-        clearInterval(pollTimer);
-        pollTimer = null;
-      }
-    };
-  };
-
-  /**
-   * Create a new member
-   */
-  const createMember = async (
-    memberData: Omit<Member, "id" | "createdAt" | "createdBy" | "updatedAt">,
-  ): Promise<{ success: boolean; error?: string; id?: string }> => {
-    try {
-      const token = await getAuthToken();
-      if (!token) {
-        throw new Error("Not authenticated");
-      }
-
-      const response = await $fetch<{ success: boolean; id?: string }>(
-        "/api/members",
-        {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          body: memberData,
-        },
-      );
-
-      toast.success("Member added successfully");
-
-      // Refresh members list
-      await fetchMembers();
-
-      return response;
-    } catch (err: any) {
-      const errorMessage =
-        err.data?.message || err.message || "Failed to create member";
-      toast.error(errorMessage);
-      return { success: false, error: errorMessage };
-    }
-  };
-
-  /**
-   * Update an existing member
-   */
-  const updateMember = async (
-    memberId: string,
-    memberData: Partial<Omit<Member, "id" | "createdAt" | "createdBy">>,
-  ): Promise<{ success: boolean; error?: string }> => {
-    try {
-      const token = await getAuthToken();
-      if (!token) {
-        throw new Error("Not authenticated");
-      }
-
-      await $fetch(`/api/members/${memberId}`, {
-        method: "PATCH",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        body: memberData,
-      });
-
-      toast.success("Member updated successfully");
-
-      // Refresh members list
-      await fetchMembers();
-
-      return { success: true };
-    } catch (err: any) {
-      const errorMessage =
-        err.data?.message || err.message || "Failed to update member";
-      toast.error(errorMessage);
-      return { success: false, error: errorMessage };
-    }
-  };
-
-  /**
-   * Delete a member
-   */
-  const deleteMember = async (
-    memberId: string,
-  ): Promise<{ success: boolean; error?: string }> => {
-    try {
-      const token = await getAuthToken();
-      if (!token) {
-        throw new Error("Not authenticated");
-      }
-
-      await $fetch(`/api/members/${memberId}`, {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      toast.success("Member deleted successfully");
-
-      // Refresh members list
-      await fetchMembers();
-
-      return { success: true };
-    } catch (err: any) {
-      const errorMessage =
-        err.data?.message || err.message || "Failed to delete member";
-      toast.error(errorMessage);
-      return { success: false, error: errorMessage };
-    }
-  };
-
-  /**
-   * Search members by name, suburb, or contact
-   */
-  const searchMembers = (query: string): Member[] => {
-    if (!query.trim()) {
-      return members.value;
-    }
-
-    const searchTerm = query.toLowerCase();
-
-    return members.value.filter((member) => {
-      const { fullName } = parseMemberName(member.name);
-      return (
-        fullName.toLowerCase().includes(searchTerm) ||
-        member.suburb.toLowerCase().includes(searchTerm) ||
-        member.contact.toLowerCase().includes(searchTerm)
-      );
-    });
-  };
-
-  /**
-   * Sort members by name (last name first)
-   */
-  const sortMembersByName = (membersList: Member[]): Member[] => {
-    return [...membersList].sort((a, b) => {
-      const nameA = parseMemberName(a.name);
-      const nameB = parseMemberName(b.name);
-
-      // Sort by last name, then first name
-      const lastNameCompare = nameA.lastName.localeCompare(nameB.lastName);
-      if (lastNameCompare !== 0) return lastNameCompare;
-
-      return nameA.firstName.localeCompare(nameB.firstName);
-    });
-  };
-
-  /**
-   * Clear error message
-   */
-  const clearError = () => {
-    error.value = null;
-  };
-
-  return {
-    members: readonly(members),
-    isLoading: readonly(isLoading),
-    error: readonly(error),
-    fetchMembers,
-    startPolling,
-    createMember,
-    updateMember,
-    deleteMember,
-    searchMembers,
-    sortMembersByName,
-    clearError,
-  };
+    return nameA.firstName.localeCompare(nameB.firstName);
+  });
 };

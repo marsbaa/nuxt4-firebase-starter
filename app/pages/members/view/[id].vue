@@ -9,7 +9,7 @@ definePageMeta({
 
 // Composables
 const route = useRoute();
-const { members, fetchMembers } = useMembers();
+const membersStore = useMembersStore();
 const router = useRouter();
 
 // State
@@ -26,12 +26,12 @@ const parsedName = computed(() => {
 // Load member data
 onMounted(async () => {
   // Ensure members are fetched
-  if (members.value.length === 0) {
-    await fetchMembers();
+  if (membersStore.members.length === 0) {
+    await membersStore.fetchMembers();
   }
 
   // Find the member
-  const foundMember = members.value.find((m) => m.id === memberId.value);
+  const foundMember = membersStore.members.find((m) => m.id === memberId.value);
   if (!foundMember) {
     router.push("/members");
     return;
