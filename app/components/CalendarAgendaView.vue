@@ -15,49 +15,114 @@ const emit = defineEmits<{
 }>();
 
 /**
- * Group events by date
- * Returns a Map where keys are date strings and values are arrays of events
+ * Get the start of the week (Sunday) for a given date
+ */
+const getWeekStart = (date: Date): Date => {
+  const d = new Date(date);
+  d.setHours(0, 0, 0, 0);
+  const day = d.getDay(); // 0 (Sunday) to 6 (Saturday)
+  const diff = day; // Days from Sunday
+  d.setDate(d.getDate() - diff);
+  return d;
+};
+
+/**
+ * Get the end of the week (Saturday) for a given date
+ */
+const getWeekEnd = (date: Date): Date => {
+  const d = new Date(date);
+  d.setHours(0, 0, 0, 0);
+  const day = d.getDay(); // 0 (Sunday) to 6 (Saturday)
+  const diff = 6 - day; // Days to Saturday
+  d.setDate(d.getDate() + diff);
+  return d;
+};
+
+/**
+ * Create a local date key string from a Date object
+ * Format: YYYY-MM-DD in local timezone
+ */
+const getLocalDateKey = (date: Date): string => {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+};
+
+/**
+ * Group events by week (Sunday to Saturday)
+ * Returns a Map where keys are week start date strings and values are arrays of events
  */
 const groupedEvents = computed(() => {
   const groups = new Map<string, CalendarEvent[]>();
 
   props.events.forEach((event) => {
     const date = event.date.toDate();
-    const isoString = date.toISOString();
-    const dateKey = isoString.split("T")[0] || isoString; // YYYY-MM-DD format
+    const weekStart = getWeekStart(date);
+    const weekKey = getLocalDateKey(weekStart);
 
-    if (!groups.has(dateKey)) {
-      groups.set(dateKey, []);
+    if (!groups.has(weekKey)) {
+      groups.set(weekKey, []);
     }
-    groups.get(dateKey)!.push(event);
+    groups.get(weekKey)!.push(event);
   });
 
   return groups;
 });
 
 /**
- * Get sorted date groups for display
- * Returns array of [dateKey, events[]] sorted by date
+ * Get sorted week groups for display
+ * Returns array of [weekKey, events[]] sorted by week start date
+ * Events within each week are also sorted by their actual date
  */
 const sortedDateGroups = computed(() => {
-  return Array.from(groupedEvents.value.entries()).sort(([dateA], [dateB]) =>
-    dateA.localeCompare(dateB),
-  );
+  return Array.from(groupedEvents.value.entries())
+    .sort(([weekA], [weekB]) => weekA.localeCompare(weekB))
+    .map(([weekKey, events]) => {
+      // Sort events within the week by their actual date
+      const sortedEvents = [...events].sort((a, b) => {
+        const dateA = a.date.toDate().getTime();
+        const dateB = b.date.toDate().getTime();
+        return dateA - dateB;
+      });
+      return [weekKey, sortedEvents] as [string, CalendarEvent[]];
+    });
 });
 
 /**
- * Format date for group header
- * e.g., "Monday, 15 January 2026"
+ * Format week range for group header
+ * e.g., "January 4-10, 2026" or "December 29, 2025 - January 4, 2026" (for weeks spanning months/years)
  */
-const formatDateHeader = (dateString: string): string => {
-  const date = new Date(dateString + "T00:00:00");
-  const options: Intl.DateTimeFormatOptions = {
-    weekday: "long",
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  };
-  return date.toLocaleDateString("en-US", options);
+const formatDateHeader = (weekStartString: string): string => {
+  // Parse the local date key (YYYY-MM-DD)
+  const [yearStr, monthStr, dayStr] = weekStartString.split("-");
+  const weekStart = new Date(
+    parseInt(yearStr!),
+    parseInt(monthStr!) - 1,
+    parseInt(dayStr!),
+  );
+  const weekEnd = getWeekEnd(weekStart);
+
+  const startMonth = weekStart.toLocaleDateString("en-US", { month: "long" });
+  const startDay = weekStart.getDate();
+  const startYear = weekStart.getFullYear();
+
+  const endMonth = weekEnd.toLocaleDateString("en-US", { month: "long" });
+  const endDay = weekEnd.getDate();
+  const endYear = weekEnd.getFullYear();
+
+  // Same month and year
+  if (startMonth === endMonth && startYear === endYear) {
+    return `${startMonth} ${startDay}–${endDay}, ${startYear}`;
+  }
+  // Same year, different months
+  else if (startYear === endYear) {
+    return `${startMonth} ${startDay} – ${endMonth} ${endDay}, ${startYear}`;
+  }
+  // Different years
+  else {
+    return `${startMonth} ${startDay}, ${startYear} – ${endMonth} ${endDay}, ${endYear}`;
+  }
 };
 
 /**
@@ -75,6 +140,20 @@ const getEventIcon = (type: CalendarEvent["type"]): string => {
 };
 
 /**
+ * Format event date to show day of week and date
+ * e.g., "Monday, Jan 5"
+ */
+const formatEventDate = (event: CalendarEvent): string => {
+  const date = event.date.toDate();
+  const options: Intl.DateTimeFormatOptions = {
+    weekday: "short",
+    month: "short",
+    day: "numeric",
+  };
+  return date.toLocaleDateString("en-US", options);
+};
+
+/**
  * Handle event click - emit to parent for navigation
  */
 const handleEventClick = (event: CalendarEvent) => {
@@ -82,23 +161,39 @@ const handleEventClick = (event: CalendarEvent) => {
 };
 
 /**
- * Check if a date is today
+ * Check if the current week contains today
  */
-const isToday = (dateString: string): boolean => {
+const isCurrentWeek = (weekStartString: string): boolean => {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
-  const date = new Date(dateString + "T00:00:00");
-  return date.getTime() === today.getTime();
+
+  // Parse the local date key (YYYY-MM-DD)
+  const [yearStr, monthStr, dayStr] = weekStartString.split("-");
+  const weekStart = new Date(
+    parseInt(yearStr!),
+    parseInt(monthStr!) - 1,
+    parseInt(dayStr!),
+  );
+  const weekEnd = getWeekEnd(weekStart);
+  return today >= weekStart && today <= weekEnd;
 };
 
 /**
- * Check if a date is in the past
+ * Check if a week is in the past (week end is before today)
  */
-const isPast = (dateString: string): boolean => {
+const isPast = (weekStartString: string): boolean => {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
-  const date = new Date(dateString + "T00:00:00");
-  return date < today;
+
+  // Parse the local date key (YYYY-MM-DD)
+  const [yearStr, monthStr, dayStr] = weekStartString.split("-");
+  const weekStart = new Date(
+    parseInt(yearStr!),
+    parseInt(monthStr!) - 1,
+    parseInt(dayStr!),
+  );
+  const weekEnd = getWeekEnd(weekStart);
+  return weekEnd < today;
 };
 </script>
 
@@ -127,16 +222,18 @@ const isPast = (dateString: string): boolean => {
         :key="dateKey"
         class="agenda-group"
       >
-        <!-- Date Header -->
+        <!-- Week Header -->
         <div
           class="date-header"
           :class="{
-            'date-header--today': isToday(dateKey),
+            'date-header--today': isCurrentWeek(dateKey),
             'date-header--past': isPast(dateKey),
           }"
         >
           <span class="date-label">{{ formatDateHeader(dateKey) }}</span>
-          <span v-if="isToday(dateKey)" class="today-badge">Today</span>
+          <span v-if="isCurrentWeek(dateKey)" class="today-badge"
+            >This Week</span
+          >
         </div>
 
         <!-- Events for this date -->
@@ -156,7 +253,10 @@ const isPast = (dateString: string): boolean => {
               <Icon :name="getEventIcon(event.type)" class="event-icon" />
             </div>
             <div class="event-content">
-              <h4 class="event-title">{{ event.title }}</h4>
+              <div class="event-header">
+                <h4 class="event-title">{{ event.title }}</h4>
+                <span class="event-date">{{ formatEventDate(event) }}</span>
+              </div>
               <p v-if="event.description" class="event-description">
                 {{ event.description }}
               </p>
@@ -400,6 +500,13 @@ const isPast = (dateString: string): boolean => {
   gap: 0.5rem;
 }
 
+.event-header {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
 .event-title {
   font-family: "Work Sans", sans-serif;
   font-size: 0.938rem;
@@ -407,6 +514,14 @@ const isPast = (dateString: string): boolean => {
   color: #2d2a26;
   margin: 0;
   line-height: 1.4;
+}
+
+.event-date {
+  font-family: "Work Sans", sans-serif;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #9c8b7a;
+  white-space: nowrap;
 }
 
 .event-description {
