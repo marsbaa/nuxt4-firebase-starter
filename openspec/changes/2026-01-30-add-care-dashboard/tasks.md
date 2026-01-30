@@ -19,14 +19,14 @@
 
 ## 3. Holding in Mind (Care Reminders Surface)
 
-- [ ] 3.1 Create `DashboardHoldingInMind.vue` component
-- [ ] 3.2 Query upcoming Care Reminders (next 5, ordered by date)
-- [ ] 3.3 Display person's name, reminder context, and date
-- [ ] 3.4 Link each reminder to the person's Care Space
-- [ ] 3.5 Implement empty state with supportive language
-- [ ] 3.6 Style as a gentle list (no checkboxes, no task affordances)
-- [ ] 3.7 Add section heading "Holding in mind" or similar pastoral language
-- [ ] 3.8 Ensure responsive layout
+- [x] 3.1 Create `DashboardHoldingInMind.vue` component
+- [x] 3.2 Query upcoming Care Reminders (next 5, ordered by date)
+- [x] 3.3 Display person's name, reminder context, and date
+- [x] 3.4 Link each reminder to the person's Care Space
+- [x] 3.5 Implement empty state with supportive language
+- [x] 3.6 Style as a gentle list (no checkboxes, no task affordances)
+- [x] 3.7 Add section heading "Holding in mind" or similar pastoral language
+- [x] 3.8 Ensure responsive layout
 
 ## 4. Shared Rhythms (Calendar Events Surface)
 
