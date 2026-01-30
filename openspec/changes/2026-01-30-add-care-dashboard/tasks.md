@@ -41,14 +41,14 @@
 
 ## 5. Dashboard Page Refactor
 
-- [ ] 5.1 Refactor `app/pages/dashboard.vue` to implement new Care Dashboard design
-- [ ] 5.2 Implement single-column, vertically-stacked layout
-- [ ] 5.3 Integrate all dashboard components in order: Opening Moment → Search → Holding in Mind → Shared Rhythms
-- [ ] 5.4 Ensure generous spacing between sections (3-4rem)
-- [ ] 5.5 Center content with comfortable max-width (max-w-3xl or max-w-4xl)
-- [ ] 5.6 Remove any existing generic dashboard content
-- [ ] 5.7 Ensure pastoral language throughout
-- [ ] 5.8 Add loading states for async components
+- [x] 5.1 Refactor `app/pages/dashboard.vue` to implement new Care Dashboard design
+- [x] 5.2 Implement single-column, vertically-stacked layout
+- [x] 5.3 Integrate all dashboard components in order: Opening Moment → Search → Holding in Mind → Shared Rhythms
+- [x] 5.4 Ensure generous spacing between sections (3-4rem)
+- [x] 5.5 Center content with comfortable max-width (max-w-3xl or max-w-4xl)
+- [x] 5.6 Remove any existing generic dashboard content
+- [x] 5.7 Ensure pastoral language throughout
+- [x] 5.8 Add loading states for async components
 
 ## 6. Styling and Visual Polish
 
