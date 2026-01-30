@@ -68,13 +68,15 @@ const updateTooltipPosition = () => {
   position: fixed;
   transform: translate(-50%, -100%);
   z-index: 9999;
+  max-width: 300px;
   padding: 0.5rem 0.75rem;
   background: #2d2a26;
   color: #ffffff;
   font-size: 0.813rem;
   line-height: 1.4;
   border-radius: 6px;
-  white-space: nowrap;
+  white-space: normal;
+  word-wrap: break-word;
   pointer-events: none;
   box-shadow:
     0 4px 6px -1px rgba(0, 0, 0, 0.1),
