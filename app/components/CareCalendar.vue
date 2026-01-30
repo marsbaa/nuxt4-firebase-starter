@@ -1,11 +1,22 @@
 <script setup lang="ts">
-import type { CalendarEvent, CalendarFilters } from "~/types/calendarEvents";
+import type {
+  CalendarEvent,
+  CalendarFilters,
+  CreateCommunityGatheringInput,
+} from "~/types/calendarEvents";
 
 // Use calendar events composable
-const { allEvents, loading, filters, updateFilters } = useCalendarEvents();
+const { allEvents, loading, filters, updateFilters, addCommunityEvent } =
+  useCalendarEvents();
+
+const toast = useToast();
 
 // View state: 'month' or 'agenda'
 const currentView = ref<"month" | "agenda">("month");
+
+// Event form modal state
+const showEventForm = ref(false);
+const isCreatingEvent = ref(false);
 
 // Switch between month and agenda view
 const switchView = (view: "month" | "agenda") => {
@@ -15,6 +26,30 @@ const switchView = (view: "month" | "agenda") => {
 // Check if a view is active
 const isActiveView = (view: "month" | "agenda") => {
   return currentView.value === view;
+};
+
+// Open event form modal
+const openEventForm = () => {
+  showEventForm.value = true;
+};
+
+// Close event form modal
+const closeEventForm = () => {
+  showEventForm.value = false;
+};
+
+// Handle event creation
+const handleEventCreated = async (input: CreateCommunityGatheringInput) => {
+  isCreatingEvent.value = true;
+  try {
+    await addCommunityEvent(input);
+    closeEventForm();
+  } catch (error) {
+    console.error("Error creating event:", error);
+    // Toast is already shown by the composable
+  } finally {
+    isCreatingEvent.value = false;
+  }
 };
 
 // Handle event click from agenda view
@@ -57,12 +92,42 @@ const handleFilterUpdate = (updates: Partial<CalendarFilters>) => {
       </div>
 
       <div class="calendar-actions">
-        <button class="new-event-btn" aria-label="Create new event">
+        <button
+          class="new-event-btn"
+          aria-label="Create new event"
+          @click="openEventForm"
+        >
           <Icon name="mdi:plus" class="btn-icon" />
           <span class="btn-text">New Event</span>
         </button>
       </div>
     </div>
+
+    <!-- Event Form Modal -->
+    <Teleport to="body">
+      <Transition name="modal">
+        <div
+          v-if="showEventForm"
+          class="modal-backdrop"
+          @click="closeEventForm"
+        >
+          <div class="modal-content" @click.stop>
+            <button
+              class="modal-close"
+              aria-label="Close modal"
+              @click="closeEventForm"
+            >
+              <Icon name="mdi:close" class="close-icon" />
+            </button>
+            <CalendarEventForm
+              :loading="isCreatingEvent"
+              @event-created="handleEventCreated"
+              @cancel="closeEventForm"
+            />
+          </div>
+        </div>
+      </Transition>
+    </Teleport>
 
     <!-- Calendar Content -->
     <div class="calendar-content">
@@ -288,6 +353,105 @@ const handleFilterUpdate = (updates: Partial<CalendarFilters>) => {
   .toggle-btn,
   .new-event-btn {
     justify-content: center;
+  }
+}
+
+/* Modal Styles */
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(44, 44, 42, 0.4);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  z-index: 9999;
+  overflow-y: auto;
+}
+
+.modal-content {
+  position: relative;
+  width: 100%;
+  max-width: 40rem;
+  max-height: 90vh;
+  overflow-y: auto;
+  background: #ffffff;
+  border-radius: 1rem;
+  box-shadow:
+    0 10px 25px -5px rgba(44, 44, 42, 0.1),
+    0 10px 10px -5px rgba(44, 44, 42, 0.04);
+  padding: 1.5rem;
+}
+
+.modal-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  background: rgba(247, 246, 244, 0.8);
+  border: 1px solid #e8e8e5;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  z-index: 10;
+}
+
+.modal-close:hover {
+  background: #f7f6f4;
+  border-color: #d6cbb8;
+}
+
+.close-icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  color: #706c64;
+}
+
+/* Modal Transitions */
+.modal-enter-active,
+.modal-leave-active {
+  transition: opacity 0.2s ease;
+}
+
+.modal-enter-active .modal-content,
+.modal-leave-active .modal-content {
+  transition: transform 0.2s ease;
+}
+
+.modal-enter-from,
+.modal-leave-to {
+  opacity: 0;
+}
+
+.modal-enter-from .modal-content,
+.modal-leave-to .modal-content {
+  transform: scale(0.95);
+}
+
+/* Modal Responsive */
+@media (max-width: 768px) {
+  .modal-backdrop {
+    padding: 0.5rem;
+  }
+
+  .modal-content {
+    max-width: 100%;
+    padding: 1rem;
+    border-radius: 0.75rem;
+  }
+
+  .modal-close {
+    top: 0.75rem;
+    right: 0.75rem;
   }
 }
 </style>

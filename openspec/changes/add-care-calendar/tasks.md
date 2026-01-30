@@ -45,10 +45,10 @@
 
 ## 7. Event Creation
 
-- [ ] 7.1 Create `CalendarEventForm.vue` component
-- [ ] 7.2 Implement "New Event" button and modal/drawer
-- [ ] 7.3 Add event creation form validation
-- [ ] 7.4 Implement event save to Firestore
+- [x] 7.1 Create `CalendarEventForm.vue` component
+- [x] 7.2 Implement "New Event" button and modal/drawer
+- [x] 7.3 Add event creation form validation
+- [x] 7.4 Implement event save to Firestore
 
 ## 8. Member Milestones Integration
 
