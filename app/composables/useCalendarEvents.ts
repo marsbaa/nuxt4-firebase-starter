@@ -160,9 +160,9 @@ export function useCalendarEvents(
 
         const { firstName, lastName } = parseName(memberName);
 
-        // Add birthday event if date of birth exists
-        if (data.dateOfBirth) {
-          const dob = data.dateOfBirth.toDate();
+        // Add birthday event if birthday exists
+        if (data.birthday) {
+          const dob = data.birthday.toDate();
           const birthdayThisYear = new Date(
             currentYear,
             dob.getMonth(),
