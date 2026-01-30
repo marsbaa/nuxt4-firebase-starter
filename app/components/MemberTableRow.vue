@@ -1,5 +1,8 @@
 <template>
-  <tr class="border-b border-slate-200 hover:bg-slate-50/50 transition-colors">
+  <!-- Desktop Table Row -->
+  <tr
+    class="hidden md:table-row border-b border-slate-200 hover:bg-slate-50/50 transition-colors"
+  >
     <!-- Row Number -->
     <td
       class="px-6 py-5 text-sm text-slate-400 dark:text-slate-500 whitespace-nowrap"
@@ -90,6 +93,52 @@
       </div>
     </td>
   </tr>
+
+  <!-- Mobile Card View -->
+  <button
+    class="md:hidden w-full bg-white rounded-xl px-4 py-4 flex items-center gap-3 text-left hover:bg-[#faf9f7] active:bg-[#f5f3f0] transition-colors border border-transparent"
+    @click="$emit('view')"
+  >
+    <!-- Avatar -->
+    <MemberAvatar :name="parsedName.fullName" size="lg" />
+
+    <!-- Member Info -->
+    <div class="flex-1 min-w-0">
+      <!-- Name -->
+      <h3
+        class="text-[17px] font-medium text-[#2d2a26] mb-1 truncate leading-snug"
+      >
+        {{ parsedName.fullName }}
+      </h3>
+
+      <!-- Age and Location -->
+      <div class="flex items-center gap-2 text-[15px] text-[#8b8680] mb-0.5">
+        <span>{{ ageOnly }} years</span>
+        <div v-if="member.suburb" class="flex items-center gap-1">
+          <AppIcon
+            name="material-symbols:location-on"
+            :size="16"
+            decorative
+            custom-class="text-[#8b8680]"
+          />
+          <span>{{ member.suburb }}</span>
+        </div>
+      </div>
+
+      <!-- Contact (if available) -->
+      <div v-if="member.contact" class="text-[15px] text-[#8b8680]">
+        {{ formattedContact }}
+      </div>
+    </div>
+
+    <!-- Chevron -->
+    <AppIcon
+      name="material-symbols:chevron-right"
+      :size="24"
+      decorative
+      custom-class="text-[#d4cec6] flex-shrink-0"
+    />
+  </button>
 </template>
 
 <script setup lang="ts">
@@ -98,19 +147,20 @@ import {
   parseMemberName,
   formatBirthday,
   formatContact,
+  calculateAge,
 } from "~/composables/useMembers";
 
 /**
- * MemberTableRow - Individual table row for displaying member information
+ * MemberTableRow - Responsive member row/card component
  *
- * Displays a single member's information in table format with avatar, name, birthday,
- * contact info, location, and action buttons.
+ * Displays a member as a table row on desktop and as a card on mobile.
+ * Shows avatar, name, age, location, contact info, and provides navigation.
  */
 
 interface Props {
   /** Member data to display */
   member: Member;
-  /** Row number for display */
+  /** Row number for display (desktop only) */
   rowNumber: number;
 }
 
@@ -130,6 +180,9 @@ const parsedName = computed(() => parseMemberName(props.member.name));
 
 // Format birthday with age
 const formattedBirthday = computed(() => formatBirthday(props.member.birthday));
+
+// Calculate age directly from birthday for mobile view
+const ageOnly = computed(() => calculateAge(props.member.birthday));
 
 // Format contact info with fallback
 const formattedContact = computed(() => formatContact(props.member.contact));
