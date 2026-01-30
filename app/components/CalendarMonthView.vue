@@ -293,12 +293,13 @@ const getEventsForDay = (date: Date) => {
 
 .calendar-day {
   background: #ffffff;
-  min-height: 120px;
+  height: 120px;
   padding: 0.75rem;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
   transition: background 0.2s ease;
+  overflow: hidden;
 }
 
 .calendar-day:hover {
@@ -324,6 +325,7 @@ const getEventsForDay = (date: Date) => {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  flex-shrink: 0;
 }
 
 .today-label {
@@ -343,6 +345,8 @@ const getEventsForDay = (date: Date) => {
   flex-direction: column;
   gap: 0.375rem;
   flex: 1;
+  overflow: hidden;
+  min-height: 0;
 }
 
 /* Calendar Footer */
@@ -362,7 +366,7 @@ const getEventsForDay = (date: Date) => {
 /* Responsive - Tablet */
 @media (max-width: 1024px) {
   .calendar-day {
-    min-height: 100px;
+    height: 100px;
     padding: 0.625rem;
   }
 }
@@ -378,7 +382,7 @@ const getEventsForDay = (date: Date) => {
   }
 
   .calendar-day {
-    min-height: 80px;
+    height: 80px;
     padding: 0.5rem;
   }
 
@@ -416,7 +420,7 @@ const getEventsForDay = (date: Date) => {
   }
 
   .calendar-day {
-    min-height: 60px;
+    height: 70px;
     padding: 0.375rem;
   }
 
