@@ -1,0 +1,89 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Members Collection Rules
+    // All authenticated users can read, create, update, and delete members
+    // Assumes all authenticated users are pastoral team members
+    match /members/{memberId} {
+      // Any authenticated user can read member data
+      allow read: if request.auth != null;
+      
+      // Any authenticated user can create members
+      // Creator ID must match authenticated user
+      allow create: if request.auth != null
+                    && request.resource.data.createdBy == request.auth.uid
+                    && request.resource.data.keys().hasAll(['name', 'birthday', 'createdBy', 'createdAt'])
+                    && request.resource.data.name is string
+                    && request.resource.data.name.size() > 0;
+      
+      // Any authenticated user can update members
+      // Preserves original creator and creation timestamp
+      allow update: if request.auth != null
+                    && request.resource.data.createdBy == resource.data.createdBy
+                    && request.resource.data.createdAt == resource.data.createdAt;
+      
+      // Any authenticated user can delete members
+      allow delete: if request.auth != null;
+    }
+    
+    // Care Reminders Collection Rules
+    match /careReminders/{reminderId} {
+      // Any authenticated user can read care reminders
+      allow read: if request.auth != null;
+      
+      // Any authenticated user can create care reminders
+      allow create: if request.auth != null
+                    && request.resource.data.createdBy == request.auth.uid;
+      
+      // Any authenticated user can update care reminders
+      allow update: if request.auth != null;
+      
+      // Any authenticated user can delete care reminders
+      allow delete: if request.auth != null;
+    }
+    
+    // Care Notes Collection Rules
+    match /careNotes/{noteId} {
+      // Any authenticated user can read care notes
+      allow read: if request.auth != null;
+      
+      // Any authenticated user can create care notes
+      allow create: if request.auth != null
+                    && request.resource.data.createdBy == request.auth.uid;
+      
+      // Any authenticated user can update care notes
+      allow update: if request.auth != null;
+      
+      // Any authenticated user can delete care notes
+      allow delete: if request.auth != null;
+    }
+    
+    // Calendar Events Collection Rules
+    // Community Gatherings (user-created events)
+    // All authenticated users are assumed to be pastoral team members
+    match /calendarEvents/{eventId} {
+      // Any authenticated user can read calendar events
+      allow read: if request.auth != null;
+      
+      // Any authenticated user can create calendar events
+      allow create: if request.auth != null
+                    && request.resource.data.createdBy == request.auth.uid
+                    && request.resource.data.keys().hasAll(['title', 'date', 'createdBy', 'createdByName', 'createdAt'])
+                    && request.resource.data.title is string
+                    && request.resource.data.title.size() > 0
+                    && request.resource.data.date is timestamp;
+      
+      // Any authenticated user can update calendar events
+      // Updates must preserve the original author and creation timestamp
+      allow update: if request.auth != null
+                    && request.resource.data.createdBy == resource.data.createdBy
+                    && request.resource.data.createdAt == resource.data.createdAt
+                    && request.resource.data.title is string
+                    && request.resource.data.title.size() > 0;
+      
+      // Any authenticated user can delete calendar events
+      allow delete: if request.auth != null;
+    }
+  }
+}

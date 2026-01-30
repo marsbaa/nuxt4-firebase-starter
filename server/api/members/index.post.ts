@@ -12,10 +12,8 @@ export default defineEventHandler(async (event) => {
     }
 
     const body = await readBody(event);
-    const { adminRtdb } = useFirebaseAdmin();
+    const { adminDb } = useFirebaseAdmin();
 
-    // Generate new member ID
-    const newMemberRef = adminRtdb.ref("members").push();
     const now = new Date().toISOString();
 
     const newMember = {
@@ -25,13 +23,14 @@ export default defineEventHandler(async (event) => {
       updatedAt: now,
     };
 
-    await newMemberRef.set(newMember);
+    // Add document to Firestore
+    const docRef = await adminDb.collection("members").add(newMember);
 
-    console.log(`[API] Member created: ${newMemberRef.key}`);
+    console.log(`[API] Member created: ${docRef.id}`);
     return {
       success: true,
-      id: newMemberRef.key,
-      member: { id: newMemberRef.key, ...newMember },
+      id: docRef.id,
+      member: { id: docRef.id, ...newMember },
     };
   } catch (error: any) {
     console.error("[API] Error creating member:", error);
