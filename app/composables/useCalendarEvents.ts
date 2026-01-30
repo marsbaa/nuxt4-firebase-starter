@@ -1,7 +1,6 @@
 import {
   collection,
   query,
-  where,
   orderBy,
   onSnapshot,
   addDoc,
@@ -18,7 +17,6 @@ import type {
   CreateCommunityGatheringInput,
   CalendarFilters,
 } from "~/types/calendarEvents";
-import type { CareReminder } from "~/types/careReminders";
 
 /**
  * Composable for managing Calendar Events with Firestore
@@ -145,7 +143,7 @@ export function useCalendarEvents(
       snapshot.docs.forEach((doc) => {
         const data = doc.data();
         const memberId = doc.id;
-        const memberName = data.name || "Unknown Member";
+        const memberName = data.displayName || "Unknown Member";
 
         // Parse name for display
         const parseName = (name: string) => {
@@ -228,7 +226,7 @@ export function useCalendarEvents(
       membersSnapshot.docs.forEach((doc) => {
         const data = doc.data();
         // Member.name is in "LASTNAME, FIRSTNAME" format or just a name string
-        memberLookup.set(doc.id, data.name || "Unknown Member");
+        memberLookup.set(doc.id, data.displayName || "Unknown Member");
       });
 
       // Then subscribe to care reminders with member names resolved

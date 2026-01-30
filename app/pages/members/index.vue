@@ -23,7 +23,6 @@ const {
   clearError,
 } = useMembers();
 const router = useRouter();
-const nuxtApp = useNuxtApp();
 const { user } = useFirebase();
 
 // State
