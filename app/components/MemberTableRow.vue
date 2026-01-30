@@ -22,7 +22,7 @@
               name="material-symbols:cake"
               :size="12"
               decorative
-              class-name="text-slate-400"
+              custom-class="text-slate-400"
             />
             <span>{{ formattedBirthday }}</span>
           </div>
@@ -40,7 +40,7 @@
           name="material-symbols:call"
           :size="16"
           decorative
-          class-name="text-amber-700"
+          custom-class="text-amber-700"
         />
         <span>{{ formattedContact }}</span>
       </div>
@@ -57,7 +57,7 @@
           name="material-symbols:location-on"
           :size="16"
           decorative
-          class-name="text-amber-700"
+          custom-class="text-amber-700"
         />
         <span>{{ member.suburb }}</span>
       </div>

@@ -48,7 +48,7 @@
               <AppIcon
                 name="material-symbols:group"
                 :size="48"
-                class-name="text-slate-300 dark:text-slate-600"
+                custom-class="text-slate-300 dark:text-slate-600"
                 decorative
               />
               <div>

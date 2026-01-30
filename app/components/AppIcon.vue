@@ -2,7 +2,7 @@
   <Icon
     :name="name"
     :size="size"
-    :class="className"
+    :class="customClass"
     :aria-label="ariaLabel || label"
     :aria-hidden="decorative ? 'true' : undefined"
     :role="decorative ? 'presentation' : undefined"
@@ -30,7 +30,7 @@ interface Props {
   /** Icon size in pixels (default: 24) */
   size?: string | number;
   /** Additional CSS classes */
-  className?: string;
+  customClass?: string;
   /** Accessible label for screen readers */
   label?: string;
   /** Explicit ARIA label (overrides label prop) */
@@ -41,7 +41,7 @@ interface Props {
 
 withDefaults(defineProps<Props>(), {
   size: "24",
-  className: "",
+  customClass: "",
   label: "",
   ariaLabel: "",
   decorative: false,

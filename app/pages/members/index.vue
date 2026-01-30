@@ -775,8 +775,19 @@ const handlePageChange = (page: number) => {
 .meta-icon {
   width: 0.875rem;
   height: 0.875rem;
+  min-width: 0.875rem;
+  min-height: 0.875rem;
   color: #9a9690;
   flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.meta-icon :deep(svg) {
+  width: 100%;
+  height: 100%;
+  display: block;
 }
 
 .meta-text {
@@ -809,8 +820,19 @@ const handlePageChange = (page: number) => {
 .info-icon {
   width: 1.125rem;
   height: 1.125rem;
+  min-width: 1.125rem;
+  min-height: 1.125rem;
   color: #c2a47a;
   flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.info-icon :deep(svg) {
+  width: 100%;
+  height: 100%;
+  display: block;
 }
 
 .info-text {
@@ -879,6 +901,18 @@ const handlePageChange = (page: number) => {
 .action-icon {
   width: 1.125rem;
   height: 1.125rem;
+  min-width: 1.125rem;
+  min-height: 1.125rem;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.action-icon :deep(svg) {
+  width: 100%;
+  height: 100%;
+  display: block;
 }
 
 .mobile-pagination {
@@ -996,13 +1030,16 @@ const handlePageChange = (page: number) => {
     gap: 0.375rem;
   }
 
-  .card-action-btn span {
+  .card-action-btn > span:not(.action-icon) {
     display: none;
   }
 
   .action-icon {
     width: 1.25rem;
     height: 1.25rem;
+    min-width: 1.25rem;
+    min-height: 1.25rem;
+    display: inline-flex;
   }
 }
 </style>
