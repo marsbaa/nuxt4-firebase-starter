@@ -145,7 +145,18 @@ export function useCalendarEvents(
       snapshot.docs.forEach((doc) => {
         const data = doc.data();
         const memberId = doc.id;
-        const memberName = `${data.firstName} ${data.lastName}`;
+        const memberName = data.name || "Unknown Member";
+
+        // Parse name for display
+        const parseName = (name: string) => {
+          if (!name || !name.includes(",")) {
+            return { firstName: name || "", lastName: "" };
+          }
+          const [lastName, firstName] = name.split(",").map((s) => s.trim());
+          return { firstName, lastName };
+        };
+
+        const { firstName, lastName } = parseName(memberName);
 
         // Add birthday event if date of birth exists
         if (data.dateOfBirth) {
@@ -156,10 +167,13 @@ export function useCalendarEvents(
             dob.getDate(),
           );
 
+          const shortLastName = lastName ? `${lastName.charAt(0)}.` : "";
+          const title = `${firstName} ${shortLastName} Birthday`.trim();
+
           milestones.push({
             id: `birthday-${memberId}-${currentYear}`,
             type: "member-milestone",
-            title: `${data.firstName} ${data.lastName.charAt(0)}. Birthday`,
+            title,
             date: Timestamp.fromDate(birthdayThisYear),
             memberId,
             memberName,
@@ -176,10 +190,13 @@ export function useCalendarEvents(
             anniversary.getDate(),
           );
 
+          const shortLastName = lastName ? `${lastName.charAt(0)}.` : "";
+          const title = `${firstName} ${shortLastName} Anniversary`.trim();
+
           milestones.push({
             id: `anniversary-${memberId}-${currentYear}`,
             type: "member-milestone",
-            title: `${data.firstName} ${data.lastName.charAt(0)}. Anniversary`,
+            title,
             date: Timestamp.fromDate(anniversaryThisYear),
             memberId,
             memberName,
@@ -210,7 +227,8 @@ export function useCalendarEvents(
 
       membersSnapshot.docs.forEach((doc) => {
         const data = doc.data();
-        memberLookup.set(doc.id, `${data.firstName} ${data.lastName}`);
+        // Member.name is in "LASTNAME, FIRSTNAME" format or just a name string
+        memberLookup.set(doc.id, data.name || "Unknown Member");
       });
 
       // Then subscribe to care reminders with member names resolved
