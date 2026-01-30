@@ -35,6 +35,7 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   update: [reminderId: string, text: string, dueDate: Date | null];
+  delete: [reminderId: string];
 }>();
 
 // Edit state
@@ -140,6 +141,13 @@ watch(editText, () => {
   nextTick(() => adjustHeight());
 });
 
+// Handle delete
+const handleDelete = () => {
+  if (confirm("Delete this reminder?")) {
+    emit("delete", props.reminder.id);
+  }
+};
+
 // Keyboard shortcuts
 const handleKeydown = (event: KeyboardEvent) => {
   // Cmd/Ctrl + Enter to submit
@@ -190,24 +198,35 @@ const handleKeydown = (event: KeyboardEvent) => {
       <!-- Actions -->
       <div class="edit-actions">
         <button
-          class="action-button cancel-button"
+          class="action-button delete-button"
           :disabled="isSubmitting"
-          @click="cancelEditing"
-          aria-label="Cancel editing"
-          title="Cancel"
+          @click="handleDelete"
+          aria-label="Delete reminder"
+          title="Delete"
         >
-          <AppIcon name="heroicons:x-mark" />
+          <AppIcon name="heroicons:trash" />
         </button>
-        <button
-          class="action-button save-button"
-          :disabled="!editText.trim() || isSubmitting"
-          @click="saveChanges"
-          aria-label="Save changes"
-          title="Save"
-        >
-          <AppIcon v-if="!isSubmitting" name="heroicons:check" />
-          <span v-else class="spinner"></span>
-        </button>
+        <div class="right-actions">
+          <button
+            class="action-button cancel-button"
+            :disabled="isSubmitting"
+            @click="cancelEditing"
+            aria-label="Cancel editing"
+            title="Cancel"
+          >
+            <AppIcon name="heroicons:x-mark" />
+          </button>
+          <button
+            class="action-button save-button"
+            :disabled="!editText.trim() || isSubmitting"
+            @click="saveChanges"
+            aria-label="Save changes"
+            title="Save"
+          >
+            <AppIcon v-if="!isSubmitting" name="heroicons:check" />
+            <span v-else class="spinner"></span>
+          </button>
+        </div>
       </div>
     </div>
 
@@ -223,7 +242,7 @@ const handleKeydown = (event: KeyboardEvent) => {
             aria-label="Edit care reminder"
             title="Edit reminder"
           >
-            <AppIcon name="heroicons:pencil-square" />
+            <AppIcon name="heroicons:pencil" />
           </button>
           <AppIcon
             name="heroicons:bookmark"
@@ -291,8 +310,8 @@ const handleKeydown = (event: KeyboardEvent) => {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 1.5rem;
-  height: 1.5rem;
+  width: 1rem;
+  height: 1rem;
   padding: 0;
   background: transparent;
   border: none;
@@ -455,10 +474,16 @@ const handleKeydown = (event: KeyboardEvent) => {
 /* Edit Actions */
 .edit-actions {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
+  align-items: center;
   gap: 0.5rem;
   padding-top: 0.5rem;
   border-top: 1px solid rgba(245, 241, 232, 0.6);
+}
+
+.right-actions {
+  display: flex;
+  gap: 0.5rem;
 }
 
 .action-button {
@@ -500,6 +525,17 @@ const handleKeydown = (event: KeyboardEvent) => {
 .save-button:hover:not(:disabled) {
   background: #c2a47a;
   color: #ffffff;
+}
+
+.delete-button {
+  border-color: #f5f1e8;
+  color: #a8a29e;
+}
+
+.delete-button:hover:not(:disabled) {
+  background: #fef2f2;
+  border-color: #fecaca;
+  color: #dc2626;
 }
 
 .action-button:disabled {

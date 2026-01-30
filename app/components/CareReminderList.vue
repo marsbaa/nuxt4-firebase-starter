@@ -39,6 +39,7 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   update: [reminderId: string, text: string, dueDate: Date | null];
+  delete: [reminderId: string];
 }>();
 
 // Computed to check if reminders list is empty
@@ -51,6 +52,11 @@ const handleUpdate = (
   dueDate: Date | null,
 ) => {
   emit("update", reminderId, text, dueDate);
+};
+
+// Handle delete from child component
+const handleDelete = (reminderId: string) => {
+  emit("delete", reminderId);
 };
 </script>
 
@@ -104,6 +110,7 @@ const handleUpdate = (
         :key="reminder.id"
         :reminder="reminder"
         @update="handleUpdate"
+        @delete="handleDelete"
       />
     </div>
   </div>

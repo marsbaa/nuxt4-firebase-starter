@@ -377,7 +377,7 @@ const handlePageChange = (page: number) => {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0;
+  padding: 1.5rem 1.5rem 1rem 1.5rem;
 }
 
 .pagination-info {
