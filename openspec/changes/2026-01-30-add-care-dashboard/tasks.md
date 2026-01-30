@@ -52,27 +52,27 @@
 
 ## 6. Styling and Visual Polish
 
-- [ ] 6.1 Verify all components use pastoral color palette
-- [ ] 6.2 Ensure generous whitespace throughout
-- [ ] 6.3 Verify soft, minimal visual weight (subtle shadows, gentle borders)
-- [ ] 6.4 Test responsive layout on mobile, tablet, and desktop
-- [ ] 6.5 Verify keyboard navigation works for all interactive elements
-- [ ] 6.6 Check accessibility (WCAG 2.1 AA standards)
+- [x] 6.1 Verify all components use pastoral color palette
+- [x] 6.2 Ensure generous whitespace throughout
+- [x] 6.3 Verify soft, minimal visual weight (subtle shadows, gentle borders)
+- [x] 6.4 Test responsive layout on mobile, tablet, and desktop
+- [x] 6.5 Verify keyboard navigation works for all interactive elements
+- [x] 6.6 Check accessibility (WCAG 2.1 AA standards)
 
 ## 7. Integration Testing
 
-- [ ] 7.1 Test navigation from dashboard to Care Spaces
-- [ ] 7.2 Test navigation from dashboard to Care Calendar
-- [ ] 7.3 Verify Care Reminders data integration works correctly
-- [ ] 7.4 Verify Calendar Events data integration works correctly
-- [ ] 7.5 Test person search navigation
-- [ ] 7.6 Test empty states for reminders and events
-- [ ] 7.7 Test loading states
-- [ ] 7.8 Verify dashboard remains default post-login route
+- [x] 7.1 Test navigation from dashboard to Care Spaces
+- [x] 7.2 Test navigation from dashboard to Care Calendar
+- [x] 7.3 Verify Care Reminders data integration works correctly
+- [x] 7.4 Verify Calendar Events data integration works correctly
+- [x] 7.5 Test person search navigation
+- [x] 7.6 Test empty states for reminders and events
+- [x] 7.7 Test loading states
+- [x] 7.8 Verify dashboard remains default post-login route
 
 ## 8. Documentation and Cleanup
 
-- [ ] 8.1 Update any relevant comments or documentation
-- [ ] 8.2 Remove unused code or components
-- [ ] 8.3 Verify no console errors or warnings
-- [ ] 8.4 Final visual review against pastoral care principles
+- [x] 8.1 Update any relevant comments or documentation
+- [x] 8.2 Remove unused code or components
+- [x] 8.3 Verify no console errors or warnings
+- [x] 8.4 Final visual review against pastoral care principles
