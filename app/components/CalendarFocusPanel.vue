@@ -36,11 +36,13 @@ const props = defineProps<Props>();
 const emit = defineEmits<Emits>();
 
 // Get members for search
-const { members, isLoading: membersLoading, fetchMembers } = useMembers();
+const membersStore = useMembersStore();
 
-// Fetch members on mount
-onMounted(() => {
-  fetchMembers();
+// Fetch members on mount if not loaded
+onMounted(async () => {
+  if (membersStore.members.length === 0) {
+    await membersStore.fetchMembers();
+  }
 });
 
 // Category labels and their pastoral meanings
@@ -117,8 +119,8 @@ const handleMemberClear = () => {
         <MemberSearchInput
           :selected-member-id="filters.selectedMemberId"
           :loading="loading"
-          :members="members"
-          :members-loading="membersLoading"
+          :members="membersStore.members"
+          :members-loading="membersStore.isLoading"
           placeholder="Search members..."
           @select="handleMemberSelect"
           @clear="handleMemberClear"

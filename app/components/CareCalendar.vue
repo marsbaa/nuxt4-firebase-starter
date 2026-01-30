@@ -5,9 +5,18 @@ import type {
   CreateCommunityGatheringInput,
 } from "~/types/calendarEvents";
 
-// Use calendar events composable
-const { allEvents, loading, filters, updateFilters, addCommunityEvent } =
-  useCalendarEvents();
+// Use calendar events store
+const calendarEventsStore = useCalendarEventsStore();
+
+// Initialize calendar data on mount
+onMounted(() => {
+  calendarEventsStore.initialize();
+});
+
+// Cleanup on unmount
+onUnmounted(() => {
+  calendarEventsStore.cleanup();
+});
 
 const toast = useToast();
 
@@ -45,11 +54,11 @@ const closeEventForm = () => {
 const handleEventCreated = async (input: CreateCommunityGatheringInput) => {
   isCreatingEvent.value = true;
   try {
-    await addCommunityEvent(input);
+    await calendarEventsStore.addCommunityEvent(input);
     closeEventForm();
   } catch (error) {
     console.error("Error creating event:", error);
-    // Toast is already shown by the composable
+    // Toast is already shown by the store
   } finally {
     isCreatingEvent.value = false;
   }
@@ -65,18 +74,18 @@ const handleEventClick = (event: CalendarEvent) => {
 
 // Handle filter updates from focus panel
 const handleFilterUpdate = (updates: Partial<CalendarFilters>) => {
-  updateFilters(updates);
+  calendarEventsStore.updateFilters(updates);
 };
 
 // Handle search query change
 const handleSearchChange = () => {
-  updateFilters({ searchQuery: searchQuery.value });
+  calendarEventsStore.updateFilters({ searchQuery: searchQuery.value });
 };
 
 // Clear search
 const clearSearch = () => {
   searchQuery.value = "";
-  updateFilters({ searchQuery: "" });
+  calendarEventsStore.updateFilters({ searchQuery: "" });
 };
 </script>
 
@@ -170,7 +179,7 @@ const clearSearch = () => {
         <!-- Month View -->
         <div v-if="currentView === 'month'" class="calendar-view">
           <CalendarMonthView
-            :events="allEvents"
+            :events="calendarEventsStore.allEvents"
             @event-click="handleEventClick"
           />
         </div>
@@ -178,8 +187,8 @@ const clearSearch = () => {
         <!-- Agenda View -->
         <div v-else-if="currentView === 'agenda'" class="calendar-view">
           <CalendarAgendaView
-            :events="allEvents"
-            :loading="loading"
+            :events="calendarEventsStore.allEvents"
+            :loading="calendarEventsStore.loading"
             @event-click="handleEventClick"
           />
         </div>
@@ -187,8 +196,8 @@ const clearSearch = () => {
 
       <!-- Focus Panel (right sidebar) -->
       <CalendarFocusPanel
-        :filters="filters"
-        :loading="loading"
+        :filters="calendarEventsStore.filters"
+        :loading="calendarEventsStore.loading"
         @update:filters="handleFilterUpdate"
       />
     </div>

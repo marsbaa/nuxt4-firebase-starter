@@ -1,21 +1,14 @@
 <script setup lang="ts">
 import type { Member } from "~/composables/useMembers";
+import { sortMembersByName } from "~/composables/useMembers";
 
 definePageMeta({
   middleware: "auth",
   layout: "dashboard",
 });
 
-// Composables
-const {
-  isLoading,
-  error,
-  fetchMembers,
-  deleteMember,
-  searchMembers,
-  sortMembersByName,
-  clearError,
-} = useMembers();
+// Stores
+const membersStore = useMembersStore();
 const router = useRouter();
 const { user } = useFirebase();
 
@@ -28,7 +21,7 @@ const memberToDelete = ref<Member | null>(null);
 
 // Computed
 const filteredMembers = computed(() => {
-  const searched = searchMembers(searchQuery.value);
+  const searched = membersStore.searchMembers(searchQuery.value);
   return sortMembersByName(searched);
 });
 
@@ -75,16 +68,12 @@ watch(searchQuery, () => {
 onMounted(() => {
   console.log("[Members Page] Component mounted");
   console.log("[Members Page] User:", user.value);
-
-  // Fetch members data once on mount
-  fetchMembers();
-
-  console.log("[Members Page] Fetch initiated, isLoading:", isLoading.value);
+  console.log("[Members Page] Members loaded:", membersStore.members.length);
 });
 
 onUnmounted(() => {
   console.log("[Members Page] Component unmounting");
-  clearError();
+  membersStore.clearError();
 });
 
 // Methods
@@ -110,7 +99,7 @@ const handleDeleteClick = (member: Member) => {
 const confirmDelete = async () => {
   if (!memberToDelete.value?.id) return;
 
-  const result = await deleteMember(memberToDelete.value.id);
+  const result = await membersStore.deleteMember(memberToDelete.value.id);
   if (result.success) {
     // Adjust current page if needed
     if (paginatedMembers.value.length === 1 && currentPage.value > 1) {
@@ -165,16 +154,16 @@ const handlePageChange = (page: number) => {
     </div>
 
     <!-- Loading state -->
-    <div v-if="isLoading" class="loading-state">
+    <div v-if="membersStore.isLoading" class="loading-state">
       <div class="loading-spinner"></div>
       <p class="loading-text">Loading members...</p>
     </div>
 
     <!-- Error state -->
-    <div v-else-if="error" class="error-state">
+    <div v-else-if="membersStore.error" class="error-state">
       <Icon name="mdi:alert-circle-outline" class="error-icon" />
-      <p class="error-text">{{ error }}</p>
-      <AppButton @click="fetchMembers" variant="secondary">
+      <p class="error-text">{{ membersStore.error }}</p>
+      <AppButton @click="membersStore.fetchMembers" variant="secondary">
         Try Again
       </AppButton>
     </div>

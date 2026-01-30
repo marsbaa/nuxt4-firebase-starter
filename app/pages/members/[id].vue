@@ -7,9 +7,9 @@ definePageMeta({
   layout: "dashboard",
 });
 
-// Composables
+// Stores
+const membersStore = useMembersStore();
 const route = useRoute();
-const { members, updateMember, fetchMembers } = useMembers();
 const { user } = useFirebase();
 const router = useRouter();
 
@@ -35,13 +35,8 @@ const errors = ref<Record<string, string>>({});
 
 // Load member data
 onMounted(async () => {
-  // Ensure members are fetched
-  if (members.value.length === 0) {
-    await fetchMembers();
-  }
-
-  // Find the member
-  const foundMember = members.value.find((m) => m.id === memberId.value);
+  // Find the member (members are preloaded by the store plugin)
+  const foundMember = membersStore.members.find((m) => m.id === memberId.value);
   if (!foundMember) {
     router.push("/members");
     return;
@@ -131,7 +126,7 @@ const handleSubmit = async () => {
         memberSince: formData.value.memberSince || "",
       };
 
-    const result = await updateMember(memberId.value, memberData);
+    const result = await membersStore.updateMember(memberId.value, memberData);
 
     if (result.success) {
       // Navigate back to members list

@@ -7,7 +7,7 @@ definePageMeta({
 });
 
 // Composables
-const { createMember } = useMembers();
+const membersStore = useMembersStore();
 const { user } = useFirebase();
 const router = useRouter();
 
@@ -85,7 +85,7 @@ const handleSubmit = async () => {
       memberSince: formData.value.memberSince || "",
     };
 
-    const result = await createMember(memberData);
+    const result = await membersStore.createMember(memberData);
 
     if (result.success) {
       // Navigate back to members list

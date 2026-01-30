@@ -12,7 +12,7 @@ import type { CareReminder } from "~/types/careReminders";
 import type { Member } from "~/composables/useMembers";
 
 const { db } = useFirebase();
-const { members, fetchMembers } = useMembers();
+const membersStore = useMembersStore();
 const router = useRouter();
 
 // State
@@ -40,7 +40,7 @@ const isReminderExpired = (dueDate: Timestamp | null): boolean => {
  * Get member details for a reminder
  */
 const getMemberForReminder = (memberId: string): Member | undefined => {
-  return members.value.find((m) => m.id === memberId);
+  return membersStore.members.find((m) => m.id === memberId);
 };
 
 /**
@@ -118,8 +118,10 @@ const cleanup = () => {
 };
 
 onMounted(async () => {
-  // Fetch members list first
-  await fetchMembers();
+  // Fetch members list first if not loaded
+  if (membersStore.members.length === 0) {
+    await membersStore.fetchMembers();
+  }
   // Then subscribe to reminders
   subscribe();
 });

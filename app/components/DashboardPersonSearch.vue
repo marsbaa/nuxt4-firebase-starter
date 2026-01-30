@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { Member } from "~/composables/useMembers";
 
-const { members, isLoading: membersLoading, fetchMembers } = useMembers();
+const membersStore = useMembersStore();
 const router = useRouter();
 
 // Handle member selection - navigate to Care Space
@@ -9,9 +9,11 @@ const handleMemberSelect = (memberId: string) => {
   router.push(`/members/view/${memberId}`);
 };
 
-// Fetch members on mount
+// Fetch members on mount if not loaded
 onMounted(async () => {
-  await fetchMembers();
+  if (membersStore.members.length === 0) {
+    await membersStore.fetchMembers();
+  }
 });
 </script>
 
@@ -20,8 +22,8 @@ onMounted(async () => {
     <!-- Member search - simple, centered -->
     <div class="search-wrapper">
       <MemberSearchInput
-        :members="members"
-        :members-loading="membersLoading"
+        :members="membersStore.members"
+        :members-loading="membersStore.isLoading"
         placeholder="Search for a name..."
         :max-results="6"
         @select="handleMemberSelect"
