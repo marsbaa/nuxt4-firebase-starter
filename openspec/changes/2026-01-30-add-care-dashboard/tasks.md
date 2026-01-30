@@ -2,11 +2,11 @@
 
 ## 1. Opening Moment Component
 
-- [ ] 1.1 Create `DashboardOpeningMoment.vue` component
-- [ ] 1.2 Implement contextual greeting based on time of day
-- [ ] 1.3 Add reflective question or gentle prompt
-- [ ] 1.4 Style with pastoral design language (generous whitespace, warm colors)
-- [ ] 1.5 Ensure responsive layout for mobile
+- [x] 1.1 Create `DashboardOpeningMoment.vue` component
+- [x] 1.2 Implement contextual greeting based on time of day
+- [x] 1.3 Add reflective question or gentle prompt
+- [x] 1.4 Style with pastoral design language (generous whitespace, warm colors)
+- [x] 1.5 Ensure responsive layout for mobile
 
 ## 2. Person Search Integration
 
