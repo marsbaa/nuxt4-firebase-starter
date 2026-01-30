@@ -199,10 +199,21 @@ export function useCalendarEvents(
    * Subscribe to care reminders for calendar display
    * Sets up real-time listener for care reminders
    */
-  const subscribeToCareReminders = () => {
+  const subscribeToCareReminders = async () => {
     if (!db) return;
 
     try {
+      // First, get all members to create a lookup map
+      const membersQuery = query(collection(db, "members"));
+      const membersSnapshot = await getDocs(membersQuery);
+      const memberLookup = new Map<string, string>();
+
+      membersSnapshot.docs.forEach((doc) => {
+        const data = doc.data();
+        memberLookup.set(doc.id, `${data.firstName} ${data.lastName}`);
+      });
+
+      // Then subscribe to care reminders with member names resolved
       const remindersQuery = query(
         collection(db, "careReminders"),
         orderBy("dueDate", "asc"),
@@ -224,13 +235,17 @@ export function useCalendarEvents(
               today.setHours(0, 0, 0, 0);
               const isExpired = dueDate < today;
 
+              // Get member name from lookup
+              const memberName =
+                memberLookup.get(data.memberId) || "Unknown Member";
+
               return {
                 id: `care-reminder-${doc.id}`,
                 type: "care-reminder",
                 title: data.text,
                 date: data.dueDate,
                 memberId: data.memberId,
-                memberName: data.memberName || "Unknown",
+                memberName,
                 reminderId: doc.id,
                 isExpired,
               } as CareReminderEvent;
@@ -380,7 +395,7 @@ export function useCalendarEvents(
 
     try {
       subscribeToCommunityEvents();
-      subscribeToCareReminders();
+      await subscribeToCareReminders();
       await loadMemberMilestones();
       loading.value = false;
     } catch (err) {
