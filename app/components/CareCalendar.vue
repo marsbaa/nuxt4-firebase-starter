@@ -131,13 +131,6 @@ const handleFilterUpdate = (updates: Partial<CalendarFilters>) => {
 
     <!-- Calendar Content -->
     <div class="calendar-content">
-      <!-- Focus Panel (left sidebar) -->
-      <CalendarFocusPanel
-        :filters="filters"
-        :loading="loading"
-        @update:filters="handleFilterUpdate"
-      />
-
       <!-- Main Calendar View -->
       <div class="calendar-main">
         <!-- Month View -->
@@ -157,6 +150,13 @@ const handleFilterUpdate = (updates: Partial<CalendarFilters>) => {
           />
         </div>
       </div>
+
+      <!-- Focus Panel (right sidebar) -->
+      <CalendarFocusPanel
+        :filters="filters"
+        :loading="loading"
+        @update:filters="handleFilterUpdate"
+      />
     </div>
   </div>
 </template>
@@ -273,7 +273,7 @@ const handleFilterUpdate = (updates: Partial<CalendarFilters>) => {
 /* Calendar Content */
 .calendar-content {
   display: grid;
-  grid-template-columns: 280px 1fr;
+  grid-template-columns: 1fr auto;
   gap: 2rem;
   flex: 1;
 }
@@ -295,12 +295,8 @@ const handleFilterUpdate = (updates: Partial<CalendarFilters>) => {
   }
 
   .calendar-content {
-    grid-template-columns: 240px 1fr;
+    grid-template-columns: 1fr auto;
     gap: 1.5rem;
-  }
-
-  .focus-panel {
-    padding: 1.25rem;
   }
 }
 
@@ -336,10 +332,6 @@ const handleFilterUpdate = (updates: Partial<CalendarFilters>) => {
   .calendar-content {
     grid-template-columns: 1fr;
     gap: 1rem;
-  }
-
-  .focus-panel {
-    padding: 1rem;
   }
 }
 
