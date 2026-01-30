@@ -30,14 +30,14 @@
 
 ## 4. Shared Rhythms (Calendar Events Surface)
 
-- [ ] 4.1 Create `DashboardSharedRhythms.vue` component
-- [ ] 4.2 Query upcoming Calendar Events (next 3, within 7 days)
-- [ ] 4.3 Display event name, date, and type
-- [ ] 4.4 Link to full Care Calendar
-- [ ] 4.5 Implement empty state with supportive language
-- [ ] 4.6 Style as a gentle list with calendar context
-- [ ] 4.7 Add section heading "Shared rhythms" or "Coming together"
-- [ ] 4.8 Ensure responsive layout
+- [x] 4.1 Create `DashboardSharedRhythms.vue` component
+- [x] 4.2 Query upcoming Calendar Events (next 3, within 7 days)
+- [x] 4.3 Display event name, date, and type
+- [x] 4.4 Link to full Care Calendar
+- [x] 4.5 Implement empty state with supportive language
+- [x] 4.6 Style as a gentle list with calendar context
+- [x] 4.7 Add section heading "Shared rhythms" or "Coming together"
+- [x] 4.8 Ensure responsive layout
 
 ## 5. Dashboard Page Refactor
 
