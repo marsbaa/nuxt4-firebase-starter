@@ -19,20 +19,9 @@ useHead({
 
 <template>
   <div class="calendar-page">
-    <div class="calendar-header">
-      <div class="header-content">
-        <h1 class="page-title">Care Calendar</h1>
-        <p class="page-subtitle">LITURGICAL CYCLE • COMMUNAL RHYTHMS</p>
-      </div>
-    </div>
-
     <div class="calendar-container">
       <CareCalendar />
     </div>
-
-    <footer class="calendar-footer">
-      <p class="footer-tagline">Grace in every shared moment</p>
-    </footer>
   </div>
 </template>
 
@@ -40,7 +29,6 @@ useHead({
 @import url("https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;600&family=Work+Sans:wght@400;500;600&display=swap");
 
 .calendar-page {
-  min-height: calc(100vh - 4rem);
   display: flex;
   flex-direction: column;
   background: linear-gradient(135deg, #faf9f7 0%, #f5f3ef 100%);
