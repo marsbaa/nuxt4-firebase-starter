@@ -140,6 +140,10 @@ export function useCalendarEvents(
       const milestones: MemberMilestoneEvent[] = [];
       const currentYear = new Date().getFullYear();
 
+      console.log(
+        `[Calendar] Loading milestones for ${snapshot.docs.length} members`,
+      );
+
       snapshot.docs.forEach((doc) => {
         const data = doc.data();
         const memberId = doc.id;
@@ -168,6 +172,10 @@ export function useCalendarEvents(
           const shortLastName = lastName ? `${lastName.charAt(0)}.` : "";
           const title = `${firstName} ${shortLastName} Birthday`.trim();
 
+          console.log(
+            `[Calendar] Adding birthday: ${title} on ${birthdayThisYear.toISOString().split("T")[0]}`,
+          );
+
           milestones.push({
             id: `birthday-${memberId}-${currentYear}`,
             type: "member-milestone",
@@ -191,6 +199,10 @@ export function useCalendarEvents(
           const shortLastName = lastName ? `${lastName.charAt(0)}.` : "";
           const title = `${firstName} ${shortLastName} Anniversary`.trim();
 
+          console.log(
+            `[Calendar] Adding anniversary: ${title} on ${anniversaryThisYear.toISOString().split("T")[0]}`,
+          );
+
           milestones.push({
             id: `anniversary-${memberId}-${currentYear}`,
             type: "member-milestone",
@@ -203,6 +215,7 @@ export function useCalendarEvents(
         }
       });
 
+      console.log(`[Calendar] Loaded ${milestones.length} member milestones`);
       memberMilestones.value = milestones;
     } catch (err) {
       console.error("Error loading member milestones:", err);
