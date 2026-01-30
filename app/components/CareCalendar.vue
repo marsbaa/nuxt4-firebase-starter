@@ -142,7 +142,10 @@ const handleFilterUpdate = (updates: Partial<CalendarFilters>) => {
       <div class="calendar-main">
         <!-- Month View -->
         <div v-if="currentView === 'month'" class="calendar-view">
-          <CalendarMonthView />
+          <CalendarMonthView
+            :events="allEvents"
+            @event-click="handleEventClick"
+          />
         </div>
 
         <!-- Agenda View -->

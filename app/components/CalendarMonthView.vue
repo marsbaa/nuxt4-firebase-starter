@@ -2,34 +2,25 @@
 import { ref, computed } from "vue";
 import CalendarEvent from "./CalendarEvent.vue";
 import CalendarLegend from "./CalendarLegend.vue";
-import type { CalendarEventType } from "~/types/calendarEvents";
+import type { CalendarEvent as CalendarEventType } from "~/types/calendarEvents";
 
-// Mock event type for demonstration
-interface MockEvent {
-  id: string;
-  date: Date;
-  title: string;
-  type: CalendarEventType;
-  icon: string;
-}
-
-// Props for passing events (will be used later)
+// Props for passing events
 interface Props {
-  events?: any[];
+  events?: readonly CalendarEventType[];
 }
 
 const props = withDefaults(defineProps<Props>(), {
   events: () => [],
 });
 
+// Emit for event clicks
+const emit = defineEmits<{
+  eventClick: [event: CalendarEventType];
+}>();
+
 // Event click handler
-const handleEventClick = (event: any) => {
-  // TODO: Implement navigation based on event type
-  // - member-milestone: navigate to member detail page
-  // - care-reminder: navigate to member detail page
-  // - care-update: navigate to member detail page
-  // - community-gathering: show event details
-  console.log("Event clicked:", event);
+const handleEventClick = (event: CalendarEventType) => {
+  emit("eventClick", event);
 };
 
 // Current displayed month
@@ -104,54 +95,28 @@ const nextMonth = () => {
 // Day names
 const dayNames = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
 
-// Mock events for demonstration (matching the screenshot)
-const mockEvents = computed<MockEvent[]>(() => {
-  const year = currentDate.value.getFullYear();
-  const month = currentDate.value.getMonth();
-
-  // Only show events for November 2024 to match the screenshot
-  if (year !== 2024 || month !== 10) return [];
-
-  return [
-    {
-      id: "1",
-      date: new Date(2024, 10, 4),
-      title: "Arthur P. Birthday",
-      type: "member-milestone" as CalendarEventType,
-      icon: "mdi:cake-variant",
-    },
-    {
-      id: "2",
-      date: new Date(2024, 10, 14),
-      title: "Church Picnic",
-      type: "community-gathering" as CalendarEventType,
-      icon: "mdi:church",
-    },
-    {
-      id: "3",
-      date: new Date(2024, 10, 20),
-      title: "The Millers Anniv.",
-      type: "member-milestone" as CalendarEventType,
-      icon: "mdi:cake-variant",
-    },
-    {
-      id: "4",
-      date: new Date(2024, 10, 28),
-      title: "Thanksgiving",
-      type: "liturgical-event" as CalendarEventType,
-      icon: "mdi:food-turkey",
-    },
-  ];
-});
+// Get icon name for event type
+const getEventIcon = (type: CalendarEventType["type"]): string => {
+  const iconMap: Record<CalendarEventType["type"], string> = {
+    "community-gathering": "mdi:calendar-star",
+    "member-milestone": "mdi:cake-variant",
+    "care-reminder": "mdi:bell-outline",
+    "care-update": "mdi:heart-outline",
+    "liturgical-event": "mdi:book-cross",
+  };
+  return iconMap[type];
+};
 
 // Get events for a specific day
 const getEventsForDay = (date: Date) => {
-  return mockEvents.value.filter(
-    (event) =>
-      event.date.getDate() === date.getDate() &&
-      event.date.getMonth() === date.getMonth() &&
-      event.date.getFullYear() === date.getFullYear(),
-  );
+  return props.events.filter((event) => {
+    const eventDate = event.date.toDate();
+    return (
+      eventDate.getDate() === date.getDate() &&
+      eventDate.getMonth() === date.getMonth() &&
+      eventDate.getFullYear() === date.getFullYear()
+    );
+  });
 };
 </script>
 
@@ -210,7 +175,8 @@ const getEventsForDay = (date: Date) => {
             :key="event.id"
             :title="event.title"
             :type="event.type"
-            :icon="event.icon"
+            :icon="getEventIcon(event.type)"
+            :member-id="event.memberId"
             @click="handleEventClick(event)"
           />
         </div>
