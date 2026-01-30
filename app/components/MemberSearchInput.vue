@@ -55,13 +55,6 @@ const containerRef = ref<HTMLElement | null>(null);
 
 // Filtered members based on search query
 const filteredMembers = computed(() => {
-  console.log("[MemberSearchInput] props.members:", props.members);
-  console.log(
-    "[MemberSearchInput] props.members.length:",
-    props.members.length,
-  );
-  console.log("[MemberSearchInput] searchQuery:", searchQuery.value);
-
   // If no search query, return all members
   if (!searchQuery.value.trim()) {
     return props.members;

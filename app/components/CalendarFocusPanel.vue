@@ -38,27 +38,8 @@ const emit = defineEmits<Emits>();
 // Get members for search
 const { members, isLoading: membersLoading, fetchMembers } = useMembers();
 
-// Debug logging
-watch(
-  members,
-  (newMembers) => {
-    console.log("[CalendarFocusPanel] members updated:", newMembers);
-    console.log("[CalendarFocusPanel] members.length:", newMembers.length);
-  },
-  { immediate: true },
-);
-
-watch(
-  membersLoading,
-  (loading) => {
-    console.log("[CalendarFocusPanel] membersLoading:", loading);
-  },
-  { immediate: true },
-);
-
 // Fetch members on mount
 onMounted(() => {
-  console.log("[CalendarFocusPanel] Fetching members...");
   fetchMembers();
 });
 
