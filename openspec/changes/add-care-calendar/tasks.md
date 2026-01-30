@@ -52,16 +52,16 @@
 
 ## 8. Member Milestones Integration
 
-- [ ] 8.1 Query member data for birthdays and anniversaries
-- [ ] 8.2 Transform member milestones into calendar events
-- [ ] 8.3 Implement member milestone linking to detail pages
+- [x] 8.1 Query member data for birthdays and anniversaries
+- [x] 8.2 Transform member milestones into calendar events
+- [x] 8.3 Implement member milestone linking to detail pages
 
 ## 9. Care Reminders Integration
 
-- [ ] 9.1 Query Care Reminders by due date for calendar display
-- [ ] 9.2 Display Care Reminders as read-only calendar items
-- [ ] 9.3 Implement Care Reminder click navigation to member pages
-- [ ] 9.4 Implement "Show completed reminders" toggle functionality
+- [x] 9.1 Query Care Reminders by due date for calendar display
+- [x] 9.2 Display Care Reminders as read-only calendar items
+- [x] 9.3 Implement Care Reminder click navigation to member pages
+- [x] 9.4 Implement "Show completed reminders" toggle functionality
 
 ## 10. Care Updates Integration
 
