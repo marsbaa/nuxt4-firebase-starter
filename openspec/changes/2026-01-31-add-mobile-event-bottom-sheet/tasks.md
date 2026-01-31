@@ -11,12 +11,12 @@
 
 ## 2. Implement Content Display by Type
 
-- [ ] 2.1 Create type-specific content templates for Events, Birthdays, and Reminders
-- [ ] 2.2 **Events**: Display title, date/time, category label, optional description
-- [ ] 2.3 **Birthdays/Member Milestones**: Display person's name (primary), "Birthday" or "Member Milestone" label, date (age if applicable), optional gentle descriptor
-- [ ] 2.4 **Reminders**: Display reminder text (primary), linked person if applicable, date context, no completion controls
-- [ ] 2.5 Add appropriate typography and formatting for each type
-- [ ] 2.6 Ensure all text follows pastoral tone guidelines (no urgency, no task language)
+- [x] 2.1 Create type-specific content templates for Events, Birthdays, and Reminders
+- [x] 2.2 **Events**: Display title, date/time, category label, optional description
+- [x] 2.3 **Birthdays/Member Milestones**: Display person's name (primary), "Birthday" or "Member Milestone" label, date (age if applicable), optional gentle descriptor
+- [x] 2.4 **Reminders**: Display reminder text (primary), linked person if applicable, date context, no completion controls
+- [x] 2.5 Add appropriate typography and formatting for each type
+- [x] 2.6 Ensure all text follows pastoral tone guidelines (no urgency, no task language)
 
 ## 3. Add Type-Appropriate Secondary Actions
 

@@ -101,8 +101,11 @@ const getItemTypeLabel = (item: CalendarEvent) => {
 
 // Get primary display text
 const getPrimaryText = (item: CalendarEvent) => {
-  if (item.type === "member-milestone" || item.type === "care-reminder") {
+  if (item.type === "member-milestone") {
     return item.memberName || "Unknown Person";
+  }
+  if (item.type === "care-reminder") {
+    return item.title;
   }
   return item.title;
 };
@@ -113,9 +116,25 @@ const getSecondaryText = (item: CalendarEvent) => {
     return item.milestoneType === "birthday" ? "Birthday" : "Member Milestone";
   }
   if (item.type === "care-reminder") {
-    return item.title;
+    return item.memberName ? `For ${item.memberName}` : "";
   }
-  return item.title;
+  return "";
+};
+
+// Get description text
+const getDescriptionText = (item: CalendarEvent) => {
+  if (item.type === "member-milestone") {
+    // For birthdays, show age if available, otherwise just the milestone
+    if (item.milestoneType === "birthday") {
+      // Note: Age calculation would need additional data, for now just show milestone
+      return "";
+    }
+    return item.description || "";
+  }
+  if (item.type === "care-reminder") {
+    return ""; // Reminders don't show description in sheet
+  }
+  return item.description || "";
 };
 
 // Get action links
@@ -194,8 +213,11 @@ onUnmounted(() => {
               {{ getPrimaryText(currentItem) }}
             </h2>
 
-            <!-- Secondary Text -->
-            <p class="sheet-secondary-text">
+            <!-- Secondary Text (for reminders and milestones) -->
+            <p
+              v-if="getSecondaryText(currentItem)"
+              class="sheet-secondary-text"
+            >
               {{ getSecondaryText(currentItem) }}
             </p>
 
@@ -209,9 +231,9 @@ onUnmounted(() => {
               {{ formatDate(currentItem.date) }}
             </p>
 
-            <!-- Description (if available) -->
-            <p v-if="currentItem.description" class="sheet-description">
-              {{ currentItem.description }}
+            <!-- Description (for events and milestones) -->
+            <p v-if="getDescriptionText(currentItem)" class="sheet-description">
+              {{ getDescriptionText(currentItem) }}
             </p>
 
             <!-- Action Links -->
