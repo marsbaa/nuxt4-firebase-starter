@@ -626,18 +626,41 @@ const clearSearch = () => {
 /* Modal Responsive */
 @media (max-width: 768px) {
   .modal-backdrop {
-    padding: 0.5rem;
+    align-items: flex-end;
+    padding: 0;
   }
 
   .modal-content {
-    max-width: 100%;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 100vh;
+    max-width: none;
+    max-height: none;
     padding: 1rem;
-    border-radius: 0.75rem;
+    padding-bottom: calc(1rem + env(safe-area-inset-bottom));
+    border-radius: 1rem 1rem 0 0;
+    overflow-y: auto;
   }
 
   .modal-close {
     top: 0.75rem;
     right: 0.75rem;
+  }
+
+  /* Bottom sheet slide animation */
+  .modal-enter-active .modal-content,
+  .modal-leave-active .modal-content {
+    transition: transform 0.3s ease;
+  }
+
+  .modal-enter-from .modal-content {
+    transform: translateY(100%);
+  }
+
+  .modal-leave-to .modal-content {
+    transform: translateY(100%);
   }
 }
 </style>
