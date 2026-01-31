@@ -6,7 +6,6 @@ import {
   endOfWeek,
   addWeeks,
   subWeeks,
-  isSameDay,
   isToday,
   eachDayOfInterval,
 } from "date-fns";
@@ -21,25 +20,13 @@ const props = defineProps<Props>();
 // Emit events for parent component
 const emit = defineEmits<{
   "event-click": [event: CalendarEvent];
+  "switch-to-month": [];
 }>();
 
 // Current week start date (state)
 const currentWeekStart = ref<Date>(
   startOfWeek(new Date(), { weekStartsOn: 0 }),
 ); // Sunday
-
-// Computed: Week range for display (e.g., "Nov 3 - 9")
-const weekRangeLabel = computed(() => {
-  const weekEnd = endOfWeek(currentWeekStart.value, { weekStartsOn: 0 });
-
-  // If same month
-  if (currentWeekStart.value.getMonth() === weekEnd.getMonth()) {
-    return `${format(currentWeekStart.value, "MMM d")} - ${format(weekEnd, "d")}`;
-  }
-
-  // Different months
-  return `${format(currentWeekStart.value, "MMM d")} - ${format(weekEnd, "MMM d")}`;
-});
 
 // Computed: Month and year for header (e.g., "November 2024")
 const monthYearLabel = computed(() => {
@@ -166,6 +153,9 @@ const isDayToday = (day: Date): boolean => {
 
       <div class="header-center">
         <h2 class="month-year-title">{{ monthYearLabel }}</h2>
+        <button class="view-month-link" @click="emit('switch-to-month')">
+          VIEW MONTH
+        </button>
       </div>
 
       <button
@@ -178,9 +168,10 @@ const isDayToday = (day: Date): boolean => {
     </div>
 
     <!-- Week Range Selector -->
-    <div class="week-range-selector">
-      <span class="week-range-label">{{ weekRangeLabel }}</span>
-    </div>
+    <WeekRangeSelector
+      :selected-week-start="currentWeekStart"
+      @update:selected-week-start="currentWeekStart = $event"
+    />
 
     <!-- Week Days List -->
     <div class="week-days-list">
@@ -235,7 +226,6 @@ const isDayToday = (day: Date): boolean => {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
-  padding: 1rem 0;
 }
 
 /* Header */
@@ -249,7 +239,9 @@ const isDayToday = (day: Date): boolean => {
 .header-center {
   flex: 1;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.375rem;
 }
 
 .month-year-title {
@@ -259,6 +251,24 @@ const isDayToday = (day: Date): boolean => {
   color: #1a1a1a;
   margin: 0;
   text-align: center;
+}
+
+.view-month-link {
+  font-family: "Work Sans", sans-serif;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  color: #c0bdb8;
+  text-transform: uppercase;
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.view-month-link:hover {
+  color: #706c64;
 }
 
 .nav-btn {
@@ -289,26 +299,6 @@ const isDayToday = (day: Date): boolean => {
 .nav-icon {
   width: 1.5rem;
   height: 1.5rem;
-}
-
-/* Week Range Selector */
-.week-range-selector {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.75rem 1rem;
-  background: #f5f5f5;
-  border-radius: 0.5rem;
-  margin: 0 auto;
-  max-width: 12rem;
-}
-
-.week-range-label {
-  font-family: "Work Sans", sans-serif;
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: #2d2a26;
-  letter-spacing: 0.01em;
 }
 
 /* Week Days List */
@@ -510,17 +500,6 @@ const isDayToday = (day: Date): boolean => {
 
 .event-time {
   font-weight: 400;
-}
-
-/* Responsive - Larger mobile */
-@media (min-width: 375px) {
-  .month-year-title {
-    font-size: 1.625rem;
-  }
-
-  .day-number {
-    font-size: 2.125rem;
-  }
 }
 
 /* Responsive - Tablet and up (hide on desktop as fallback) */

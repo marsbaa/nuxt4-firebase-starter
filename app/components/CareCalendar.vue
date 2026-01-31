@@ -19,36 +19,8 @@ onUnmounted(() => {
   calendarEventsStore.cleanup();
 });
 
-const toast = useToast();
-
-// View state: 'week' or 'month'
-const currentView = ref<"week" | "month">("month");
-
-// Mobile detection
-const isMobile = ref(false);
-
-// Update mobile state
-const updateMobileState = () => {
-  if (process.client) {
-    isMobile.value = window.innerWidth < 768;
-  }
-};
-
-// Initialize mobile state and set default view
-onMounted(() => {
-  updateMobileState();
-  // Set default view based on device
-  currentView.value = isMobile.value ? "week" : "month";
-
-  // Listen for resize
-  window.addEventListener("resize", updateMobileState);
-});
-
-onUnmounted(() => {
-  if (process.client) {
-    window.removeEventListener("resize", updateMobileState);
-  }
-});
+// View state: 'agenda', 'week', or 'month'
+const currentView = ref<"agenda" | "week" | "month">("month");
 
 // Event form modal state
 const showEventForm = ref(false);
@@ -57,13 +29,13 @@ const isCreatingEvent = ref(false);
 // Search query state
 const searchQuery = ref("");
 
-// Switch between week and month view
-const switchView = (view: "week" | "month") => {
+// Switch between views
+const switchView = (view: "agenda" | "week" | "month") => {
   currentView.value = view;
 };
 
-// Check if a view is active
-const isActiveView = (view: "week" | "month") => {
+// Check if a view is active (for desktop toggle)
+const isActiveView = (view: "agenda" | "month") => {
   return currentView.value === view;
 };
 
@@ -131,13 +103,13 @@ const clearSearch = () => {
           <span class="toggle-text">Month</span>
         </button>
         <button
-          @click="switchView('week')"
+          @click="switchView('agenda')"
           class="toggle-btn"
-          :class="{ 'is-active': isActiveView('week') }"
-          aria-label="Switch to week view"
+          :class="{ 'is-active': isActiveView('agenda') }"
+          aria-label="Switch to agenda view"
         >
-          <Icon name="mdi:calendar-week" class="toggle-icon" />
-          <span class="toggle-text">Week</span>
+          <Icon name="mdi:format-list-bulleted" class="toggle-icon" />
+          <span class="toggle-text">Agenda</span>
         </button>
       </div>
 
@@ -209,16 +181,31 @@ const clearSearch = () => {
             <CalendarMonthView
               :events="calendarEventsStore.allEvents"
               @event-click="handleEventClick"
+              @switch-to-week="switchView('week')"
             />
           </div>
 
-          <!-- Week View -->
+          <!-- Week View (Mobile) -->
           <div
             v-else-if="currentView === 'week'"
             key="week"
             class="calendar-view"
           >
             <CalendarWeekView
+              :events="calendarEventsStore.allEvents"
+              :loading="calendarEventsStore.loading"
+              @event-click="handleEventClick"
+              @switch-to-month="switchView('month')"
+            />
+          </div>
+
+          <!-- Agenda View (Desktop) -->
+          <div
+            v-else-if="currentView === 'agenda'"
+            key="agenda"
+            class="calendar-view"
+          >
+            <CalendarAgendaView
               :events="calendarEventsStore.allEvents"
               :loading="calendarEventsStore.loading"
               @event-click="handleEventClick"
@@ -257,8 +244,6 @@ const clearSearch = () => {
   justify-content: space-between;
   align-items: center;
   gap: 1rem;
-  padding-bottom: 1.5rem;
-  border-bottom: 1px solid #e8e8e5;
 }
 
 /* View Toggle */
@@ -460,13 +445,9 @@ const clearSearch = () => {
     gap: 1rem;
   }
 
+  /* Hide view toggle on mobile */
   .view-toggle {
-    width: 100%;
-  }
-
-  .toggle-btn {
-    flex: 1;
-    justify-content: center;
+    display: none;
   }
 
   .calendar-actions {
