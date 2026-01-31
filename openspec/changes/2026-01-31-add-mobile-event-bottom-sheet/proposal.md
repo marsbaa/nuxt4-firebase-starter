@@ -2,33 +2,66 @@
 
 ## Why
 
-On mobile devices, navigating away from the calendar to view basic event details is unnecessarily disruptive. It forces users out of their temporal context and turns a moment of awareness into an act of navigation.
+On mobile devices, navigating away from the calendar to view basic details is unnecessarily disruptive. It forces users out of their temporal context and turns a moment of awareness into an act of navigation.
 
-The pastoral care app's Calendar serves as a **shared awareness surface** emphasising communal rhythms, liturgical cycles, and member milestones. It is designed for brief, reflective check-ins—especially on mobile. Currently, tapping a calendar event or birthday navigates the user to a separate detail page, breaking the sense of presence the calendar is meant to support.
+The pastoral care app's Calendar serves as a **shared awareness surface** emphasising communal rhythms, liturgical cycles, member milestones, and care intentions held in time. It is designed for brief, reflective check-ins—especially on mobile. Currently, tapping a calendar event, birthday, or reminder navigates the user to a separate detail page, breaking the sense of presence the calendar is meant to support.
+
+This disruption problem applies not only to **calendar events**, but also to:
+
+- **Birthdays / member milestones** that appear on the calendar
+- **Reminders** (care intentions) that surface on the calendar
 
 This is especially problematic for:
 
 - **Month view**, where details cannot be shown inline
-- **Brief mobile interactions** where pastors simply want to understand _what an event is_ without committing to deeper action
+- **Brief mobile interactions** where pastors simply want to understand _what an item is_ without committing to deeper action
 
-The calendar should prioritise **in-place understanding before navigation**.
+The calendar should prioritise **in-place understanding before navigation**—for anything shown on the calendar.
 
 ## What Changes
 
-- Introduce an **Event Detail Bottom Sheet** as the primary interaction pattern for viewing calendar event details on mobile devices
+- Introduce an **Event Detail Bottom Sheet** as the primary interaction pattern for viewing calendar item details on mobile devices
+- The bottom sheet is a **shared reveal pattern** for all calendar items on mobile
 - The bottom sheet appears when tapping:
-  - An event in **Weekly View**
-  - A day or event indicator in **Month View**
+  - **Events** (communal rhythms, liturgical events, gatherings) in Weekly View or Month View
+  - **Birthdays / member milestones** shown on the calendar
+  - **Reminders** (care intentions held in time) that surface on the calendar
 - The sheet slides up from the bottom while keeping the calendar visible in the background
-- Content shown includes:
-  - Event title
-  - Date and time (or date only if applicable)
-  - Event category (e.g. Communal Rhythm, Member Milestone, Liturgical Event)
-  - Optional short descriptive line
-  - For member-related events (e.g. birthdays), the person's name is shown clearly
-- Actions provided:
-  - Navigation to full detail page is **optional and secondary**
-  - Actions such as "Open full details" or "Go to person" may be included but are not the primary interaction
+
+### Content Rules by Type (Minimal and Calm)
+
+The bottom sheet displays different information depending on the tapped item type:
+
+#### Events
+
+- Title
+- Date/time
+- Category label (Communal Rhythm / Liturgical / etc.)
+- Optional short description
+
+#### Birthdays / Member Milestones
+
+- Person's name (primary)
+- Label: "Birthday" or "Member Milestone"
+- Date (and age only if already part of existing semantics)
+- Optional gentle descriptor (no task language)
+
+#### Reminders
+
+- Reminder text (primary)
+- Linked person (if applicable)
+- Date context
+- No completion controls, no urgency indicators
+
+### Actions
+
+- Navigation is **secondary and optional**
+- First tap is always **reveal**, not routing
+- Actions remain restrained:
+  - **Events**: "Open full details"
+  - **Birthdays**: "Go to person"
+  - **Reminders**: "View in care space" (if applicable)
+- Do not introduce task-style actions (no "Complete", no checkboxes)
 - The sheet can be dismissed easily (swipe down or tap outside)
 
 ### Design Principles
@@ -50,31 +83,35 @@ Not: **"Where am I going?"**
 
 - Mobile-only interaction changes (viewport < 768px)
 - Introduction of Event Detail Bottom Sheet component
-- Replacing immediate navigation with in-place reveal for mobile calendar event taps
+- Replacing immediate navigation with in-place reveal for mobile calendar taps
+- Bottom sheet support for **events**, **birthdays**, and **reminders** on mobile calendar taps
 - Content display without editing functionality
 
 ### Out of Scope
 
-- Changes to event data or semantics
+- Changes to event, birthday, or reminder data or semantics
 - Editing or management functionality within the bottom sheet
+- Reminder completion or task management interactions
+- Editing workflows inside the bottom sheet
 - Desktop or tablet calendar behaviour (≥ 768px maintains current navigation pattern)
 - Visual identity or copy changes beyond the bottom sheet component
-- Changes to how events are created or stored
+- Changes to how events, birthdays, or reminders are created or stored
 
 ## Impact
 
 - **Affected specs:** `care-calendar`
 - **Affected code areas:**
-  - Calendar event click handling on mobile (`CareCalendar.vue`, `CalendarWeekView.vue`, `CalendarMonthView.vue`)
-  - New bottom sheet component for event detail reveal (e.g., `EventDetailSheet.vue`)
+  - Calendar item click handling on mobile (`CareCalendar.vue`, `CalendarWeekView.vue`, `CalendarMonthView.vue`)
+  - New bottom sheet component for calendar item detail reveal (e.g., `CalendarItemSheet.vue`)
   - Conditional navigation logic based on viewport size
+  - Data mapping to populate the sheet consistently for all calendar item types (events, birthdays, reminders)
 - **User impact:**
   - Reduced disruption and improved clarity on mobile
-  - Faster understanding of event details without context loss
+  - Faster understanding of calendar item details without context loss
   - More pastorally aligned interaction on mobile devices
 - **Risk level:** Low
   - No breaking changes to data structures or APIs
-  - Existing event detail pages remain available and functional
+  - Existing detail pages remain available and functional
   - Progressive enhancement pattern—desktop behaviour unchanged
   - Mobile users can still access full detail pages if needed
 
@@ -86,9 +123,10 @@ The mobile calendar becomes gentler, clearer, and more pastorally aligned—supp
 
 ## Success Criteria
 
-- On mobile, tapping a calendar event displays the bottom sheet instead of navigating away
-- The bottom sheet shows essential event information clearly and calmly
+- On mobile, tapping an **event, birthday, or reminder** displays the bottom sheet instead of navigating away
+- The bottom sheet shows minimal, calm details appropriate to the tapped item type
+- Essential information is displayed clearly and in pastorally appropriate language
 - Users can dismiss the sheet easily to return to calendar context
 - Optional navigation to full detail pages remains available but non-primary
 - Desktop and tablet behaviour remains unchanged (direct navigation preserved)
-- The interaction feels calm, gentle, and pastorally appropriate
+- The interaction feels calm, gentle, and pastorally appropriate across all calendar item types

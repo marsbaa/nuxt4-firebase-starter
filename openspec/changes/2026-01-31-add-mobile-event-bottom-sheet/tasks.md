@@ -1,36 +1,40 @@
 # Implementation Tasks
 
-## 1. Create Event Detail Bottom Sheet Component
+## 1. Create Calendar Item Bottom Sheet Component
 
-- [ ] 1.1 Create `EventDetailSheet.vue` component with bottom sheet UI pattern
+- [ ] 1.1 Create `CalendarItemSheet.vue` component with bottom sheet UI pattern
 - [ ] 1.2 Implement slide-up animation from bottom of screen
 - [ ] 1.3 Add swipe-down and tap-outside dismiss functionality
 - [ ] 1.4 Ensure calendar remains visible (dimmed) in background
 - [ ] 1.5 Add proper ARIA labels and accessibility attributes for mobile screen readers
+- [ ] 1.6 Support multiple item types (events, birthdays, reminders) with type detection
 
-## 2. Implement Event Content Display
+## 2. Implement Content Display by Type
 
-- [ ] 2.1 Add event title display with appropriate typography
-- [ ] 2.2 Add date and time formatting (or date-only for all-day events)
-- [ ] 2.3 Add event category badge display (Community Gathering, Member Milestone, etc.)
-- [ ] 2.4 Add optional description text with appropriate line clamping
-- [ ] 2.5 For member-related events, prominently display person's name
-- [ ] 2.6 Ensure all text follows pastoral tone guidelines (no urgency, task language)
+- [ ] 2.1 Create type-specific content templates for Events, Birthdays, and Reminders
+- [ ] 2.2 **Events**: Display title, date/time, category label, optional description
+- [ ] 2.3 **Birthdays/Member Milestones**: Display person's name (primary), "Birthday" or "Member Milestone" label, date (age if applicable), optional gentle descriptor
+- [ ] 2.4 **Reminders**: Display reminder text (primary), linked person if applicable, date context, no completion controls
+- [ ] 2.5 Add appropriate typography and formatting for each type
+- [ ] 2.6 Ensure all text follows pastoral tone guidelines (no urgency, no task language)
 
-## 3. Add Secondary Navigation Actions
+## 3. Add Type-Appropriate Secondary Actions
 
-- [ ] 3.1 Add optional "Open full details" link/button (not primary CTA)
-- [ ] 3.2 For member milestones, add "Go to person" link
-- [ ] 3.3 Style actions as subtle, secondary affordances (not dominant buttons)
-- [ ] 3.4 Ensure actions are accessible and tappable on mobile
+- [ ] 3.1 **Events**: Add optional "Open full details" link (not primary CTA)
+- [ ] 3.2 **Birthdays/Member Milestones**: Add "Go to person" link
+- [ ] 3.3 **Reminders**: Add "View in care space" link (if applicable)
+- [ ] 3.4 Style all actions as subtle, secondary affordances (not dominant buttons)
+- [ ] 3.5 Ensure actions are accessible and tappable on mobile
+- [ ] 3.6 Do not add task-style actions (no "Complete", no checkboxes)
 
-## 4. Update Calendar Event Click Handling
+## 4. Update Calendar Click Handling for All Item Types
 
 - [ ] 4.1 Add viewport detection utility (check if < 768px)
-- [ ] 4.2 Update `CalendarWeekView.vue` to trigger bottom sheet on mobile tap
-- [ ] 4.3 Update `CalendarMonthView.vue` to trigger bottom sheet on mobile tap
+- [ ] 4.2 Update `CalendarWeekView.vue` to trigger bottom sheet on mobile tap for all item types
+- [ ] 4.3 Update `CalendarMonthView.vue` to trigger bottom sheet on mobile tap for all item types
 - [ ] 4.4 Preserve direct navigation behavior for desktop/tablet (≥ 768px)
-- [ ] 4.5 Pass event data to bottom sheet component when opened
+- [ ] 4.5 Pass item data and type to bottom sheet component when opened
+- [ ] 4.6 Implement data mapping to populate sheet consistently for events, birthdays, and reminders
 
 ## 5. Visual Design and Styling
 
@@ -45,12 +49,15 @@
 - [ ] 6.1 Test on various mobile viewport sizes (320px - 767px)
 - [ ] 6.2 Verify swipe-down dismiss works smoothly
 - [ ] 6.3 Verify tap-outside dismiss works correctly
-- [ ] 6.4 Test with different event types (community events, birthdays, reminders)
-- [ ] 6.5 Verify desktop behavior unchanged (direct navigation preserved)
-- [ ] 6.6 Test keyboard navigation and screen reader compatibility
-- [ ] 6.7 Verify sheet animations perform smoothly on lower-end devices
+- [ ] 6.4 Test with all calendar item types: events, birthdays/member milestones, and reminders
+- [ ] 6.5 Verify content displays correctly and pastorally for each item type
+- [ ] 6.6 Verify desktop behavior unchanged for all item types (direct navigation preserved)
+- [ ] 6.7 Test keyboard navigation and screen reader compatibility across all item types
+- [ ] 6.8 Verify sheet animations perform smoothly on lower-end devices
+- [ ] 6.9 Confirm no task-style interactions appear for reminders (no completion controls)
 
 ## 7. Documentation
 
-- [ ] 7.1 Update component documentation for `EventDetailSheet.vue`
-- [ ] 7.2 Document mobile interaction pattern in relevant code comments
+- [ ] 7.1 Update component documentation for `CalendarItemSheet.vue`
+- [ ] 7.2 Document mobile interaction pattern for all calendar item types in relevant code comments
+- [ ] 7.3 Document content rules and display differences by type (events, birthdays, reminders)
