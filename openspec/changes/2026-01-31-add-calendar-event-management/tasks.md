@@ -6,7 +6,7 @@
 - [x] 1.2 Add `updateEvent()` action to [`app/stores/calendarEvents.ts`](app/stores/calendarEvents.ts) with support for series scope (this/future/all)
 - [x] 1.3 Add `deleteEvent()` action to [`app/stores/calendarEvents.ts`](app/stores/calendarEvents.ts) with support for series scope (this/future/all)
 - [x] 1.4 Implement recurrence expansion logic in store (generate recurring event instances for display)
-- [ ] 1.5 Update Firestore rules to support event updates and deletes with proper authentication checks
+- [x] 1.5 Update Firestore rules to support event updates and deletes with proper authentication checks
 
 ## 2. Event Form Component
 
