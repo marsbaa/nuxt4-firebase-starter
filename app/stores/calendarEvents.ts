@@ -6,6 +6,7 @@ import {
   onSnapshot,
   addDoc,
   updateDoc,
+  deleteDoc,
   doc,
   serverTimestamp,
   Timestamp,
@@ -442,6 +443,59 @@ export const useCalendarEventsStore = defineStore("calendarEvents", {
       } catch (err) {
         console.error("Error updating community event:", err);
         toast.error("Unable to update event. Please try again.");
+        throw err;
+      }
+    },
+
+    /**
+     * Delete a community gathering event
+     */
+    async deleteEvent(
+      id: string,
+      scope?: "this" | "future" | "all",
+    ): Promise<void> {
+      const { db, user } = useFirebase();
+      const toast = useToast();
+
+      if (!db) {
+        throw new Error("Firestore is not initialized");
+      }
+
+      if (!user.value) {
+        throw new Error("User must be authenticated to delete events");
+      }
+
+      try {
+        const existingEvent = this.communityEvents.find((e) => e.id === id);
+        if (!existingEvent) {
+          throw new Error("Event not found");
+        }
+
+        if (existingEvent.recurrence && scope === "this") {
+          // Create a deletion exception for this occurrence
+          const exceptionData = {
+            title: existingEvent.title,
+            date: existingEvent.date,
+            description: existingEvent.description,
+            allDay: existingEvent.allDay,
+            startTime: existingEvent.startTime,
+            endTime: existingEvent.endTime,
+            recurrence: null, // Mark as deleted
+            parentSeriesId: existingEvent.seriesId || existingEvent.id,
+            createdBy: user.value.uid,
+            createdByName: user.value.displayName || "Unknown",
+            createdAt: serverTimestamp(),
+          };
+          await addDoc(collection(db, "calendarEvents"), exceptionData);
+        } else {
+          // Delete the document
+          await deleteDoc(doc(db, "calendarEvents", id));
+        }
+
+        toast.success("Event removed from calendar");
+      } catch (err) {
+        console.error("Error deleting community event:", err);
+        toast.error("Unable to remove event. Please try again.");
         throw err;
       }
     },
