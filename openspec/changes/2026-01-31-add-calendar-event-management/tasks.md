@@ -20,12 +20,12 @@
 
 ## 3. Mobile Bottom Sheet Integration
 
-- [ ] 3.1 Update [`app/components/CareCalendar.vue`](app/components/CareCalendar.vue) to manage form overlay state
-- [ ] 3.2 Implement full-height bottom sheet for mobile (< 768px) with slide-up animation
-- [ ] 3.3 Render `CalendarEventForm` within bottom sheet on mobile
-- [ ] 3.4 Add Close action to dismiss bottom sheet
-- [ ] 3.5 Implement dimmed calendar background when bottom sheet is open
-- [ ] 3.6 Ensure bottom sheet respects safe area insets
+- [x] 3.1 Update [`app/components/CareCalendar.vue`](app/components/CareCalendar.vue) to manage form overlay state
+- [x] 3.2 Implement full-height bottom sheet for mobile (< 768px) with slide-up animation
+- [x] 3.3 Render `CalendarEventForm` within bottom sheet on mobile
+- [x] 3.4 Add Close action to dismiss bottom sheet
+- [x] 3.5 Implement dimmed calendar background when bottom sheet is open
+- [x] 3.6 Ensure bottom sheet respects safe area insets
 
 ## 4. Desktop Drawer Integration
 
