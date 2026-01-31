@@ -10,8 +10,8 @@
 
 ## 2. Event Form Component
 
-- [ ] 2.1 Create [`app/components/CalendarEventForm.vue`](app/components/CalendarEventForm.vue) with form fields (title, date, time, all-day, description, recurrence)
-- [ ] 2.2 Implement recurrence controls (weekly day selector, end condition selector)
+- [x] 2.1 Create [`app/components/CalendarEventForm.vue`](app/components/CalendarEventForm.vue) with form fields (title, date, time, all-day, description, recurrence)
+- [x] 2.2 Implement recurrence controls (weekly day selector, end condition selector)
 - [ ] 2.3 Add form validation with pastoral error messaging
 - [ ] 2.4 Implement Add mode (create new event)
 - [ ] 2.5 Implement Edit mode (load existing event, show series management options for recurring events)
