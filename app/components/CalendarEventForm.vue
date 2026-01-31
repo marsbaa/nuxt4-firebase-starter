@@ -37,14 +37,23 @@
  */
 -->
 <script setup lang="ts">
-import type { CreateCommunityGatheringInput } from "~/types/calendarEvents";
+import { Timestamp } from "firebase/firestore";
+import type {
+  CreateCommunityGatheringInput,
+  CommunityGatheringEvent,
+  UpdateCommunityGatheringInput,
+} from "~/types/calendarEvents";
 
 const props = defineProps<{
   loading?: boolean;
+  mode?: "add" | "edit";
+  event?: CommunityGatheringEvent;
 }>();
 
 const emit = defineEmits<{
   "event-created": [input: CreateCommunityGatheringInput];
+  "event-updated": [input: UpdateCommunityGatheringInput];
+  "event-deleted": [id: string, scope?: "this" | "future" | "all"];
   cancel: [];
 }>();
 
@@ -54,7 +63,13 @@ const { profile } = useProfile();
 // Form state
 const title = ref("");
 const date = ref("");
+const allDay = ref(true);
+const startTime = ref("");
+const endTime = ref("");
 const description = ref("");
+const isRecurring = ref(false);
+const recurrenceDays = ref<string[]>([]);
+const recurrenceEndCondition = ref<string>("never");
 const isSubmitting = ref(false);
 const titleInputRef = ref<HTMLInputElement | null>(null);
 const descriptionRef = ref<HTMLTextAreaElement | null>(null);
@@ -93,11 +108,27 @@ const handleCancel = () => {
   }
 };
 
+// Toggle day selection for recurrence
+const toggleDay = (day: string) => {
+  const index = recurrenceDays.value.indexOf(day);
+  if (index > -1) {
+    recurrenceDays.value.splice(index, 1);
+  } else {
+    recurrenceDays.value.push(day);
+  }
+};
+
 // Reset form
 const resetForm = () => {
   title.value = "";
   date.value = "";
+  allDay.value = true;
+  startTime.value = "";
+  endTime.value = "";
   description.value = "";
+  isRecurring.value = false;
+  recurrenceDays.value = [];
+  recurrenceEndCondition.value = "never";
   titleError.value = "";
   dateError.value = "";
   if (descriptionRef.value) {
@@ -137,17 +168,79 @@ const handleSubmit = async () => {
 
   isSubmitting.value = true;
   try {
-    const input: CreateCommunityGatheringInput = {
-      title: title.value.trim(),
-      date: new Date(date.value),
-      description: description.value.trim() || undefined,
-      createdBy: user.value.uid,
-      createdByName:
-        profile.value?.displayName || user.value.email || "Anonymous",
-    };
+    if (props.mode === "edit" && props.event) {
+      const input: UpdateCommunityGatheringInput = {
+        id: props.event.id,
+        title: title.value.trim(),
+        date: new Date(date.value),
+        description: description.value.trim() || undefined,
+        allDay: allDay.value,
+        startTime: allDay.value
+          ? undefined
+          : startTime.value
+            ? new Date(`${date.value}T${startTime.value}`)
+            : undefined,
+        endTime: allDay.value
+          ? undefined
+          : endTime.value
+            ? new Date(`${date.value}T${endTime.value}`)
+            : undefined,
+        recurrence: isRecurring.value
+          ? {
+              type: "weekly",
+              daysOfWeek: recurrenceDays.value,
+              endCondition:
+                recurrenceEndCondition.value === "never"
+                  ? "never"
+                  : {
+                      endsOn: Timestamp.fromDate(
+                        new Date(
+                          recurrenceEndCondition.value as { endsOn: string },
+                        ).endsOn,
+                      ),
+                    },
+            }
+          : undefined,
+      };
+      emit("event-updated", input);
+    } else {
+      const input: CreateCommunityGatheringInput = {
+        title: title.value.trim(),
+        date: new Date(date.value),
+        description: description.value.trim() || undefined,
+        allDay: allDay.value,
+        startTime: allDay.value
+          ? undefined
+          : startTime.value
+            ? new Date(`${date.value}T${startTime.value}`)
+            : undefined,
+        endTime: allDay.value
+          ? undefined
+          : endTime.value
+            ? new Date(`${date.value}T${endTime.value}`)
+            : undefined,
+        recurrence: isRecurring.value
+          ? {
+              type: "weekly",
+              daysOfWeek: recurrenceDays.value,
+              endCondition:
+                recurrenceEndCondition.value === "never"
+                  ? "never"
+                  : {
+                      endsOn: Timestamp.fromDate(
+                        new Date(recurrenceEndCondition.value),
+                      ),
+                    },
+            }
+          : undefined,
+        createdBy: user.value.uid,
+        createdByName:
+          profile.value?.displayName || user.value.email || "Anonymous",
+      };
 
-    emit("event-created", input);
-    resetForm();
+      emit("event-created", input);
+      resetForm();
+    }
   } catch (error) {
     console.error("Error preparing event:", error);
   } finally {
@@ -250,6 +343,54 @@ watch(date, () => {
             @blur="validateDate"
           />
           <p v-if="dateError" class="field-error">{{ dateError }}</p>
+        </div>
+
+        <!-- All Day Toggle -->
+        <div class="form-field">
+          <label class="field-label">
+            <AppIcon name="heroicons:clock" class="label-icon" />
+            <span>All Day Event</span>
+          </label>
+          <label class="toggle">
+            <input
+              v-model="allDay"
+              type="checkbox"
+              :disabled="loading || isSubmitting"
+            />
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+
+        <!-- Time Inputs (if not all day) -->
+        <div v-if="!allDay" class="form-field time-fields">
+          <div class="time-field">
+            <label for="event-start-time" class="field-label">
+              <AppIcon name="heroicons:play" class="label-icon" />
+              <span>Start Time</span>
+            </label>
+            <input
+              id="event-start-time"
+              v-model="startTime"
+              type="time"
+              class="field-input time-input"
+              :disabled="loading || isSubmitting"
+              aria-label="Start time for this gathering"
+            />
+          </div>
+          <div class="time-field">
+            <label for="event-end-time" class="field-label">
+              <AppIcon name="heroicons:stop" class="label-icon" />
+              <span>End Time (Optional)</span>
+            </label>
+            <input
+              id="event-end-time"
+              v-model="endTime"
+              type="time"
+              class="field-input time-input"
+              :disabled="loading || isSubmitting"
+              aria-label="End time for this gathering"
+            />
+          </div>
         </div>
 
         <!-- Description Textarea -->
