@@ -11,11 +11,11 @@
 
 ## 2. Implement View Toggle and Responsive Logic
 
-- [ ] 2.1 Add view toggle UI (Week / Month) with mobile-first visibility
-- [ ] 2.2 Implement viewport detection in `CareCalendar.vue` (< 768px = mobile)
-- [ ] 2.3 Default to weekly view on mobile, monthly view on desktop
-- [ ] 2.4 Persist view preference in component state
-- [ ] 2.5 Handle view switching smoothly with transition
+- [x] 2.1 Add view toggle UI (Week / Month) with mobile-first visibility
+- [x] 2.2 Implement viewport detection in `CareCalendar.vue` (< 768px = mobile)
+- [x] 2.3 Default to weekly view on mobile, monthly view on desktop
+- [x] 2.4 Persist view preference in component state
+- [x] 2.5 Handle view switching smoothly with transition
 
 ## 3. Adapt Month View for Mobile Secondary
 

@@ -4,6 +4,7 @@ import type {
   CalendarFilters,
   CreateCommunityGatheringInput,
 } from "~/types/calendarEvents";
+import CalendarWeekView from "~/components/CalendarWeekView.vue";
 
 // Use calendar events store
 const calendarEventsStore = useCalendarEventsStore();
@@ -20,8 +21,34 @@ onUnmounted(() => {
 
 const toast = useToast();
 
-// View state: 'month' or 'agenda'
-const currentView = ref<"month" | "agenda">("month");
+// View state: 'week' or 'month'
+const currentView = ref<"week" | "month">("month");
+
+// Mobile detection
+const isMobile = ref(false);
+
+// Update mobile state
+const updateMobileState = () => {
+  if (process.client) {
+    isMobile.value = window.innerWidth < 768;
+  }
+};
+
+// Initialize mobile state and set default view
+onMounted(() => {
+  updateMobileState();
+  // Set default view based on device
+  currentView.value = isMobile.value ? "week" : "month";
+
+  // Listen for resize
+  window.addEventListener("resize", updateMobileState);
+});
+
+onUnmounted(() => {
+  if (process.client) {
+    window.removeEventListener("resize", updateMobileState);
+  }
+});
 
 // Event form modal state
 const showEventForm = ref(false);
@@ -30,13 +57,13 @@ const isCreatingEvent = ref(false);
 // Search query state
 const searchQuery = ref("");
 
-// Switch between month and agenda view
-const switchView = (view: "month" | "agenda") => {
+// Switch between week and month view
+const switchView = (view: "week" | "month") => {
   currentView.value = view;
 };
 
 // Check if a view is active
-const isActiveView = (view: "month" | "agenda") => {
+const isActiveView = (view: "week" | "month") => {
   return currentView.value === view;
 };
 
@@ -104,13 +131,13 @@ const clearSearch = () => {
           <span class="toggle-text">Month</span>
         </button>
         <button
-          @click="switchView('agenda')"
+          @click="switchView('week')"
           class="toggle-btn"
-          :class="{ 'is-active': isActiveView('agenda') }"
-          aria-label="Switch to agenda view"
+          :class="{ 'is-active': isActiveView('week') }"
+          aria-label="Switch to week view"
         >
-          <Icon name="mdi:format-list-bulleted" class="toggle-icon" />
-          <span class="toggle-text">Agenda</span>
+          <Icon name="mdi:calendar-week" class="toggle-icon" />
+          <span class="toggle-text">Week</span>
         </button>
       </div>
 
@@ -176,22 +203,28 @@ const clearSearch = () => {
     <div class="calendar-content">
       <!-- Main Calendar View -->
       <div class="calendar-main">
-        <!-- Month View -->
-        <div v-if="currentView === 'month'" class="calendar-view">
-          <CalendarMonthView
-            :events="calendarEventsStore.allEvents"
-            @event-click="handleEventClick"
-          />
-        </div>
+        <Transition name="view" mode="out-in">
+          <!-- Month View -->
+          <div v-if="currentView === 'month'" key="month" class="calendar-view">
+            <CalendarMonthView
+              :events="calendarEventsStore.allEvents"
+              @event-click="handleEventClick"
+            />
+          </div>
 
-        <!-- Agenda View -->
-        <div v-else-if="currentView === 'agenda'" class="calendar-view">
-          <CalendarAgendaView
-            :events="calendarEventsStore.allEvents"
-            :loading="calendarEventsStore.loading"
-            @event-click="handleEventClick"
-          />
-        </div>
+          <!-- Week View -->
+          <div
+            v-else-if="currentView === 'week'"
+            key="week"
+            class="calendar-view"
+          >
+            <CalendarWeekView
+              :events="calendarEventsStore.allEvents"
+              :loading="calendarEventsStore.loading"
+              @event-click="handleEventClick"
+            />
+          </div>
+        </Transition>
       </div>
 
       <!-- Focus Panel (right sidebar) -->
@@ -532,6 +565,24 @@ const clearSearch = () => {
   width: 1.25rem;
   height: 1.25rem;
   color: #706c64;
+}
+
+/* View Transitions */
+.view-enter-active,
+.view-leave-active {
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease;
+}
+
+.view-enter-from {
+  opacity: 0;
+  transform: translateX(20px);
+}
+
+.view-leave-to {
+  opacity: 0;
+  transform: translateX(-20px);
 }
 
 /* Modal Transitions */
