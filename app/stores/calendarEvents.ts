@@ -432,13 +432,13 @@ export const useCalendarEventsStore = defineStore("calendarEvents", {
 
         // Handle series scope for recurring events
         const existingEvent = this.communityEvents.find(
-          (e) => e.id === input.id,
+          (e) => e.seriesId === input.id || e.id === input.id,
         );
         if (existingEvent?.recurrence && input.scope === "this") {
           // Create an exception for this occurrence
           const exceptionData = {
             ...updateData,
-            parentSeriesId: existingEvent.seriesId || existingEvent.id,
+            parentSeriesId: input.id,
             createdBy: user.value.uid,
             createdByName: user.value.displayName || "Unknown",
             createdAt: serverTimestamp(),
@@ -476,7 +476,9 @@ export const useCalendarEventsStore = defineStore("calendarEvents", {
       }
 
       try {
-        const existingEvent = this.communityEvents.find((e) => e.id === id);
+        const existingEvent = this.communityEvents.find(
+          (e) => e.seriesId === id || e.id === id,
+        );
         if (!existingEvent) {
           throw new Error("Event not found");
         }
@@ -491,7 +493,7 @@ export const useCalendarEventsStore = defineStore("calendarEvents", {
             startTime: existingEvent.startTime,
             endTime: existingEvent.endTime,
             recurrence: null, // Mark as deleted
-            parentSeriesId: existingEvent.seriesId || existingEvent.id,
+            parentSeriesId: id,
             createdBy: user.value.uid,
             createdByName: user.value.displayName || "Unknown",
             createdAt: serverTimestamp(),
@@ -550,6 +552,54 @@ export const useCalendarEventsStore = defineStore("calendarEvents", {
             });
           }
           currentDate.setDate(currentDate.getDate() + 1);
+        }
+      } else if (recurrence.type === "monthly") {
+        const startWeekday = startDate.getDay(); // 0=Sun, 1=Mon, etc.
+        const startDay = startDate.getDate();
+        // Calculate which occurrence of the weekday this is in the month
+        const occurrence = Math.ceil(startDay / 7);
+
+        const endDate =
+          recurrence.endCondition === "never"
+            ? new Date(Date.now() + 365 * 24 * 60 * 60 * 1000)
+            : (
+                recurrence.endCondition as { endsOn: Timestamp }
+              ).endsOn.toDate();
+
+        let currentMonth = new Date(
+          startDate.getFullYear(),
+          startDate.getMonth(),
+          1,
+        );
+        while (currentMonth <= endDate) {
+          // Find the occurrence-th occurrence of startWeekday in currentMonth
+          const monthDates = [];
+          const firstDay = new Date(currentMonth);
+          const lastDay = new Date(
+            currentMonth.getFullYear(),
+            currentMonth.getMonth() + 1,
+            0,
+          );
+          for (
+            let d = new Date(firstDay);
+            d <= lastDay;
+            d.setDate(d.getDate() + 1)
+          ) {
+            if (d.getDay() === startWeekday) {
+              monthDates.push(new Date(d));
+            }
+          }
+          const targetDate = monthDates[occurrence - 1];
+          if (targetDate) {
+            const instanceDate = Timestamp.fromDate(targetDate);
+            instances.push({
+              ...event,
+              id: `${event.id}-${targetDate.toISOString().split("T")[0]}`,
+              date: instanceDate,
+              seriesId: event.id,
+            });
+          }
+          currentMonth.setMonth(currentMonth.getMonth() + 1);
         }
       }
 

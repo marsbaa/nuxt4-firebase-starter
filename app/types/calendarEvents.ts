@@ -41,9 +41,9 @@ export interface BaseCalendarEvent {
  * Recurrence configuration for recurring events
  */
 export interface EventRecurrence {
-  /** Recurrence type (initially weekly only) */
-  type: "weekly";
-  /** Days of the week for weekly recurrence */
+  /** Recurrence type */
+  type: "weekly" | "monthly";
+  /** Days of the week for weekly recurrence, or day of month for monthly */
   daysOfWeek: string[];
   /** End condition for the recurrence */
   endCondition: "never" | { endsOn: Timestamp };

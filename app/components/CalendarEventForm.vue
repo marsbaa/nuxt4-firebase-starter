@@ -48,6 +48,7 @@ const props = defineProps<{
   loading?: boolean;
   mode?: "add" | "edit";
   event?: CommunityGatheringEvent;
+  clickedOccurrence?: CommunityGatheringEvent;
 }>();
 
 const emit = defineEmits<{
@@ -112,7 +113,11 @@ const handleDelete = () => {
 // Confirm delete
 const confirmDelete = () => {
   if (!props.event) return;
-  emit("event-deleted", props.event.id, deleteScope.value);
+  emit(
+    "event-deleted",
+    props.event.seriesId || props.event.id,
+    deleteScope.value,
+  );
   showDeleteConfirm.value = false;
 };
 
@@ -195,7 +200,7 @@ const handleSubmit = async () => {
   try {
     if (props.mode === "edit" && props.event) {
       const input: UpdateCommunityGatheringInput = {
-        id: props.event.id,
+        id: props.event.seriesId || props.event.id,
         title: title.value.trim(),
         date: new Date(date.value),
         description: description.value.trim() || undefined,
@@ -212,7 +217,7 @@ const handleSubmit = async () => {
             : undefined,
         recurrence: isRecurring.value
           ? {
-              type: "weekly",
+              type: recurrenceFrequency.value,
               daysOfWeek: recurrenceDays.value,
               endCondition:
                 recurrenceEndCondition.value === "never"
@@ -244,7 +249,7 @@ const handleSubmit = async () => {
             : undefined,
         recurrence: isRecurring.value
           ? {
-              type: "weekly",
+              type: recurrenceFrequency.value,
               daysOfWeek: recurrenceDays.value,
               endCondition:
                 recurrenceEndCondition.value === "never"
@@ -305,6 +310,7 @@ const loadEventForEdit = () => {
     description.value = props.event.description || "";
     isRecurring.value = !!props.event.recurrence;
     if (props.event.recurrence) {
+      recurrenceFrequency.value = props.event.recurrence.type;
       recurrenceDays.value = props.event.recurrence.daysOfWeek;
       const endCondition =
         props.event.recurrence.endCondition === "never"
