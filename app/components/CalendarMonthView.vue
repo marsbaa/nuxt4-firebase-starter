@@ -15,13 +15,13 @@ const props = withDefaults(defineProps<Props>(), {
 
 // Emit for event clicks
 const emit = defineEmits<{
-  eventClick: [event: CalendarEventType];
+  "event-click": [event: CalendarEventType];
   "switch-to-week": [];
 }>();
 
 // Event click handler
 const handleEventClick = (event: CalendarEventType) => {
-  emit("eventClick", event);
+  emit("event-click", event);
 };
 
 // Current displayed month
