@@ -98,6 +98,16 @@ const validateDate = () => {
   return true;
 };
 
+// Handle delete
+const handleDelete = () => {
+  if (!props.event) return;
+
+  const scope = props.event.recurrence ? "all" : undefined; // For now, default to all for recurring
+  if (confirm("Are you sure you want to remove this gathering?")) {
+    emit("event-deleted", props.event.id, scope);
+  }
+};
+
 // Handle cancel
 const handleCancel = () => {
   const hasContent =
@@ -194,9 +204,7 @@ const handleSubmit = async () => {
                   ? "never"
                   : {
                       endsOn: Timestamp.fromDate(
-                        new Date(
-                          recurrenceEndCondition.value as { endsOn: string },
-                        ).endsOn,
+                        new Date(recurrenceEndCondition.value),
                       ),
                     },
             }
@@ -266,10 +274,52 @@ const handleKeydown = (event: KeyboardEvent) => {
   }
 };
 
+// Load event data for edit mode
+const loadEventForEdit = () => {
+  if (props.mode === "edit" && props.event) {
+    title.value = props.event.title;
+    date.value = props.event.date.toDate().toISOString().split("T")[0];
+    allDay.value = props.event.allDay;
+    startTime.value = props.event.startTime
+      ? props.event.startTime.toDate().toTimeString().slice(0, 5)
+      : "";
+    endTime.value = props.event.endTime
+      ? props.event.endTime.toDate().toTimeString().slice(0, 5)
+      : "";
+    description.value = props.event.description || "";
+    isRecurring.value = !!props.event.recurrence;
+    if (props.event.recurrence) {
+      recurrenceDays.value = props.event.recurrence.daysOfWeek;
+      recurrenceEndCondition.value =
+        props.event.recurrence.endCondition === "never"
+          ? "never"
+          : (
+              props.event.recurrence.endCondition as { endsOn: Timestamp }
+            ).endsOn
+              .toDate()
+              .toISOString()
+              .split("T")[0];
+    }
+  }
+};
+
+// Watch for event changes in edit mode
+watch(
+  () => props.event,
+  () => {
+    if (props.mode === "edit") {
+      loadEventForEdit();
+    }
+  },
+  { immediate: true },
+);
+
 // Auto-focus and adjust height on mount
 onMounted(() => {
   nextTick(() => {
-    titleInputRef.value?.focus();
+    if (props.mode !== "edit") {
+      titleInputRef.value?.focus();
+    }
     adjustHeight();
   });
 });
@@ -295,10 +345,31 @@ watch(date, () => {
     <div class="form-container">
       <!-- Form Header -->
       <div class="form-header">
-        <h3 class="form-title">Create a Community Gathering</h3>
+        <h3 class="form-title">
+          {{
+            mode === "edit"
+              ? "Edit Community Gathering"
+              : "Create a Community Gathering"
+          }}
+        </h3>
         <p class="form-subtitle">
-          Mark shared moments in your church community's life together
+          {{
+            mode === "edit"
+              ? "Update the details of this gathering"
+              : "Mark shared moments in your church community's life together"
+          }}
         </p>
+        <div v-if="mode === 'edit'" class="form-header-actions">
+          <AppButton
+            variant="danger"
+            size="sm"
+            :disabled="loading || isSubmitting"
+            @click="handleDelete"
+          >
+            <AppIcon name="heroicons:trash" class="button-icon" />
+            Remove Gathering
+          </AppButton>
+        </div>
       </div>
 
       <!-- Form Fields -->
@@ -411,6 +482,81 @@ watch(date, () => {
             @keydown="handleKeydown"
           />
         </div>
+
+        <!-- Recurrence Section -->
+        <div class="form-field">
+          <label class="field-label">
+            <AppIcon name="heroicons:arrow-path" class="label-icon" />
+            <span>Repeats</span>
+          </label>
+          <label class="toggle">
+            <input
+              v-model="isRecurring"
+              type="checkbox"
+              :disabled="loading || isSubmitting"
+            />
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+
+        <!-- Recurrence Controls (if recurring) -->
+        <div v-if="isRecurring" class="recurrence-controls">
+          <div class="form-field">
+            <label class="field-label">
+              <span>Repeat on</span>
+            </label>
+            <div class="day-selector">
+              <button
+                v-for="day in [
+                  'monday',
+                  'tuesday',
+                  'wednesday',
+                  'thursday',
+                  'friday',
+                  'saturday',
+                  'sunday',
+                ]"
+                :key="day"
+                type="button"
+                class="day-button"
+                :class="{ active: recurrenceDays.includes(day) }"
+                :disabled="loading || isSubmitting"
+                @click="toggleDay(day)"
+              >
+                {{ day.charAt(0).toUpperCase() }}
+              </button>
+            </div>
+          </div>
+
+          <div class="form-field">
+            <label class="field-label">
+              <span>End condition</span>
+            </label>
+            <select
+              v-model="recurrenceEndCondition"
+              class="field-input"
+              :disabled="loading || isSubmitting"
+            >
+              <option value="never">Never ends</option>
+              <option value="ends-on">Ends on date</option>
+            </select>
+          </div>
+
+          <div v-if="recurrenceEndCondition !== 'never'" class="form-field">
+            <label for="recurrence-end-date" class="field-label">
+              <span>End date</span>
+            </label>
+            <input
+              id="recurrence-end-date"
+              v-model="recurrenceEndCondition"
+              type="date"
+              class="field-input date-input"
+              :min="date"
+              :disabled="loading || isSubmitting"
+              aria-label="End date for recurrence"
+            />
+          </div>
+        </div>
       </div>
 
       <!-- Form Actions -->
@@ -438,7 +584,7 @@ watch(date, () => {
             :loading="isSubmitting"
             @click="handleSubmit"
           >
-            Create Gathering
+            {{ mode === "edit" ? "Save Changes" : "Create Gathering" }}
           </AppButton>
         </div>
       </div>
@@ -705,9 +851,131 @@ kbd {
   }
 }
 
+/* Toggle Switch */
+.toggle {
+  position: relative;
+  display: inline-block;
+  width: 3rem;
+  height: 1.5rem;
+  cursor: pointer;
+}
+
+.toggle input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.toggle-slider {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #e7e5e4;
+  border-radius: 1rem;
+  transition: 0.3s;
+}
+
+.toggle-slider:before {
+  position: absolute;
+  content: "";
+  height: 1.125rem;
+  width: 1.125rem;
+  left: 0.1875rem;
+  bottom: 0.1875rem;
+  background-color: white;
+  border-radius: 50%;
+  transition: 0.3s;
+}
+
+.toggle input:checked + .toggle-slider {
+  background-color: #c2a47a;
+}
+
+.toggle input:checked + .toggle-slider:before {
+  transform: translateX(1.5rem);
+}
+
+/* Time Fields */
+.time-fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.time-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.time-input {
+  max-width: none;
+}
+
+/* Recurrence Controls */
+.recurrence-controls {
+  background-color: #fefcf9;
+  border: 1px solid #f5f1e8;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  margin-top: 0.5rem;
+}
+
+.day-selector {
+  display: flex;
+  gap: 0.25rem;
+  flex-wrap: wrap;
+}
+
+.day-button {
+  width: 2rem;
+  height: 2rem;
+  border: 1px solid #e7e5e4;
+  background-color: white;
+  border-radius: 0.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #57534e;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.day-button:hover {
+  background-color: #f5f4f2;
+  border-color: #d6cbb8;
+}
+
+.day-button.active {
+  background-color: #c2a47a;
+  border-color: #c2a47a;
+  color: white;
+}
+
+.day-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Form Header Actions */
+.form-header-actions {
+  margin-top: 1rem;
+}
+
+.button-icon {
+  width: 1rem;
+  height: 1rem;
+}
+
 /* Smooth transitions */
 .field-input,
-.field-textarea {
+.field-textarea,
+.day-button,
+.toggle-slider {
   transition: all 0.15s ease;
 }
 </style>
