@@ -38,6 +38,18 @@ export interface BaseCalendarEvent {
 }
 
 /**
+ * Recurrence configuration for recurring events
+ */
+export interface EventRecurrence {
+  /** Recurrence type (initially weekly only) */
+  type: "weekly";
+  /** Days of the week for weekly recurrence */
+  daysOfWeek: string[];
+  /** End condition for the recurrence */
+  endCondition: "never" | { endsOn: Timestamp };
+}
+
+/**
  * Community Gathering event
  * Church events, services, picnics, special gatherings
  * These are user-created communal time markers
@@ -50,6 +62,18 @@ export interface CommunityGatheringEvent extends BaseCalendarEvent {
   createdByName: string;
   /** Creation timestamp */
   createdAt: Timestamp;
+  /** Whether this is an all-day event */
+  allDay: boolean;
+  /** Start time (if not all-day) */
+  startTime?: Timestamp;
+  /** End time (optional, if not all-day) */
+  endTime?: Timestamp;
+  /** Recurrence configuration (if recurring) */
+  recurrence?: EventRecurrence;
+  /** For recurring events, the ID of the series master */
+  seriesId?: string;
+  /** For exceptions, the ID of the parent series */
+  parentSeriesId?: string;
 }
 
 /**
@@ -129,6 +153,10 @@ export interface CreateCommunityGatheringInput {
   description?: string;
   createdBy: string;
   createdByName: string;
+  allDay: boolean;
+  startTime?: Date;
+  endTime?: Date;
+  recurrence?: EventRecurrence;
 }
 
 /**
