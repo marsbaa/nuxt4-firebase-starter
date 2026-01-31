@@ -43,11 +43,11 @@
 
 ## 6. Visual Design & Polish
 
-- [ ] 6.1 Apply pastoral visual design standards (generous whitespace, calm typography, subtle colors)
-- [ ] 6.2 Ensure destructive actions (Delete) are visually separated and lower emphasis
-- [ ] 6.3 Style recurrence controls to be clear but unobtrusive
-- [ ] 6.4 Implement gentle confirmation dialogs with pastoral copy
-- [ ] 6.5 Test responsive behavior across mobile widths (320px - 767px) and desktop widths (≥ 768px)
+- [x] 6.1 Apply pastoral visual design standards (generous whitespace, calm typography, subtle colors)
+- [x] 6.2 Ensure destructive actions (Delete) are visually separated and lower emphasis
+- [x] 6.3 Style recurrence controls to be clear but unobtrusive
+- [x] 6.4 Implement gentle confirmation dialogs with pastoral copy
+- [x] 6.5 Test responsive behavior across mobile widths (320px - 767px) and desktop widths (≥ 768px)
 
 ## 7. Accessibility
 
