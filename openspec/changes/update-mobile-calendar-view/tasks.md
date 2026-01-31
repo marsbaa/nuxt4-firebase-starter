@@ -25,10 +25,10 @@
 
 ## 4. Update Calendar Event Rendering
 
-- [ ] 4.1 Ensure all event types render correctly in weekly view
-- [ ] 4.2 Display contextual labels (Communal Rhythm, Member Milestone, etc.)
-- [ ] 4.3 Preserve click navigation to member pages or event details
-- [ ] 4.4 Maintain read-only status for Care Reminders and Care Updates
+- [x] 4.1 Ensure all event types render correctly in weekly view
+- [x] 4.2 Display contextual labels (Communal Rhythm, Member Milestone, etc.)
+- [x] 4.3 Preserve click navigation to member pages or event details
+- [x] 4.4 Maintain read-only status for Care Reminders and Care Updates
 
 ## 5. Test Mobile Experience
 

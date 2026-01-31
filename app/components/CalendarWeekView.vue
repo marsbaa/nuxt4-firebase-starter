@@ -385,13 +385,13 @@ const isDayToday = (day: Date): boolean => {
 
 /* Event type styling - Community Gatherings */
 .event-card--community-gathering {
-  background: rgba(169, 193, 205, 0.12);
-  border: 1px solid rgba(169, 193, 205, 0.25);
+  background: rgba(169, 193, 205, 0.15);
+  border: 1px solid rgba(169, 193, 205, 0.3);
 }
 
 .event-card--community-gathering:hover {
-  background: rgba(169, 193, 205, 0.18);
-  border-color: rgba(169, 193, 205, 0.35);
+  background: rgba(169, 193, 205, 0.2);
+  border-color: rgba(169, 193, 205, 0.4);
 }
 
 .event-card--community-gathering .event-icon {
@@ -400,13 +400,13 @@ const isDayToday = (day: Date): boolean => {
 
 /* Member Milestones */
 .event-card--member-milestone {
-  background: rgba(207, 184, 203, 0.12);
-  border: 1px solid rgba(207, 184, 203, 0.25);
+  background: rgba(207, 184, 203, 0.15);
+  border: 1px solid rgba(207, 184, 203, 0.3);
 }
 
 .event-card--member-milestone:hover {
-  background: rgba(207, 184, 203, 0.18);
-  border-color: rgba(207, 184, 203, 0.35);
+  background: rgba(207, 184, 203, 0.2);
+  border-color: rgba(207, 184, 203, 0.4);
 }
 
 .event-card--member-milestone .event-icon {
@@ -415,13 +415,13 @@ const isDayToday = (day: Date): boolean => {
 
 /* Care Reminders */
 .event-card--care-reminder {
-  background: rgba(122, 155, 118, 0.12);
-  border: 1px solid rgba(122, 155, 118, 0.25);
+  background: rgba(122, 155, 118, 0.15);
+  border: 1px solid rgba(122, 155, 118, 0.3);
 }
 
 .event-card--care-reminder:hover {
-  background: rgba(122, 155, 118, 0.18);
-  border-color: rgba(122, 155, 118, 0.35);
+  background: rgba(122, 155, 118, 0.2);
+  border-color: rgba(122, 155, 118, 0.4);
 }
 
 .event-card--care-reminder .event-icon {
@@ -430,13 +430,13 @@ const isDayToday = (day: Date): boolean => {
 
 /* Care Updates */
 .event-card--care-update {
-  background: rgba(191, 174, 157, 0.12);
-  border: 1px solid rgba(191, 174, 157, 0.25);
+  background: rgba(191, 174, 157, 0.15);
+  border: 1px solid rgba(191, 174, 157, 0.3);
 }
 
 .event-card--care-update:hover {
-  background: rgba(191, 174, 157, 0.18);
-  border-color: rgba(191, 174, 157, 0.35);
+  background: rgba(191, 174, 157, 0.2);
+  border-color: rgba(191, 174, 157, 0.4);
 }
 
 .event-card--care-update .event-icon {
@@ -445,13 +445,13 @@ const isDayToday = (day: Date): boolean => {
 
 /* Liturgical Events */
 .event-card--liturgical-event {
-  background: rgba(217, 188, 155, 0.12);
-  border: 1px solid rgba(217, 188, 155, 0.25);
+  background: rgba(217, 188, 155, 0.15);
+  border: 1px solid rgba(217, 188, 155, 0.3);
 }
 
 .event-card--liturgical-event:hover {
-  background: rgba(217, 188, 155, 0.18);
-  border-color: rgba(217, 188, 155, 0.35);
+  background: rgba(217, 188, 155, 0.2);
+  border-color: rgba(217, 188, 155, 0.4);
 }
 
 .event-card--liturgical-event .event-icon {
