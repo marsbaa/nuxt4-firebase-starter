@@ -3,6 +3,8 @@ import type {
   CalendarEvent,
   CalendarFilters,
   CreateCommunityGatheringInput,
+  CommunityGatheringEvent,
+  UpdateCommunityGatheringInput,
 } from "~/types/calendarEvents";
 import CalendarWeekView from "~/components/CalendarWeekView.vue";
 import CalendarItemSheet from "~/components/CalendarItemSheet.vue";
@@ -38,6 +40,7 @@ const currentView = ref<"agenda" | "week" | "month">("month");
 
 // Event form modal state
 const showEventForm = ref(false);
+const editingEvent = ref<CommunityGatheringEvent | undefined>(undefined);
 const isCreatingEvent = ref(false);
 
 // Search query state
@@ -63,12 +66,14 @@ const isActiveView = (view: "agenda" | "month") => {
 
 // Open event form modal
 const openEventForm = () => {
+  editingEvent.value = undefined;
   showEventForm.value = true;
 };
 
 // Close event form modal
 const closeEventForm = () => {
   showEventForm.value = false;
+  editingEvent.value = undefined;
 };
 
 // Handle event creation
@@ -85,15 +90,45 @@ const handleEventCreated = async (input: CreateCommunityGatheringInput) => {
   }
 };
 
+// Handle event update
+const handleEventUpdated = async (input: UpdateCommunityGatheringInput) => {
+  try {
+    await calendarEventsStore.updateEvent(input);
+    closeEventForm();
+  } catch (error) {
+    console.error("Error updating event:", error);
+  }
+};
+
+// Handle event deletion
+const handleEventDeleted = async (
+  id: string,
+  scope?: "this" | "future" | "all",
+) => {
+  try {
+    await calendarEventsStore.deleteEvent(id, scope);
+    closeEventForm();
+  } catch (error) {
+    console.error("Error deleting event:", error);
+  }
+};
+
 // Handle event click from calendar views
 const handleEventClick = (event: CalendarEvent) => {
-  if (isMobile()) {
-    // Open bottom sheet on mobile for all item types
-    openSheet(event);
+  if (event.type === "community-gathering") {
+    // Open edit form for community events
+    editingEvent.value = event as CommunityGatheringEvent;
+    showEventForm.value = true;
   } else {
-    // Navigate directly on desktop/tablet
-    if (event.memberId) {
-      navigateTo(`/members/view/${event.memberId}`);
+    // Preserve existing behavior for other event types
+    if (isMobile()) {
+      // Open bottom sheet on mobile for member milestones and care reminders
+      openSheet(event);
+    } else {
+      // Navigate directly on desktop/tablet
+      if (event.memberId) {
+        navigateTo(`/members/view/${event.memberId}`);
+      }
     }
   }
 };
@@ -189,8 +224,12 @@ const clearSearch = () => {
               <Icon name="mdi:close" class="close-icon" />
             </button>
             <CalendarEventForm
+              :mode="editingEvent ? 'edit' : 'add'"
+              :event="editingEvent"
               :loading="isCreatingEvent"
               @event-created="handleEventCreated"
+              @event-updated="handleEventUpdated"
+              @event-deleted="handleEventDeleted"
               @cancel="closeEventForm"
             />
           </div>
