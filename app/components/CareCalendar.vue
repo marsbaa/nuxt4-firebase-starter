@@ -13,6 +13,9 @@ const calendarEventsStore = useCalendarEventsStore();
 // Use calendar item sheet
 const { openSheet } = useCalendarItemSheet();
 
+// Use viewport detection
+const { isMobile } = useViewport();
+
 // Initialize calendar data on mount
 onMounted(() => {
   calendarEventsStore.initialize();
@@ -84,11 +87,8 @@ const handleEventCreated = async (input: CreateCommunityGatheringInput) => {
 
 // Handle event click from calendar views
 const handleEventClick = (event: CalendarEvent) => {
-  // Check if mobile viewport (< 768px)
-  const isMobile = process.client && window.innerWidth < 768;
-
-  if (isMobile) {
-    // Open bottom sheet on mobile
+  if (isMobile()) {
+    // Open bottom sheet on mobile for all item types
     openSheet(event);
   } else {
     // Navigate directly on desktop/tablet

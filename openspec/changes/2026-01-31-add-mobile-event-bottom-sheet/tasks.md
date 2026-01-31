@@ -29,12 +29,12 @@
 
 ## 4. Update Calendar Click Handling for All Item Types
 
-- [ ] 4.1 Add viewport detection utility (check if < 768px)
-- [ ] 4.2 Update `CalendarWeekView.vue` to trigger bottom sheet on mobile tap for all item types
-- [ ] 4.3 Update `CalendarMonthView.vue` to trigger bottom sheet on mobile tap for all item types
-- [ ] 4.4 Preserve direct navigation behavior for desktop/tablet (≥ 768px)
-- [ ] 4.5 Pass item data and type to bottom sheet component when opened
-- [ ] 4.6 Implement data mapping to populate sheet consistently for events, birthdays, and reminders
+- [x] 4.1 Add viewport detection utility (check if < 768px)
+- [x] 4.2 Update `CalendarWeekView.vue` to trigger bottom sheet on mobile tap for all item types
+- [x] 4.3 Update `CalendarMonthView.vue` to trigger bottom sheet on mobile tap for all item types
+- [x] 4.4 Preserve direct navigation behavior for desktop/tablet (≥ 768px)
+- [x] 4.5 Pass item data and type to bottom sheet component when opened
+- [x] 4.6 Implement data mapping to populate sheet consistently for events, birthdays, and reminders
 
 ## 5. Visual Design and Styling
 
