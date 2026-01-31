@@ -12,11 +12,18 @@ const calendarEventsStore = useCalendarEventsStore();
 // Initialize calendar data on mount
 onMounted(() => {
   calendarEventsStore.initialize();
+  updateViewBasedOnScreenSize();
+  if (process.client) {
+    window.addEventListener("resize", updateViewBasedOnScreenSize);
+  }
 });
 
 // Cleanup on unmount
 onUnmounted(() => {
   calendarEventsStore.cleanup();
+  if (process.client) {
+    window.removeEventListener("resize", updateViewBasedOnScreenSize);
+  }
 });
 
 // View state: 'agenda', 'week', or 'month'
@@ -28,6 +35,14 @@ const isCreatingEvent = ref(false);
 
 // Search query state
 const searchQuery = ref("");
+
+// Function to update view based on screen size
+const updateViewBasedOnScreenSize = () => {
+  if (process.client) {
+    const isMobile = window.innerWidth < 768;
+    currentView.value = isMobile ? "week" : "month";
+  }
+};
 
 // Switch between views
 const switchView = (view: "agenda" | "week" | "month") => {
