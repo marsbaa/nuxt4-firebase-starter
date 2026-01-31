@@ -20,12 +20,12 @@
 
 ## 3. Add Type-Appropriate Secondary Actions
 
-- [ ] 3.1 **Events**: Add optional "Open full details" link (not primary CTA)
-- [ ] 3.2 **Birthdays/Member Milestones**: Add "Go to person" link
-- [ ] 3.3 **Reminders**: Add "View in care space" link (if applicable)
-- [ ] 3.4 Style all actions as subtle, secondary affordances (not dominant buttons)
-- [ ] 3.5 Ensure actions are accessible and tappable on mobile
-- [ ] 3.6 Do not add task-style actions (no "Complete", no checkboxes)
+- [x] 3.1 **Events**: Add optional "Open full details" link (not primary CTA)
+- [x] 3.2 **Birthdays/Member Milestones**: Add "Go to person" link
+- [x] 3.3 **Reminders**: Add "View in care space" link (if applicable)
+- [x] 3.4 Style all actions as subtle, secondary affordances (not dominant buttons)
+- [x] 3.5 Ensure actions are accessible and tappable on mobile
+- [x] 3.6 Do not add task-style actions (no "Complete", no checkboxes)
 
 ## 4. Update Calendar Click Handling for All Item Types
 
