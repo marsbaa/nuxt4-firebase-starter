@@ -471,18 +471,24 @@ const clearSearch = () => {
 
   .calendar-actions {
     width: 100%;
-    flex-direction: column;
-    gap: 0.75rem;
+    flex-direction: row;
+    gap: 0.5rem;
   }
 
   .search-field {
-    min-width: 100%;
-    max-width: 100%;
+    flex: 1;
+    min-width: 0;
+    max-width: none;
   }
 
   .new-event-btn {
-    width: 100%;
-    justify-content: center;
+    flex-shrink: 0;
+    padding: 0.625rem;
+    width: auto;
+  }
+
+  .new-event-btn .btn-text {
+    display: none;
   }
 
   .calendar-content {
