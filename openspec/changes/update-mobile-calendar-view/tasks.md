@@ -19,9 +19,9 @@
 
 ## 3. Adapt Month View for Mobile Secondary
 
-- [ ] 3.1 Adjust `CalendarMonthView.vue` for simplified mobile display
-- [ ] 3.2 Ensure month view remains accessible but non-dominant on mobile
-- [ ] 3.3 Maintain full desktop experience unchanged
+- [x] 3.1 Adjust `CalendarMonthView.vue` for simplified mobile display
+- [x] 3.2 Ensure month view remains accessible but non-dominant on mobile
+- [x] 3.3 Maintain full desktop experience unchanged
 
 ## 4. Update Calendar Event Rendering
 

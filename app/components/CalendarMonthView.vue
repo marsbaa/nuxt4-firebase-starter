@@ -395,6 +395,22 @@ const getEventsForDay = (date: Date) => {
   }
 }
 
+/* Mobile simplified display */
+@media (max-width: 768px) {
+  .calendar-legend {
+    display: none;
+  }
+
+  .calendar-footer {
+    display: none;
+  }
+
+  .calendar-day {
+    height: 60px;
+    padding: 0.375rem;
+  }
+}
+
 /* Small mobile */
 @media (max-width: 480px) {
   .calendar-header {
@@ -402,8 +418,8 @@ const getEventsForDay = (date: Date) => {
   }
 
   .nav-btn {
-    width: 2rem;
-    height: 2rem;
+    width: 2.75rem;
+    height: 2.75rem;
   }
 
   .nav-icon {
@@ -420,8 +436,8 @@ const getEventsForDay = (date: Date) => {
   }
 
   .calendar-day {
-    height: 70px;
-    padding: 0.375rem;
+    height: 55px;
+    padding: 0.25rem;
   }
 
   .calendar-day-header {
