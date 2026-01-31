@@ -283,19 +283,33 @@ The system SHALL implement visual design standards that create a calm, pastoral 
 
 ### Requirement: Responsive Design
 
-The system SHALL provide a responsive layout that adapts gracefully to different viewport sizes.
+The system SHALL provide a responsive layout that adapts gracefully to different viewport sizes, with view-specific optimizations for mobile devices.
 
-#### Scenario: Mobile Month View
+#### Scenario: Mobile Weekly View Default
 
-- **WHEN** viewing the calendar on a mobile device
-- **THEN** the month view adapts to the smaller screen
-- **AND** events remain readable and tappable
+- **WHEN** viewing the calendar on a mobile device (viewport < 768px)
+- **THEN** the Weekly View is displayed by default
+- **AND** the view toggle allows switching to Monthly View if desired
+
+#### Scenario: Desktop Monthly View Default
+
+- **WHEN** viewing the calendar on a desktop or tablet device (viewport ≥ 768px)
+- **THEN** the Monthly View is displayed by default
+- **AND** the view toggle allows switching to Weekly View if desired
 
 #### Scenario: Mobile Focus Panel
 
 - **WHEN** viewing the calendar on a mobile device
 - **THEN** the Focus Panel is collapsible or accessible via a toggle
 - **AND** it does not obscure the main calendar view
+- **AND** Focus Panel behavior is consistent across Weekly and Monthly views
+
+#### Scenario: Weekly View Responsiveness
+
+- **WHEN** viewing the Weekly View on varying mobile widths (320px - 767px)
+- **THEN** day sections adapt to the available width
+- **AND** event cards remain readable and tappable
+- **AND** generous vertical spacing is maintained
 
 ---
 
@@ -320,4 +334,37 @@ The system SHALL meet WCAG 2.1 Level AA accessibility standards for the Care Cal
 - **WHEN** event type colors are used
 - **THEN** color alone is not the only means of distinction
 - **AND** contrast ratios meet WCAG AA requirements
+
+### Requirement: Weekly View Visual Design
+
+The system SHALL implement visual design standards specific to the Weekly View that maintain the calm, pastoral aesthetic while optimizing for mobile readability.
+
+#### Scenario: Weekly View Typography
+
+- **WHEN** the Weekly View is displayed
+- **THEN** day numbers are large and readable (e.g., "03" in light gray)
+- **AND** day names are uppercase and subtle (e.g., "SUNDAY" in light gray)
+- **AND** event names use clear, readable font sizes for mobile
+- **AND** contextual labels are visibly distinct but not dominant
+
+#### Scenario: Weekly View Spacing
+
+- **WHEN** the Weekly View is displayed
+- **THEN** generous whitespace separates each day section
+- **AND** events within a day have comfortable vertical spacing
+- **AND** the layout feels calm and uncluttered
+
+#### Scenario: Weekly View Empty Days
+
+- **WHEN** a day in the Weekly View has no events
+- **THEN** only the day header is shown
+- **AND** no "no events" message or placeholder is displayed
+- **AND** the empty space maintains visual calm
+
+#### Scenario: Weekly View Week Range Header
+
+- **WHEN** the Weekly View is displayed
+- **THEN** the week range is clearly shown (e.g., "Nov 3 - 9")
+- **AND** the header includes subtle affordances for week selection (if implemented)
+- **AND** navigation controls are visible but not visually dominant
 
