@@ -5,9 +5,13 @@ import type {
   CreateCommunityGatheringInput,
 } from "~/types/calendarEvents";
 import CalendarWeekView from "~/components/CalendarWeekView.vue";
+import CalendarItemSheet from "~/components/CalendarItemSheet.vue";
 
 // Use calendar events store
 const calendarEventsStore = useCalendarEventsStore();
+
+// Use calendar item sheet
+const { openSheet } = useCalendarItemSheet();
 
 // Initialize calendar data on mount
 onMounted(() => {
@@ -78,11 +82,19 @@ const handleEventCreated = async (input: CreateCommunityGatheringInput) => {
   }
 };
 
-// Handle event click from agenda view
+// Handle event click from calendar views
 const handleEventClick = (event: CalendarEvent) => {
-  // Navigate to member detail page if memberId exists
-  if (event.memberId) {
-    navigateTo(`/members/view/${event.memberId}`);
+  // Check if mobile viewport (< 768px)
+  const isMobile = process.client && window.innerWidth < 768;
+
+  if (isMobile) {
+    // Open bottom sheet on mobile
+    openSheet(event);
+  } else {
+    // Navigate directly on desktop/tablet
+    if (event.memberId) {
+      navigateTo(`/members/view/${event.memberId}`);
+    }
   }
 };
 
@@ -236,6 +248,9 @@ const clearSearch = () => {
         @update:filters="handleFilterUpdate"
       />
     </div>
+
+    <!-- Calendar Item Bottom Sheet -->
+    <CalendarItemSheet />
   </div>
 </template>
 

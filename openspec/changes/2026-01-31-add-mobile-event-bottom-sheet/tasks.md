@@ -2,12 +2,12 @@
 
 ## 1. Create Calendar Item Bottom Sheet Component
 
-- [ ] 1.1 Create `CalendarItemSheet.vue` component with bottom sheet UI pattern
-- [ ] 1.2 Implement slide-up animation from bottom of screen
-- [ ] 1.3 Add swipe-down and tap-outside dismiss functionality
-- [ ] 1.4 Ensure calendar remains visible (dimmed) in background
-- [ ] 1.5 Add proper ARIA labels and accessibility attributes for mobile screen readers
-- [ ] 1.6 Support multiple item types (events, birthdays, reminders) with type detection
+- [x] 1.1 Create `CalendarItemSheet.vue` component with bottom sheet UI pattern
+- [x] 1.2 Implement slide-up animation from bottom of screen
+- [x] 1.3 Add swipe-down and tap-outside dismiss functionality
+- [x] 1.4 Ensure calendar remains visible (dimmed) in background
+- [x] 1.5 Add proper ARIA labels and accessibility attributes for mobile screen readers
+- [x] 1.6 Support multiple item types (events, birthdays, reminders) with type detection
 
 ## 2. Implement Content Display by Type
 
