@@ -160,6 +160,14 @@ export interface CreateCommunityGatheringInput {
 }
 
 /**
+ * Data structure for updating a Community Gathering event
+ */
+export interface UpdateCommunityGatheringInput extends Partial<CreateCommunityGatheringInput> {
+  id: string;
+  scope?: "this" | "future" | "all"; // Scope for recurring event updates
+}
+
+/**
  * Calendar view mode
  */
 export type CalendarViewMode = "month" | "agenda";

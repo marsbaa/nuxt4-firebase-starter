@@ -5,6 +5,8 @@ import {
   orderBy,
   onSnapshot,
   addDoc,
+  updateDoc,
+  doc,
   serverTimestamp,
   Timestamp,
   type Unsubscribe,
@@ -16,6 +18,7 @@ import type {
   MemberMilestoneEvent,
   CareReminderEvent,
   CreateCommunityGatheringInput,
+  UpdateCommunityGatheringInput,
   CalendarFilters,
 } from "~/types/calendarEvents";
 
@@ -132,6 +135,12 @@ export const useCalendarEventsStore = defineStore("calendarEvents", {
                 createdBy: data.createdBy,
                 createdByName: data.createdByName,
                 createdAt: data.createdAt,
+                allDay: data.allDay ?? true,
+                startTime: data.startTime,
+                endTime: data.endTime,
+                recurrence: data.recurrence,
+                seriesId: data.seriesId,
+                parentSeriesId: data.parentSeriesId,
               } as CommunityGatheringEvent;
             });
           },
@@ -348,6 +357,12 @@ export const useCalendarEventsStore = defineStore("calendarEvents", {
           title: input.title.trim(),
           date: Timestamp.fromDate(input.date),
           description: input.description?.trim() || null,
+          allDay: input.allDay,
+          startTime: input.startTime
+            ? Timestamp.fromDate(input.startTime)
+            : null,
+          endTime: input.endTime ? Timestamp.fromDate(input.endTime) : null,
+          recurrence: input.recurrence || null,
           createdBy: input.createdBy,
           createdByName: input.createdByName,
           createdAt: serverTimestamp(),
@@ -359,6 +374,74 @@ export const useCalendarEventsStore = defineStore("calendarEvents", {
       } catch (err) {
         console.error("Error adding community event:", err);
         toast.error("Unable to add event. Please try again.");
+        throw err;
+      }
+    },
+
+    /**
+     * Update a community gathering event
+     */
+    async updateEvent(input: UpdateCommunityGatheringInput): Promise<void> {
+      const { db, user } = useFirebase();
+      const toast = useToast();
+
+      if (!db) {
+        throw new Error("Firestore is not initialized");
+      }
+
+      if (!user.value) {
+        throw new Error("User must be authenticated to update events");
+      }
+
+      if (!input.title?.trim()) {
+        toast.error("Please provide an event name");
+        throw new Error("Title cannot be empty");
+      }
+
+      try {
+        const eventRef = doc(db, "calendarEvents", input.id);
+        const updateData: any = {};
+
+        if (input.title !== undefined) updateData.title = input.title.trim();
+        if (input.date !== undefined)
+          updateData.date = Timestamp.fromDate(input.date);
+        if (input.description !== undefined)
+          updateData.description = input.description?.trim() || null;
+        if (input.allDay !== undefined) updateData.allDay = input.allDay;
+        if (input.startTime !== undefined)
+          updateData.startTime = input.startTime
+            ? Timestamp.fromDate(input.startTime)
+            : null;
+        if (input.endTime !== undefined)
+          updateData.endTime = input.endTime
+            ? Timestamp.fromDate(input.endTime)
+            : null;
+        if (input.recurrence !== undefined)
+          updateData.recurrence = input.recurrence || null;
+
+        // Handle series scope for recurring events
+        const existingEvent = this.communityEvents.find(
+          (e) => e.id === input.id,
+        );
+        if (existingEvent?.recurrence && input.scope === "this") {
+          // Create an exception for this occurrence
+          const exceptionData = {
+            ...updateData,
+            parentSeriesId: existingEvent.seriesId || existingEvent.id,
+            createdBy: user.value.uid,
+            createdByName: user.value.displayName || "Unknown",
+            createdAt: serverTimestamp(),
+          };
+          await addDoc(collection(db, "calendarEvents"), exceptionData);
+        } else {
+          // Update the existing document
+          await updateDoc(eventRef, updateData);
+        }
+
+        toast.success("Event updated");
+      } catch (err) {
+        console.error("Error updating community event:", err);
+        toast.error("Unable to update event. Please try again.");
         throw err;
       }
     },
