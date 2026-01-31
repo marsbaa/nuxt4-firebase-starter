@@ -36,10 +36,10 @@
 
 ## 5. Event Interaction Updates
 
-- [ ] 5.1 Update event click handling in [`app/components/CalendarMonthView.vue`](app/components/CalendarMonthView.vue) to open Edit mode for Community Events
-- [ ] 5.2 Update event click handling in [`app/components/CalendarWeekView.vue`](app/components/CalendarWeekView.vue) to open Edit mode for Community Events
-- [ ] 5.3 Preserve existing bottom sheet behavior for Member Milestones and Care Reminders (navigation to member page)
-- [ ] 5.4 Ensure "New Event" button opens Add mode in form overlay/drawer
+- [x] 5.1 Update event click handling in [`app/components/CalendarMonthView.vue`](app/components/CalendarMonthView.vue) to open Edit mode for Community Events
+- [x] 5.2 Update event click handling in [`app/components/CalendarWeekView.vue`](app/components/CalendarWeekView.vue) to open Edit mode for Community Events
+- [x] 5.3 Preserve existing bottom sheet behavior for Member Milestones and Care Reminders (navigation to member page)
+- [x] 5.4 Ensure "New Event" button opens Add mode in form overlay/drawer
 
 ## 6. Visual Design & Polish
 
