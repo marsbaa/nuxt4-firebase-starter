@@ -1,4 +1,27 @@
 <script setup lang="ts">
+/**
+ * CalendarMonthView Component
+ *
+ * Displays calendar events in a traditional month grid view.
+ * Shows a full month with events displayed as compact items within each day cell.
+ *
+ * Mobile Interaction Pattern:
+ * - On mobile (< 768px): Event tap → Opens CalendarItemSheet bottom sheet
+ * - On desktop (≥ 768px): Event click → Direct navigation to detail page
+ *
+ * The viewport detection and routing logic is handled by the parent CareCalendar component.
+ * This component simply emits 'event-click' events, which the parent handles appropriately.
+ *
+ * Supports all calendar item types:
+ * - Community Gatherings
+ * - Member Milestones (birthdays, etc.)
+ * - Care Reminders
+ * - Care Updates
+ * - Liturgical Events
+ *
+ * @see CareCalendar.vue - Parent component with viewport detection
+ * @see CalendarItemSheet.vue - Mobile bottom sheet for event details
+ */
 import { ref, computed } from "vue";
 import CalendarEvent from "./CalendarEvent.vue";
 import CalendarLegend from "./CalendarLegend.vue";
@@ -15,13 +38,13 @@ const props = withDefaults(defineProps<Props>(), {
 
 // Emit for event clicks
 const emit = defineEmits<{
-  eventClick: [event: CalendarEventType];
+  "event-click": [event: CalendarEventType];
   "switch-to-week": [];
 }>();
 
 // Event click handler
 const handleEventClick = (event: CalendarEventType) => {
-  emit("eventClick", event);
+  emit("event-click", event);
 };
 
 // Current displayed month

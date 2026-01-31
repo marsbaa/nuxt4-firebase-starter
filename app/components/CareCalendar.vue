@@ -5,18 +5,32 @@ import type {
   CreateCommunityGatheringInput,
 } from "~/types/calendarEvents";
 import CalendarWeekView from "~/components/CalendarWeekView.vue";
+import CalendarItemSheet from "~/components/CalendarItemSheet.vue";
 
 // Use calendar events store
 const calendarEventsStore = useCalendarEventsStore();
 
+// Use calendar item sheet
+const { openSheet } = useCalendarItemSheet();
+
+// Use viewport detection
+const { isMobile } = useViewport();
+
 // Initialize calendar data on mount
 onMounted(() => {
   calendarEventsStore.initialize();
+  updateViewBasedOnScreenSize();
+  if (process.client) {
+    window.addEventListener("resize", updateViewBasedOnScreenSize);
+  }
 });
 
 // Cleanup on unmount
 onUnmounted(() => {
   calendarEventsStore.cleanup();
+  if (process.client) {
+    window.removeEventListener("resize", updateViewBasedOnScreenSize);
+  }
 });
 
 // View state: 'agenda', 'week', or 'month'
@@ -28,6 +42,14 @@ const isCreatingEvent = ref(false);
 
 // Search query state
 const searchQuery = ref("");
+
+// Function to update view based on screen size
+const updateViewBasedOnScreenSize = () => {
+  if (process.client) {
+    const isMobile = window.innerWidth < 768;
+    currentView.value = isMobile ? "week" : "month";
+  }
+};
 
 // Switch between views
 const switchView = (view: "agenda" | "week" | "month") => {
@@ -63,11 +85,16 @@ const handleEventCreated = async (input: CreateCommunityGatheringInput) => {
   }
 };
 
-// Handle event click from agenda view
+// Handle event click from calendar views
 const handleEventClick = (event: CalendarEvent) => {
-  // Navigate to member detail page if memberId exists
-  if (event.memberId) {
-    navigateTo(`/members/view/${event.memberId}`);
+  if (isMobile()) {
+    // Open bottom sheet on mobile for all item types
+    openSheet(event);
+  } else {
+    // Navigate directly on desktop/tablet
+    if (event.memberId) {
+      navigateTo(`/members/view/${event.memberId}`);
+    }
   }
 };
 
@@ -221,6 +248,9 @@ const clearSearch = () => {
         @update:filters="handleFilterUpdate"
       />
     </div>
+
+    <!-- Calendar Item Bottom Sheet -->
+    <CalendarItemSheet />
   </div>
 </template>
 
