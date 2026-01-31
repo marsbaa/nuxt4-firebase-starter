@@ -2,12 +2,12 @@
 
 ## 1. Create Weekly View Component
 
-- [ ] 1.1 Create `CalendarWeekView.vue` component with vertical day layout
-- [ ] 1.2 Implement week range calculation and navigation
-- [ ] 1.3 Add event grouping by date within the week
-- [ ] 1.4 Display event details (name, time, contextual label) with appropriate typography
-- [ ] 1.5 Style for calm, spacious mobile reading experience
-- [ ] 1.6 Add navigation controls (prev week, next week, week range display)
+- [x] 1.1 Create `CalendarWeekView.vue` component with vertical day layout
+- [x] 1.2 Implement week range calculation and navigation
+- [x] 1.3 Add event grouping by date within the week
+- [x] 1.4 Display event details (name, time, contextual label) with appropriate typography
+- [x] 1.5 Style for calm, spacious mobile reading experience
+- [x] 1.6 Add navigation controls (prev week, next week, week range display)
 
 ## 2. Implement View Toggle and Responsive Logic
 
