@@ -123,11 +123,12 @@ export const useCalendarEventsStore = defineStore("calendarEvents", {
         this.unsubscribeCommunityEvents = onSnapshot(
           eventsQuery,
           (snapshot) => {
-            this.communityEvents = snapshot.docs.map((doc) => {
+            const events: CommunityGatheringEvent[] = [];
+            snapshot.docs.forEach((doc) => {
               const data = doc.data();
-              return {
+              const baseEvent = {
                 id: doc.id,
-                type: "community-gathering",
+                type: "community-gathering" as const,
                 title: data.title,
                 date: data.date,
                 description: data.description,
@@ -143,7 +144,16 @@ export const useCalendarEventsStore = defineStore("calendarEvents", {
                 seriesId: data.seriesId,
                 parentSeriesId: data.parentSeriesId,
               } as CommunityGatheringEvent;
+
+              if (data.recurrence) {
+                // Expand recurring event into instances
+                const instances = this.expandRecurringEvent(baseEvent);
+                events.push(...instances);
+              } else {
+                events.push(baseEvent);
+              }
             });
+            this.communityEvents = events;
           },
           (err) => {
             console.error("Error loading community events:", err);
@@ -498,6 +508,52 @@ export const useCalendarEventsStore = defineStore("calendarEvents", {
         toast.error("Unable to remove event. Please try again.");
         throw err;
       }
+    },
+
+    /**
+     * Expand a recurring event into individual instances
+     */
+    expandRecurringEvent(
+      event: CommunityGatheringEvent,
+    ): CommunityGatheringEvent[] {
+      if (!event.recurrence) return [event];
+
+      const instances: CommunityGatheringEvent[] = [];
+      const startDate = event.date.toDate();
+      const recurrence = event.recurrence;
+
+      if (recurrence.type === "weekly") {
+        const daysOfWeek = recurrence.daysOfWeek;
+        let currentDate = new Date(startDate);
+        const endDate =
+          recurrence.endCondition === "never"
+            ? new Date(Date.now() + 365 * 24 * 60 * 60 * 1000)
+            : (
+                recurrence.endCondition as { endsOn: Timestamp }
+              ).endsOn.toDate();
+
+        // Generate instances for the next year or until end date
+        while (currentDate <= endDate) {
+          if (
+            daysOfWeek.includes(
+              currentDate
+                .toLocaleString("en", { weekday: "long" })
+                .toLowerCase() as any,
+            )
+          ) {
+            const instanceDate = Timestamp.fromDate(currentDate);
+            instances.push({
+              ...event,
+              id: `${event.id}-${currentDate.toISOString().split("T")[0]}`,
+              date: instanceDate,
+              seriesId: event.id,
+            });
+          }
+          currentDate.setDate(currentDate.getDate() + 1);
+        }
+      }
+
+      return instances;
     },
 
     /**

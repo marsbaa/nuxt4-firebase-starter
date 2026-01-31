@@ -5,7 +5,7 @@
 - [x] 1.1 Update `CalendarEvent` type in [`app/types/calendarEvents.ts`](app/types/calendarEvents.ts) to include recurrence fields (recurrence type, weekly days, end condition, parent series ID)
 - [x] 1.2 Add `updateEvent()` action to [`app/stores/calendarEvents.ts`](app/stores/calendarEvents.ts) with support for series scope (this/future/all)
 - [x] 1.3 Add `deleteEvent()` action to [`app/stores/calendarEvents.ts`](app/stores/calendarEvents.ts) with support for series scope (this/future/all)
-- [ ] 1.4 Implement recurrence expansion logic in store (generate recurring event instances for display)
+- [x] 1.4 Implement recurrence expansion logic in store (generate recurring event instances for display)
 - [ ] 1.5 Update Firestore rules to support event updates and deletes with proper authentication checks
 
 ## 2. Event Form Component
