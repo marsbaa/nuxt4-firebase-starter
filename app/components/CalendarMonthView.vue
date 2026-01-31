@@ -16,6 +16,7 @@ const props = withDefaults(defineProps<Props>(), {
 // Emit for event clicks
 const emit = defineEmits<{
   eventClick: [event: CalendarEventType];
+  "switch-to-week": [];
 }>();
 
 // Event click handler
@@ -41,8 +42,6 @@ const calendarDays = computed(() => {
 
   // First day of the month
   const firstDay = new Date(year, month, 1);
-  // Last day of the month
-  const lastDay = new Date(year, month + 1, 0);
 
   // Start from Sunday before the first day
   const startDate = new Date(firstDay);
@@ -134,7 +133,9 @@ const getEventsForDay = (date: Date) => {
 
       <div class="header-content">
         <h2 class="month-title">{{ monthYear }}</h2>
-        <p class="calendar-subtitle">LITURGICAL CYCLE • COMMUNAL RHYTHMS</p>
+        <button class="view-week-link" @click="emit('switch-to-week')">
+          VIEW WEEK
+        </button>
       </div>
 
       <button @click="nextMonth" class="nav-btn" aria-label="Next month">
@@ -215,28 +216,31 @@ const getEventsForDay = (date: Date) => {
   align-items: center;
   justify-content: space-between;
   gap: 1.5rem;
-  padding-bottom: 1.5rem;
-  border-bottom: 1px solid #e8e8e5;
 }
 
 .nav-btn {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 2.5rem;
-  height: 2.5rem;
+  width: 2.75rem;
+  height: 2.75rem;
+  min-width: 2.75rem;
+  padding: 0;
   background: transparent;
-  border: 1px solid #e8e8e5;
-  border-radius: 8px;
-  color: #706c64;
+  border: none;
+  border-radius: 0.5rem;
   cursor: pointer;
+  color: #706c64;
   transition: all 0.2s ease;
-  flex-shrink: 0;
 }
 
 .nav-btn:hover {
-  background: #f7f6f4;
-  border-color: #d9d6d0;
+  background: rgba(112, 108, 100, 0.08);
+  color: #2d2a26;
+}
+
+.nav-btn:active {
+  transform: scale(0.95);
 }
 
 .nav-icon {
@@ -246,26 +250,38 @@ const getEventsForDay = (date: Date) => {
 
 .header-content {
   flex: 1;
-  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.375rem;
 }
 
 .month-title {
   font-family: "Crimson Pro", serif;
-  font-size: 2rem;
-  font-weight: 600;
-  color: #2d2a26;
-  margin: 0 0 0.5rem;
-  line-height: 1.2;
+  font-size: 1.5rem;
+  font-weight: 400;
+  color: #1a1a1a;
+  margin: 0;
+  text-align: center;
 }
 
-.calendar-subtitle {
+.view-week-link {
   font-family: "Work Sans", sans-serif;
-  font-size: 0.75rem;
+  font-size: 0.6875rem;
   font-weight: 500;
-  letter-spacing: 0.1em;
-  color: #9c8b7a;
+  letter-spacing: 0.08em;
+  color: #c0bdb8;
   text-transform: uppercase;
-  margin: 0;
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: color 0.2s ease;
+  display: none; /* Hidden by default, shown on mobile */
+}
+
+.view-week-link:hover {
+  color: #706c64;
 }
 
 /* Calendar Grid */
@@ -373,12 +389,9 @@ const getEventsForDay = (date: Date) => {
 
 /* Responsive - Mobile */
 @media (max-width: 768px) {
-  .month-title {
-    font-size: 1.5rem;
-  }
-
-  .calendar-subtitle {
-    font-size: 0.625rem;
+  /* Show VIEW WEEK link on mobile */
+  .view-week-link {
+    display: block;
   }
 
   .calendar-day {
@@ -395,33 +408,31 @@ const getEventsForDay = (date: Date) => {
   }
 }
 
+/* Mobile simplified display */
+@media (max-width: 768px) {
+  .calendar-legend {
+    display: none;
+  }
+
+  .calendar-footer {
+    display: none;
+  }
+
+  .calendar-day {
+    height: 60px;
+    padding: 0.375rem;
+  }
+}
+
 /* Small mobile */
 @media (max-width: 480px) {
   .calendar-header {
     gap: 0.75rem;
   }
 
-  .nav-btn {
-    width: 2rem;
-    height: 2rem;
-  }
-
-  .nav-icon {
-    width: 1.25rem;
-    height: 1.25rem;
-  }
-
-  .month-title {
-    font-size: 1.25rem;
-  }
-
-  .calendar-subtitle {
-    display: none;
-  }
-
   .calendar-day {
-    height: 70px;
-    padding: 0.375rem;
+    height: 55px;
+    padding: 0.25rem;
   }
 
   .calendar-day-header {

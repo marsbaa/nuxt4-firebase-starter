@@ -4,6 +4,7 @@ import type {
   CalendarFilters,
   CreateCommunityGatheringInput,
 } from "~/types/calendarEvents";
+import CalendarWeekView from "~/components/CalendarWeekView.vue";
 
 // Use calendar events store
 const calendarEventsStore = useCalendarEventsStore();
@@ -18,10 +19,8 @@ onUnmounted(() => {
   calendarEventsStore.cleanup();
 });
 
-const toast = useToast();
-
-// View state: 'month' or 'agenda'
-const currentView = ref<"month" | "agenda">("month");
+// View state: 'agenda', 'week', or 'month'
+const currentView = ref<"agenda" | "week" | "month">("month");
 
 // Event form modal state
 const showEventForm = ref(false);
@@ -30,13 +29,13 @@ const isCreatingEvent = ref(false);
 // Search query state
 const searchQuery = ref("");
 
-// Switch between month and agenda view
-const switchView = (view: "month" | "agenda") => {
+// Switch between views
+const switchView = (view: "agenda" | "week" | "month") => {
   currentView.value = view;
 };
 
-// Check if a view is active
-const isActiveView = (view: "month" | "agenda") => {
+// Check if a view is active (for desktop toggle)
+const isActiveView = (view: "agenda" | "month") => {
   return currentView.value === view;
 };
 
@@ -176,22 +175,43 @@ const clearSearch = () => {
     <div class="calendar-content">
       <!-- Main Calendar View -->
       <div class="calendar-main">
-        <!-- Month View -->
-        <div v-if="currentView === 'month'" class="calendar-view">
-          <CalendarMonthView
-            :events="calendarEventsStore.allEvents"
-            @event-click="handleEventClick"
-          />
-        </div>
+        <Transition name="view" mode="out-in">
+          <!-- Month View -->
+          <div v-if="currentView === 'month'" key="month" class="calendar-view">
+            <CalendarMonthView
+              :events="calendarEventsStore.allEvents"
+              @event-click="handleEventClick"
+              @switch-to-week="switchView('week')"
+            />
+          </div>
 
-        <!-- Agenda View -->
-        <div v-else-if="currentView === 'agenda'" class="calendar-view">
-          <CalendarAgendaView
-            :events="calendarEventsStore.allEvents"
-            :loading="calendarEventsStore.loading"
-            @event-click="handleEventClick"
-          />
-        </div>
+          <!-- Week View (Mobile) -->
+          <div
+            v-else-if="currentView === 'week'"
+            key="week"
+            class="calendar-view"
+          >
+            <CalendarWeekView
+              :events="calendarEventsStore.allEvents"
+              :loading="calendarEventsStore.loading"
+              @event-click="handleEventClick"
+              @switch-to-month="switchView('month')"
+            />
+          </div>
+
+          <!-- Agenda View (Desktop) -->
+          <div
+            v-else-if="currentView === 'agenda'"
+            key="agenda"
+            class="calendar-view"
+          >
+            <CalendarAgendaView
+              :events="calendarEventsStore.allEvents"
+              :loading="calendarEventsStore.loading"
+              @event-click="handleEventClick"
+            />
+          </div>
+        </Transition>
       </div>
 
       <!-- Focus Panel (right sidebar) -->
@@ -224,8 +244,6 @@ const clearSearch = () => {
   justify-content: space-between;
   align-items: center;
   gap: 1rem;
-  padding-bottom: 1.5rem;
-  border-bottom: 1px solid #e8e8e5;
 }
 
 /* View Toggle */
@@ -427,29 +445,31 @@ const clearSearch = () => {
     gap: 1rem;
   }
 
+  /* Hide view toggle on mobile */
   .view-toggle {
-    width: 100%;
-  }
-
-  .toggle-btn {
-    flex: 1;
-    justify-content: center;
+    display: none;
   }
 
   .calendar-actions {
     width: 100%;
-    flex-direction: column;
-    gap: 0.75rem;
+    flex-direction: row;
+    gap: 0.5rem;
   }
 
   .search-field {
-    min-width: 100%;
-    max-width: 100%;
+    flex: 1;
+    min-width: 0;
+    max-width: none;
   }
 
   .new-event-btn {
-    width: 100%;
-    justify-content: center;
+    flex-shrink: 0;
+    padding: 0.625rem;
+    width: auto;
+  }
+
+  .new-event-btn .btn-text {
+    display: none;
   }
 
   .calendar-content {
@@ -532,6 +552,24 @@ const clearSearch = () => {
   width: 1.25rem;
   height: 1.25rem;
   color: #706c64;
+}
+
+/* View Transitions */
+.view-enter-active,
+.view-leave-active {
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease;
+}
+
+.view-enter-from {
+  opacity: 0;
+  transform: translateX(20px);
+}
+
+.view-leave-to {
+  opacity: 0;
+  transform: translateX(-20px);
 }
 
 /* Modal Transitions */
