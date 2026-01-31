@@ -663,4 +663,44 @@ const clearSearch = () => {
     transform: translateY(100%);
   }
 }
+
+/* Desktop Drawer */
+@media (min-width: 769px) {
+  .modal-backdrop {
+    background: transparent;
+    backdrop-filter: none;
+  }
+
+  .modal-content {
+    position: fixed;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 400px;
+    max-width: none;
+    max-height: none;
+    border-radius: 0;
+    padding: 1.5rem;
+    overflow-y: auto;
+  }
+
+  .modal-close {
+    top: 1rem;
+    right: 1rem;
+  }
+
+  /* Drawer slide animation */
+  .modal-enter-active .modal-content,
+  .modal-leave-active .modal-content {
+    transition: transform 0.3s ease;
+  }
+
+  .modal-enter-from .modal-content {
+    transform: translateX(100%);
+  }
+
+  .modal-leave-to .modal-content {
+    transform: translateX(100%);
+  }
+}
 </style>
