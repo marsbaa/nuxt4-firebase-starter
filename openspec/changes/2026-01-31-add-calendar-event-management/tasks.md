@@ -12,11 +12,11 @@
 
 - [x] 2.1 Create [`app/components/CalendarEventForm.vue`](app/components/CalendarEventForm.vue) with form fields (title, date, time, all-day, description, recurrence)
 - [x] 2.2 Implement recurrence controls (weekly day selector, end condition selector)
-- [ ] 2.3 Add form validation with pastoral error messaging
-- [ ] 2.4 Implement Add mode (create new event)
-- [ ] 2.5 Implement Edit mode (load existing event, show series management options for recurring events)
-- [ ] 2.6 Add delete functionality with gentle confirmation dialog and series scope options
-- [ ] 2.7 Ensure all copy uses pastoral language (no task management terminology)
+- [x] 2.3 Add form validation with pastoral error messaging
+- [x] 2.4 Implement Add mode (create new event)
+- [x] 2.5 Implement Edit mode (load existing event, show series management options for recurring events)
+- [x] 2.6 Add delete functionality with gentle confirmation dialog and series scope options
+- [x] 2.7 Ensure all copy uses pastoral language (no task management terminology)
 
 ## 3. Mobile Bottom Sheet Integration
 
