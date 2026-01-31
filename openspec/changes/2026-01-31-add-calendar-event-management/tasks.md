@@ -29,10 +29,10 @@
 
 ## 4. Desktop Drawer Integration
 
-- [ ] 4.1 Implement right-side drawer panel for desktop (≥ 768px) with slide-in animation
-- [ ] 4.2 Render `CalendarEventForm` within drawer on desktop
-- [ ] 4.3 Ensure calendar remains visible in background when drawer is open
-- [ ] 4.4 Add Close action to dismiss drawer
+- [x] 4.1 Implement right-side drawer panel for desktop (≥ 768px) with slide-in animation
+- [x] 4.2 Render `CalendarEventForm` within drawer on desktop
+- [x] 4.3 Ensure calendar remains visible in background when drawer is open
+- [x] 4.4 Add Close action to dismiss drawer
 
 ## 5. Event Interaction Updates
 
