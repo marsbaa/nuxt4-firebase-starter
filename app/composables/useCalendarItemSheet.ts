@@ -1,34 +1,34 @@
 import type { CalendarEvent } from "~/types/calendarEvents";
 
+// Global state for the sheet (singleton)
+const sheetState = reactive({
+  isOpen: false,
+  currentItem: null as CalendarEvent | null,
+});
+
 /**
  * State management for the Calendar Item Bottom Sheet
  * Provides global state and methods for opening/closing the sheet
  */
 export const useCalendarItemSheet = () => {
-  // Sheet visibility state
-  const isOpen = ref(false);
-
-  // Current item data
-  const currentItem = ref<CalendarEvent | null>(null);
-
   // Open the sheet with item data
   const openSheet = (item: CalendarEvent) => {
-    currentItem.value = item;
-    isOpen.value = true;
+    sheetState.currentItem = item;
+    sheetState.isOpen = true;
   };
 
   // Close the sheet
   const closeSheet = () => {
-    isOpen.value = false;
+    sheetState.isOpen = false;
     // Clear item data after animation completes
     setTimeout(() => {
-      currentItem.value = null;
+      sheetState.currentItem = null;
     }, 300); // Match transition duration
   };
 
   return {
-    isOpen: readonly(isOpen),
-    currentItem: readonly(currentItem),
+    isOpen: readonly(computed(() => sheetState.isOpen)),
+    currentItem: readonly(computed(() => sheetState.currentItem)),
     openSheet,
     closeSheet,
   };

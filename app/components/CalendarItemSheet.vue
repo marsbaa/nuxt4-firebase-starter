@@ -1,4 +1,32 @@
 <script setup lang="ts">
+/**
+ * CalendarItemSheet Component
+ *
+ * A mobile-optimized bottom sheet for displaying calendar item details.
+ * Triggered when users tap calendar items on mobile viewports (< 768px).
+ *
+ * Supports multiple item types:
+ * - Community Gatherings: Events with title, date/time, description, and "Open full details" link
+ * - Member Milestones: Birthdays and milestones with person's name, date, and "Go to person" link
+ * - Care Reminders: Reminders with title, linked person, date, and "View in care space" link
+ * - Liturgical Events: Church events with title, date/time, description, and "Open full details" link
+ * - Care Updates: Updates with title, date/time, and description
+ *
+ * Features:
+ * - Slide-up animation from bottom of screen
+ * - Swipe-down gesture to dismiss
+ * - Tap outside (backdrop) to dismiss
+ * - Escape key to dismiss
+ * - Accessible with ARIA labels and focus management
+ * - Pastoral tone with calm, generous whitespace
+ *
+ * Mobile Interaction Pattern:
+ * On mobile (< 768px): Calendar item tap → Opens this bottom sheet
+ * On desktop (≥ 768px): Calendar item click → Direct navigation to detail page
+ *
+ * @see useCalendarItemSheet - State management composable
+ * @see CareCalendar.vue - Parent component that handles viewport detection
+ */
 import type { CalendarEvent } from "~/types/calendarEvents";
 
 // Use the sheet composable
@@ -73,11 +101,52 @@ const formatDate = (timestamp: any) => {
   const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
   return date.toLocaleDateString("en-US", {
     weekday: "long",
-    year: "numeric",
     month: "long",
     day: "numeric",
   });
 };
+
+// Format time for display
+const formatTime = (timestamp: any) => {
+  if (!timestamp) return "";
+  const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
+  return date.toLocaleTimeString("en-US", {
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: true,
+  });
+};
+
+/**
+ * Content Display Rules by Item Type
+ *
+ * Each calendar item type has specific display rules to maintain pastoral tone:
+ *
+ * Events (community-gathering, liturgical-event):
+ * - Type Label: "Communal Rhythm" or "Liturgical Event"
+ * - Primary Text: Event title
+ * - Description: Optional event description in italic quote style
+ * - Action: "Open full details" link
+ *
+ * Birthdays/Member Milestones:
+ * - Type Label: "Birthday" or "Member Milestone"
+ * - Primary Text: Person's name (e.g., "John Smith")
+ * - Description: Optional gentle descriptor
+ * - Action: "Go to person" link to member profile
+ *
+ * Care Reminders:
+ * - Type Label: "Care Reminder"
+ * - Primary Text: Reminder text
+ * - Description: Not shown (reminders are brief)
+ * - Action: "View in care space" link (if person linked)
+ * - Note: No completion controls (not task-style)
+ *
+ * Care Updates:
+ * - Type Label: "Care Update"
+ * - Primary Text: Update title
+ * - Description: Optional update description
+ * - Action: None (updates are informational)
+ */
 
 // Get item type label
 const getItemTypeLabel = (item: CalendarEvent) => {
@@ -108,17 +177,6 @@ const getPrimaryText = (item: CalendarEvent) => {
     return item.title;
   }
   return item.title;
-};
-
-// Get secondary display text
-const getSecondaryText = (item: CalendarEvent) => {
-  if (item.type === "member-milestone") {
-    return item.milestoneType === "birthday" ? "Birthday" : "Member Milestone";
-  }
-  if (item.type === "care-reminder") {
-    return item.memberName ? `For ${item.memberName}` : "";
-  }
-  return "";
 };
 
 // Get description text
@@ -205,6 +263,11 @@ onUnmounted(() => {
 
           <!-- Content -->
           <div class="sheet-content">
+            <!-- Type Label -->
+            <span class="sheet-type-label">
+              {{ getItemTypeLabel(currentItem) }}
+            </span>
+
             <!-- Primary Text -->
             <h2
               :id="`sheet-title-${currentItem.id}`"
@@ -213,27 +276,15 @@ onUnmounted(() => {
               {{ getPrimaryText(currentItem) }}
             </h2>
 
-            <!-- Secondary Text (for reminders and milestones) -->
-            <p
-              v-if="getSecondaryText(currentItem)"
-              class="sheet-secondary-text"
-            >
-              {{ getSecondaryText(currentItem) }}
-            </p>
-
-            <!-- Type Label -->
-            <span class="sheet-type-label">
-              {{ getItemTypeLabel(currentItem) }}
-            </span>
-
-            <!-- Date -->
+            <!-- Date and Time -->
             <p class="sheet-date">
-              {{ formatDate(currentItem.date) }}
+              {{ formatDate(currentItem.date) }} at
+              {{ formatTime(currentItem.date) }}
             </p>
 
             <!-- Description (for events and milestones) -->
             <p v-if="getDescriptionText(currentItem)" class="sheet-description">
-              {{ getDescriptionText(currentItem) }}
+              "{{ getDescriptionText(currentItem) }}"
             </p>
 
             <!-- Action Links -->
@@ -250,6 +301,18 @@ onUnmounted(() => {
               >
                 {{ link.text }}
               </a>
+            </div>
+
+            <!-- Close Button -->
+            <div class="sheet-close-section">
+              <button
+                class="sheet-close-button"
+                @click="closeSheet"
+                aria-label="Close sheet"
+              >
+                <span class="close-text">CLOSE</span>
+                <Icon name="mdi:calendar-blank-outline" class="close-icon" />
+              </button>
             </div>
           </div>
         </div>
@@ -295,73 +358,116 @@ onUnmounted(() => {
 }
 
 .sheet-content {
-  padding: 1.5rem;
-  padding-top: 1rem;
-}
-
-.sheet-primary-text {
-  font-family: "Crimson Pro", serif;
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: #2d2a26;
-  margin: 0 0 0.5rem 0;
-  line-height: 1.2;
-}
-
-.sheet-secondary-text {
-  font-family: "Work Sans", sans-serif;
-  font-size: 1rem;
-  color: #706c64;
-  margin: 0 0 0.75rem 0;
-  font-weight: 500;
+  padding: 2rem 1.5rem;
+  padding-top: 1.5rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .sheet-type-label {
   display: inline-block;
   font-family: "Work Sans", sans-serif;
-  font-size: 0.875rem;
+  font-size: 0.75rem;
   font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
   color: #5f7d5c;
-  background: rgba(122, 155, 118, 0.1);
-  padding: 0.25rem 0.75rem;
+  background: rgba(122, 155, 118, 0.12);
+  padding: 0.375rem 1rem;
   border-radius: 20px;
-  margin-bottom: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.sheet-primary-text {
+  font-family: "Crimson Pro", serif;
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: #2d2a26;
+  margin: 0 0 0.75rem 0;
+  line-height: 1.3;
+  max-width: 90%;
 }
 
 .sheet-date {
   font-family: "Work Sans", sans-serif;
-  font-size: 0.875rem;
-  color: #9c8b7a;
-  margin: 0 0 1rem 0;
+  font-size: 0.9375rem;
+  color: #706c64;
+  margin: 0 0 1.5rem 0;
+  font-weight: 400;
 }
 
 .sheet-description {
-  font-family: "Work Sans", sans-serif;
-  font-size: 0.875rem;
-  color: #2d2a26;
-  line-height: 1.5;
-  margin: 0 0 1.5rem 0;
+  font-family: "Crimson Pro", serif;
+  font-size: 1rem;
+  font-style: italic;
+  color: #706c64;
+  line-height: 1.6;
+  margin: 0 0 2rem 0;
+  max-width: 85%;
 }
 
 .sheet-actions {
-  border-top: 1px solid #f7f6f4;
-  padding-top: 1rem;
+  width: 100%;
+  padding-top: 0.5rem;
+  padding-bottom: 1.5rem;
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
+  align-items: center;
 }
 
 .sheet-action-link {
   font-family: "Work Sans", sans-serif;
   font-size: 0.875rem;
-  color: #5f7d5c;
+  color: #706c64;
   text-decoration: underline;
-  text-decoration-color: rgba(122, 155, 118, 0.3);
+  text-decoration-color: rgba(112, 108, 100, 0.3);
   transition: all 0.2s ease;
 }
 
 .sheet-action-link:hover {
+  color: #5f7d5c;
   text-decoration-color: #5f7d5c;
+}
+
+.sheet-close-section {
+  width: 100%;
+  padding-top: 1.5rem;
+  border-top: 1px solid #f0ede8;
+  display: flex;
+  justify-content: center;
+}
+
+.sheet-close-button {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+  transition: opacity 0.2s ease;
+  color: #9c8b7a;
+}
+
+.sheet-close-button:hover {
+  opacity: 0.7;
+}
+
+.close-text {
+  font-family: "Work Sans", sans-serif;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.close-icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  opacity: 0.6;
 }
 
 /* Transitions */
@@ -383,11 +489,17 @@ onUnmounted(() => {
 /* Mobile optimizations */
 @media (max-width: 768px) {
   .sheet-content {
-    padding: 1.25rem;
+    padding: 1.5rem 1.25rem;
   }
 
   .sheet-primary-text {
-    font-size: 1.375rem;
+    font-size: 1.5rem;
+    max-width: 95%;
+  }
+
+  .sheet-description {
+    font-size: 0.9375rem;
+    max-width: 90%;
   }
 }
 

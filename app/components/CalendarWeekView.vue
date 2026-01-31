@@ -1,4 +1,27 @@
 <script setup lang="ts">
+/**
+ * CalendarWeekView Component
+ *
+ * Displays calendar events in a weekly list view, optimized for mobile.
+ * Shows one week at a time with day-by-day event listings.
+ *
+ * Mobile Interaction Pattern:
+ * - On mobile (< 768px): Event tap → Opens CalendarItemSheet bottom sheet
+ * - On desktop (≥ 768px): Event click → Direct navigation to detail page
+ *
+ * The viewport detection and routing logic is handled by the parent CareCalendar component.
+ * This component simply emits 'event-click' events, which the parent handles appropriately.
+ *
+ * Supports all calendar item types:
+ * - Community Gatherings
+ * - Member Milestones (birthdays, etc.)
+ * - Care Reminders
+ * - Care Updates
+ * - Liturgical Events
+ *
+ * @see CareCalendar.vue - Parent component with viewport detection
+ * @see CalendarItemSheet.vue - Mobile bottom sheet for event details
+ */
 import type { CalendarEvent } from "~/types/calendarEvents";
 import {
   format,

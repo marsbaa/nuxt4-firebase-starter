@@ -38,26 +38,26 @@
 
 ## 5. Visual Design and Styling
 
-- [ ] 5.1 Apply pastoral visual design standards (calm, generous whitespace)
-- [ ] 5.2 Ensure category colors are subtle and accessible
-- [ ] 5.3 Use appropriate font sizes for mobile readability
-- [ ] 5.4 Add gentle backdrop overlay when sheet is open
-- [ ] 5.5 Ensure bottom sheet respects safe area insets on mobile devices
+- [x] 5.1 Apply pastoral visual design standards (calm, generous whitespace)
+- [x] 5.2 Ensure category colors are subtle and accessible
+- [x] 5.3 Use appropriate font sizes for mobile readability
+- [x] 5.4 Add gentle backdrop overlay when sheet is open
+- [x] 5.5 Ensure bottom sheet respects safe area insets on mobile devices
 
 ## 6. Testing and Validation
 
-- [ ] 6.1 Test on various mobile viewport sizes (320px - 767px)
-- [ ] 6.2 Verify swipe-down dismiss works smoothly
-- [ ] 6.3 Verify tap-outside dismiss works correctly
-- [ ] 6.4 Test with all calendar item types: events, birthdays/member milestones, and reminders
-- [ ] 6.5 Verify content displays correctly and pastorally for each item type
-- [ ] 6.6 Verify desktop behavior unchanged for all item types (direct navigation preserved)
-- [ ] 6.7 Test keyboard navigation and screen reader compatibility across all item types
-- [ ] 6.8 Verify sheet animations perform smoothly on lower-end devices
-- [ ] 6.9 Confirm no task-style interactions appear for reminders (no completion controls)
+- [x] 6.1 Test on various mobile viewport sizes (320px - 767px)
+- [x] 6.2 Verify swipe-down dismiss works smoothly
+- [x] 6.3 Verify tap-outside dismiss works correctly
+- [x] 6.4 Test with all calendar item types: events, birthdays/member milestones, and reminders
+- [x] 6.5 Verify content displays correctly and pastorally for each item type
+- [x] 6.6 Verify desktop behavior unchanged for all item types (direct navigation preserved)
+- [x] 6.7 Test keyboard navigation and screen reader compatibility across all item types
+- [x] 6.8 Verify sheet animations perform smoothly on lower-end devices
+- [x] 6.9 Confirm no task-style interactions appear for reminders (no completion controls)
 
 ## 7. Documentation
 
-- [ ] 7.1 Update component documentation for `CalendarItemSheet.vue`
-- [ ] 7.2 Document mobile interaction pattern for all calendar item types in relevant code comments
-- [ ] 7.3 Document content rules and display differences by type (events, birthdays, reminders)
+- [x] 7.1 Update component documentation for `CalendarItemSheet.vue`
+- [x] 7.2 Document mobile interaction pattern for all calendar item types in relevant code comments
+- [x] 7.3 Document content rules and display differences by type (events, birthdays, reminders)
