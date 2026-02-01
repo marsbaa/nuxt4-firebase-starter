@@ -25,6 +25,7 @@
 import { ref, computed } from "vue";
 import CalendarEvent from "./CalendarEvent.vue";
 import CalendarLegend from "./CalendarLegend.vue";
+import CalendarDayEventsSheet from "./CalendarDayEventsSheet.vue";
 import type { CalendarEvent as CalendarEventType } from "~/types/calendarEvents";
 
 // Props for passing events
@@ -129,9 +130,9 @@ const getEventIcon = (type: CalendarEventType["type"]): string => {
   return iconMap[type];
 };
 
-// Get events for a specific day
+// Get events for a specific day, sorted by priority and time
 const getEventsForDay = (date: Date) => {
-  return props.events.filter((event) => {
+  const filtered = props.events.filter((event) => {
     const eventDate = event.date.toDate();
     return (
       eventDate.getDate() === date.getDate() &&
@@ -139,6 +140,67 @@ const getEventsForDay = (date: Date) => {
       eventDate.getFullYear() === date.getFullYear()
     );
   });
+
+  // Sort by: 1) Event type priority, 2) Time
+  return filtered.sort((a, b) => {
+    // Define priority order: events (community-gathering, liturgical-event) > care-reminder > member-milestone
+    const getPriority = (type: CalendarEventType["type"]) => {
+      if (type === "community-gathering" || type === "liturgical-event")
+        return 1;
+      if (type === "care-reminder") return 2;
+      if (type === "member-milestone") return 3;
+      return 4; // care-update
+    };
+
+    const priorityA = getPriority(a.type);
+    const priorityB = getPriority(b.type);
+
+    // First sort by priority
+    if (priorityA !== priorityB) {
+      return priorityA - priorityB;
+    }
+
+    // Then sort by time (events with startTime come first, sorted by time)
+    const timeA =
+      "startTime" in a && a.startTime ? a.startTime.toMillis() : Infinity;
+    const timeB =
+      "startTime" in b && b.startTime ? b.startTime.toMillis() : Infinity;
+
+    return timeA - timeB;
+  });
+};
+
+// Maximum number of events to display before showing "+N more"
+const MAX_VISIBLE_EVENTS = 2;
+
+// Get visible events for a day (limited to MAX_VISIBLE_EVENTS)
+const getVisibleEventsForDay = (date: Date) => {
+  const allEvents = getEventsForDay(date);
+  return allEvents.slice(0, MAX_VISIBLE_EVENTS);
+};
+
+// Get count of remaining events
+const getRemainingEventsCount = (date: Date) => {
+  const allEvents = getEventsForDay(date);
+  return Math.max(0, allEvents.length - MAX_VISIBLE_EVENTS);
+};
+
+// State for day events sheet
+const selectedDayDate = ref<Date | null>(null);
+const showDayEventsSheet = ref(false);
+
+// Handle "+N more" click
+const handleShowMoreClick = (date: Date) => {
+  selectedDayDate.value = date;
+  showDayEventsSheet.value = true;
+};
+
+// Close day events sheet
+const closeDayEventsSheet = () => {
+  showDayEventsSheet.value = false;
+  setTimeout(() => {
+    selectedDayDate.value = null;
+  }, 300); // Match transition duration
 };
 </script>
 
@@ -195,7 +257,7 @@ const getEventsForDay = (date: Date) => {
         <!-- Events for this day -->
         <div class="day-events">
           <CalendarEvent
-            v-for="event in getEventsForDay(day.date)"
+            v-for="event in getVisibleEventsForDay(day.date)"
             :key="event.id"
             :title="event.title"
             :type="event.type"
@@ -203,6 +265,15 @@ const getEventsForDay = (date: Date) => {
             :member-id="event.memberId"
             @click="handleEventClick(event)"
           />
+
+          <!-- "+N more" link -->
+          <button
+            v-if="getRemainingEventsCount(day.date) > 0"
+            class="show-more-link"
+            @click="handleShowMoreClick(day.date)"
+          >
+            + {{ getRemainingEventsCount(day.date) }} more
+          </button>
         </div>
       </div>
     </div>
@@ -220,6 +291,15 @@ const getEventsForDay = (date: Date) => {
     <div class="calendar-footer">
       <p class="tagline">"Grace in every shared moment"</p>
     </div>
+
+    <!-- Day Events Sheet -->
+    <CalendarDayEventsSheet
+      :is-open="showDayEventsSheet"
+      :date="selectedDayDate"
+      :events="selectedDayDate ? getEventsForDay(selectedDayDate) : []"
+      @close="closeDayEventsSheet"
+      @event-click="handleEventClick"
+    />
   </div>
 </template>
 
@@ -332,7 +412,7 @@ const getEventsForDay = (date: Date) => {
 
 .calendar-day {
   background: #ffffff;
-  height: 120px;
+  height: 140px;
   padding: 0.75rem;
   display: flex;
   flex-direction: column;
@@ -384,8 +464,34 @@ const getEventsForDay = (date: Date) => {
   flex-direction: column;
   gap: 0.375rem;
   flex: 1;
-  overflow: hidden;
   min-height: 0;
+  position: relative;
+}
+
+/* Show More Link */
+.show-more-link {
+  font-family: "Work Sans", sans-serif;
+  font-size: 0.688rem;
+  font-weight: 500;
+  color: #706c64;
+  background: transparent;
+  border: none;
+  padding: 0.25rem 0.5rem;
+  text-align: left;
+  cursor: pointer;
+  transition: color 0.2s ease;
+  border-radius: 4px;
+  flex-shrink: 0;
+  margin-top: auto;
+}
+
+.show-more-link:hover {
+  color: #5f7d5c;
+  background: rgba(122, 155, 118, 0.08);
+}
+
+.show-more-link:active {
+  transform: scale(0.98);
 }
 
 /* Calendar Footer */
@@ -405,7 +511,7 @@ const getEventsForDay = (date: Date) => {
 /* Responsive - Tablet */
 @media (max-width: 1024px) {
   .calendar-day {
-    height: 100px;
+    height: 120px;
     padding: 0.625rem;
   }
 }
@@ -418,7 +524,7 @@ const getEventsForDay = (date: Date) => {
   }
 
   .calendar-day {
-    height: 80px;
+    height: 95px;
     padding: 0.5rem;
   }
 
@@ -428,6 +534,11 @@ const getEventsForDay = (date: Date) => {
 
   .today-label {
     font-size: 0.563rem;
+  }
+
+  .show-more-link {
+    font-size: 0.625rem;
+    padding: 0.188rem 0.375rem;
   }
 }
 
@@ -442,7 +553,7 @@ const getEventsForDay = (date: Date) => {
   }
 
   .calendar-day {
-    height: 60px;
+    height: 75px;
     padding: 0.375rem;
   }
 }
@@ -454,7 +565,7 @@ const getEventsForDay = (date: Date) => {
   }
 
   .calendar-day {
-    height: 55px;
+    height: 65px;
     padding: 0.25rem;
   }
 

@@ -81,11 +81,34 @@ const eventsByDay = computed(() => {
     }
   });
 
-  // Sort events by date within each day
+  // Sort events by priority and time within each day
   grouped.forEach((dayEvents) => {
-    dayEvents.sort(
-      (a, b) => a.date.toDate().getTime() - b.date.toDate().getTime(),
-    );
+    dayEvents.sort((a, b) => {
+      // Define priority order: events (community-gathering, liturgical-event) > care-reminder > member-milestone
+      const getPriority = (type: CalendarEvent["type"]) => {
+        if (type === "community-gathering" || type === "liturgical-event")
+          return 1;
+        if (type === "care-reminder") return 2;
+        if (type === "member-milestone") return 3;
+        return 4; // care-update
+      };
+
+      const priorityA = getPriority(a.type);
+      const priorityB = getPriority(b.type);
+
+      // First sort by priority
+      if (priorityA !== priorityB) {
+        return priorityA - priorityB;
+      }
+
+      // Then sort by time (events with startTime come first, sorted by time)
+      const timeA =
+        "startTime" in a && a.startTime ? a.startTime.toMillis() : Infinity;
+      const timeB =
+        "startTime" in b && b.startTime ? b.startTime.toMillis() : Infinity;
+
+      return timeA - timeB;
+    });
   });
 
   return grouped;
@@ -126,6 +149,12 @@ const getEventLabel = (event: CalendarEvent): string => {
 
 // Get formatted time for event
 const getEventTime = (event: CalendarEvent): string | null => {
+  // Check if event has a startTime field (community-gathering, liturgical-event)
+  if ("startTime" in event && event.startTime) {
+    return format(event.startTime.toDate(), "h:mm a");
+  }
+
+  // For other event types, check if the date has a time component
   const eventDate = event.date.toDate();
   const hours = eventDate.getHours();
   const minutes = eventDate.getMinutes();

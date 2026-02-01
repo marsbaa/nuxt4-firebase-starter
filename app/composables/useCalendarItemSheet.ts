@@ -4,6 +4,7 @@ import type { CalendarEvent } from "~/types/calendarEvents";
 const sheetState = reactive({
   isOpen: false,
   currentItem: null as CalendarEvent | null,
+  onEditEvent: null as ((event: CalendarEvent) => void) | null,
 });
 
 /**
@@ -26,10 +27,24 @@ export const useCalendarItemSheet = () => {
     }, 300); // Match transition duration
   };
 
+  // Set the edit event callback
+  const setEditEventCallback = (callback: (event: CalendarEvent) => void) => {
+    sheetState.onEditEvent = callback;
+  };
+
+  // Trigger edit event
+  const editEvent = (event: CalendarEvent) => {
+    if (sheetState.onEditEvent) {
+      sheetState.onEditEvent(event);
+    }
+  };
+
   return {
     isOpen: readonly(computed(() => sheetState.isOpen)),
     currentItem: readonly(computed(() => sheetState.currentItem)),
     openSheet,
     closeSheet,
+    setEditEventCallback,
+    editEvent,
   };
 };

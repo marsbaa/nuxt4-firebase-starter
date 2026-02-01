@@ -30,7 +30,7 @@
 import type { CalendarEvent } from "~/types/calendarEvents";
 
 // Use the sheet composable
-const { isOpen, currentItem, closeSheet } = useCalendarItemSheet();
+const { isOpen, currentItem, closeSheet, editEvent } = useCalendarItemSheet();
 
 // Touch handling for swipe-to-dismiss
 let startY = 0;
@@ -199,13 +199,21 @@ const getDescriptionText = (item: CalendarEvent) => {
 const getActionLinks = (item: CalendarEvent) => {
   const links = [];
 
-  if (item.type === "community-gathering" || item.type === "liturgical-event") {
+  if (item.type === "community-gathering") {
+    links.push({
+      text: "Edit event",
+      action: () => {
+        closeSheet();
+        editEvent(item);
+      },
+    });
+  } else if (item.type === "liturgical-event") {
     links.push({
       text: "Open full details",
       action: () => {
         // Navigate to event detail page
         closeSheet();
-        // TODO: Implement navigation
+        // TODO: Implement navigation for liturgical events
       },
     });
   }

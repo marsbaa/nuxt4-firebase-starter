@@ -126,14 +126,16 @@ const cancelDelete = () => {
   showDeleteConfirm.value = false;
 };
 
-// Handle cancel
+// Handle close (from header CLOSE button - no confirmation)
+const handleClose = () => {
+  resetForm();
+  emit("cancel");
+};
+
+// Handle cancel (from Cancel button - no confirmation)
 const handleCancel = () => {
-  const hasContent =
-    title.value.trim() || description.value.trim() || date.value;
-  if (!hasContent || confirm("Discard this gathering?")) {
-    resetForm();
-    emit("cancel");
-  }
+  resetForm();
+  emit("cancel");
 };
 
 // Toggle day selection for recurrence
@@ -375,7 +377,7 @@ watch(date, () => {
           type="button"
           class="close-link"
           :disabled="loading || isSubmitting"
-          @click="handleCancel"
+          @click="handleClose"
         >
           CLOSE
         </button>
@@ -1091,8 +1093,18 @@ watch(date, () => {
 
 /* Responsive adjustments */
 @media (max-width: 767px) {
+  .calendar-event-form {
+    min-height: 100vh;
+  }
+
   .form-container {
     padding: 1.5rem;
+    padding-top: max(1.5rem, env(safe-area-inset-top));
+    padding-bottom: max(1.5rem, env(safe-area-inset-bottom));
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    min-height: 100vh;
   }
 
   .form-title {

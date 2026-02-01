@@ -13,15 +13,42 @@ import CalendarItemSheet from "~/components/CalendarItemSheet.vue";
 const calendarEventsStore = useCalendarEventsStore();
 
 // Use calendar item sheet
-const { openSheet } = useCalendarItemSheet();
+const { openSheet, setEditEventCallback } = useCalendarItemSheet();
 
 // Use viewport detection
 const { isMobile } = useViewport();
+
+// Handle edit event from bottom sheet
+const handleEditEventFromSheet = (event: CalendarEvent) => {
+  if (event.type === "community-gathering") {
+    const gatheringEvent = event as CommunityGatheringEvent;
+
+    // Store the originally clicked occurrence
+    clickedOccurrence.value = gatheringEvent;
+
+    // For recurring event instances, find the series master
+    let eventToEdit = gatheringEvent;
+    if (eventToEdit.seriesId) {
+      // This is a recurring instance, find the master event
+      const masterEvent = calendarEventsStore.communityEvents.find(
+        (e) => e.id === eventToEdit.seriesId && !e.seriesId, // Master has no seriesId
+      );
+      if (masterEvent) {
+        eventToEdit = masterEvent;
+      }
+    }
+
+    // Open edit form for community events
+    editingEvent.value = eventToEdit;
+    showEventForm.value = true;
+  }
+};
 
 // Initialize calendar data on mount
 onMounted(() => {
   calendarEventsStore.initialize();
   updateViewBasedOnScreenSize();
+  setEditEventCallback(handleEditEventFromSheet);
   if (process.client) {
     window.addEventListener("resize", updateViewBasedOnScreenSize);
   }
@@ -41,6 +68,7 @@ const currentView = ref<"agenda" | "week" | "month">("month");
 // Event form modal state
 const showEventForm = ref(false);
 const editingEvent = ref<CommunityGatheringEvent | undefined>(undefined);
+const clickedOccurrence = ref<CommunityGatheringEvent | undefined>(undefined);
 const isCreatingEvent = ref(false);
 
 // Search query state
@@ -74,6 +102,7 @@ const openEventForm = () => {
 const closeEventForm = () => {
   showEventForm.value = false;
   editingEvent.value = undefined;
+  clickedOccurrence.value = undefined;
 };
 
 // Handle event creation
@@ -116,9 +145,30 @@ const handleEventDeleted = async (
 // Handle event click from calendar views
 const handleEventClick = (event: CalendarEvent) => {
   if (event.type === "community-gathering") {
-    // Open edit form for community events
-    editingEvent.value = event as CommunityGatheringEvent;
-    showEventForm.value = true;
+    // On mobile, open bottom sheet to show details
+    if (isMobile()) {
+      openSheet(event);
+    } else {
+      // On desktop, open edit form
+      // Store the originally clicked occurrence
+      clickedOccurrence.value = event as CommunityGatheringEvent;
+
+      // For recurring event instances, find the series master
+      let eventToEdit = event as CommunityGatheringEvent;
+      if (eventToEdit.seriesId) {
+        // This is a recurring instance, find the master event
+        const masterEvent = calendarEventsStore.communityEvents.find(
+          (e) => e.id === eventToEdit.seriesId && !e.seriesId, // Master has no seriesId
+        );
+        if (masterEvent) {
+          eventToEdit = masterEvent;
+        }
+      }
+
+      // Open edit form for community events
+      editingEvent.value = eventToEdit;
+      showEventForm.value = true;
+    }
   } else {
     // Preserve existing behavior for other event types
     if (isMobile()) {
@@ -216,16 +266,10 @@ const clearSearch = () => {
           @click="closeEventForm"
         >
           <div class="modal-content" @click.stop>
-            <button
-              class="modal-close"
-              aria-label="Close modal"
-              @click="closeEventForm"
-            >
-              <Icon name="mdi:close" class="close-icon" />
-            </button>
             <CalendarEventForm
               :mode="editingEvent ? 'edit' : 'add'"
               :event="editingEvent"
+              :clicked-occurrence="clickedOccurrence"
               :loading="isCreatingEvent"
               @event-created="handleEventCreated"
               @event-updated="handleEventUpdated"
@@ -594,35 +638,6 @@ const clearSearch = () => {
   padding: 1.5rem;
 }
 
-.modal-close {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 2rem;
-  height: 2rem;
-  padding: 0;
-  background: rgba(247, 246, 244, 0.8);
-  border: 1px solid #e8e8e5;
-  border-radius: 0.5rem;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  z-index: 10;
-}
-
-.modal-close:hover {
-  background: #f7f6f4;
-  border-color: #d6cbb8;
-}
-
-.close-icon {
-  width: 1.25rem;
-  height: 1.25rem;
-  color: #706c64;
-}
-
 /* View Transitions */
 .view-enter-active,
 .view-leave-active {
@@ -662,44 +677,40 @@ const clearSearch = () => {
   transform: scale(0.95);
 }
 
-/* Modal Responsive */
+/* Modal Responsive - Mobile Drawer */
 @media (max-width: 768px) {
   .modal-backdrop {
-    align-items: flex-end;
+    align-items: stretch;
+    justify-content: flex-end;
     padding: 0;
   }
 
   .modal-content {
     position: fixed;
-    bottom: 0;
-    left: 0;
     right: 0;
-    height: 100vh;
+    top: 0;
+    bottom: 0;
+    width: 100%;
     max-width: none;
     max-height: none;
-    padding: 1rem;
-    padding-bottom: calc(1rem + env(safe-area-inset-bottom));
-    border-radius: 1rem 1rem 0 0;
+    padding: 0;
+    border-radius: 0;
     overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
   }
 
-  .modal-close {
-    top: 0.75rem;
-    right: 0.75rem;
-  }
-
-  /* Bottom sheet slide animation */
+  /* Mobile drawer slide animation */
   .modal-enter-active .modal-content,
   .modal-leave-active .modal-content {
     transition: transform 0.3s ease;
   }
 
   .modal-enter-from .modal-content {
-    transform: translateY(100%);
+    transform: translateX(100%);
   }
 
   .modal-leave-to .modal-content {
-    transform: translateY(100%);
+    transform: translateX(100%);
   }
 }
 
@@ -721,11 +732,6 @@ const clearSearch = () => {
     border-radius: 0;
     padding: 1.5rem;
     overflow-y: auto;
-  }
-
-  .modal-close {
-    top: 1rem;
-    right: 1rem;
   }
 
   /* Drawer slide animation */
