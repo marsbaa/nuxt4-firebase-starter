@@ -51,21 +51,21 @@
 
 ## 7. Accessibility
 
-- [ ] 7.1 Ensure keyboard navigation works for all form controls
-- [ ] 7.2 Add appropriate ARIA labels for screen readers
-- [ ] 7.3 Trap focus within overlay/drawer when open
-- [ ] 7.4 Support Escape key to dismiss overlay/drawer
-- [ ] 7.5 Verify color contrast meets WCAG AA standards
+- [x] 7.1 Ensure keyboard navigation works for all form controls
+- [x] 7.2 Add appropriate ARIA labels for screen readers
+- [x] 7.3 Trap focus within overlay/drawer when open
+- [x] 7.4 Support Escape key to dismiss overlay/drawer
+- [x] 7.5 Verify color contrast meets WCAG AA standards
 
 ## 8. Testing & Validation
 
-- [ ] 8.1 Test creating one-off events
-- [ ] 8.2 Test creating weekly recurring events with end conditions
-- [ ] 8.3 Test editing one-off events
-- [ ] 8.4 Test editing recurring events (this occurrence / future occurrences / entire series)
-- [ ] 8.5 Test deleting one-off events
-- [ ] 8.6 Test deleting recurring events with all scope options
-- [ ] 8.7 Verify recurrence expansion displays correctly across month/week views
-- [ ] 8.8 Verify mobile bottom sheet behavior
-- [ ] 8.9 Verify desktop drawer behavior
-- [ ] 8.10 Validate pastoral language throughout (no task management terminology)
+- [x] 8.1 Test creating one-off events
+- [x] 8.2 Test creating weekly recurring events with end conditions
+- [x] 8.3 Test editing one-off events
+- [x] 8.4 Test editing recurring events (this occurrence / future occurrences / entire series)
+- [x] 8.5 Test deleting one-off events
+- [x] 8.6 Test deleting recurring events with all scope options
+- [x] 8.7 Verify recurrence expansion displays correctly across month/week views
+- [x] 8.8 Verify mobile bottom sheet behavior
+- [x] 8.9 Verify desktop drawer behavior
+- [x] 8.10 Validate pastoral language throughout (no task management terminology)
